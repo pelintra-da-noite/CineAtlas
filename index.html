@@ -2,97 +2,83 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>CineAtlas</title>
-  <meta name="description" content="Click a country on the globe and discover a random film from that place. CineAtlas é o teu mapa de cinema mundial." />
+  <title>CineAtlas – World Cinema Explorer</title>
+  <meta name="description" content="Click a country on the globe and discover a random film from that region. Explore world cinema with CineAtlas." />
 
-  <!-- Fontes -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="styles.css">
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <header id="siteTitle">CineAtlas</header>
   <div id="tagline">Click a country for a random film</div>
+
+  <!-- Fades -->
   <div id="fadeOverlay"></div>
   <div id="themeFade"></div>
 
-  <!-- Starfield canvas -->
+  <!-- Starfield -->
   <canvas id="starsCanvas"></canvas>
 
-  <!-- Theme switch (top-right) + randomizer -->
-  <div id="themeSwitch" aria-label="Theme">
-    <span id="themeLabel" aria-hidden="true">
-      <!-- ícone de lua por defeito (dark mode) -->
-      <svg class="icon-moon-min" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M19 14.5A7 7 0 0 1 10.5 6 6 6 0 1 0 19 14.5Z" />
-      </svg>
-    </span>
+  <!-- Theme + Randomizer -->
+  <div id="themeSwitch" aria-label="Theme switch">
+    <span id="themeLabel"></span>
     <label class="switch" aria-label="Toggle theme">
       <input id="themeCheckbox" type="checkbox" />
       <span class="slider"></span>
     </label>
-    <button
-      id="randomBtn"
-      class="iconBtn"
-      title="Random country"
-      aria-label="Random country"
-      type="button">
-      <svg class="icon-die" viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="4" y="4" width="16" height="16"></rect>
-        <circle cx="9" cy="9" r="1.3"></circle>
-        <circle cx="15" cy="15" r="1.3"></circle>
-        <circle cx="15" cy="9" r="1.3"></circle>
-        <circle cx="9" cy="15" r="1.3"></circle>
-      </svg>
+    <button id="randomBtn" class="iconBtn" title="Random country" aria-label="Random country" type="button">
+      🎲
     </button>
   </div>
 
-  <!-- Language buttons (bottom-right) -->
+  <!-- Language -->
   <div id="controlsBar" role="toolbar" aria-label="Language controls">
     <button class="langBtn active" data-lang="en-US" aria-pressed="true">English</button>
     <button class="langBtn" data-lang="pt-PT" aria-pressed="false">Português</button>
   </div>
 
-  <!-- Donate (bottom-left) + créditos -->
+  <!-- Donate -->
   <div id="donateBar">
-    <a id="donateBtn" class="donateBtn" href="https://www.buymeacoffee.com/alexandresd" target="_blank" rel="noopener">
-      Support us
-    </a>
-    <span id="credits">SaramagaBytes © 2025</span>
+    <a id="donateBtn" class="donateBtn" href="https://www.buymeacoffee.com/alexandresd" target="_blank" rel="noopener">Support us</a>
+    <span id="creditText">SaramagaBytes © 2025</span>
   </div>
 
-  <!-- popup -->
-  <div id="popup" aria-modal="true" role="dialog">
+  <!-- POPUP -->
+  <div id="popup">
     <div id="popupHeader">
       <div id="countryBlock">
-        <img id="countryFlagImg" alt="flag"/>
+        <img id="countryFlagImg" alt="flag" />
         <div id="countryName">Country</div>
       </div>
-      <button id="closePopup" type="button" aria-label="Close">
-        <span>×</span>
-      </button>
+      <button id="closePopup"><span>×</span></button>
     </div>
+
     <div id="popupBody">
       <div class="posterCol">
-        <a id="posterLink" href="#" target="_blank" rel="noopener" style="text-decoration:none;display:block;">
+        <a id="posterLink" href="#" target="_blank" style="text-decoration:none;display:block;">
           <img id="moviePoster" src="" alt="" />
         </a>
       </div>
+
       <div class="infoCol">
         <div id="titleBlock">
           <h4 id="movieTitleOriginal"></h4>
-          <div id="movieTitleTranslated"></div>
+          <h5 id="movieTitleTranslated"></h5>
         </div>
         <div class="directorLine" id="directorLine">
           <strong id="directorLabel">Director:</strong>
           <span id="directorName"></span>
         </div>
         <p id="overviewText"></p>
-        <div class="actionsRow">
+
+        <!-- ✅ id adicionado aqui -->
+        <div class="actionsRow" id="actionsRow">
           <a class="actionBtn" id="letterboxdBtn" href="#" target="_blank" rel="noopener">See on Letterboxd</a>
           <button class="actionBtn" id="copyBtn" type="button">Copy</button>
           <button class="actionBtn" id="anotherBtn" type="button">Another one</button>
@@ -101,12 +87,13 @@
     </div>
   </div>
 
-  <!-- snow canvas -->
+  <!-- Snow -->
   <canvas id="snowOverlay"></canvas>
 
+  <!-- Globe -->
   <div id="globeViz"></div>
 
-  <!-- libs + script principal -->
+  <!-- Scripts -->
   <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
   <script src="https://unpkg.com/globe.gl"></script>
   <script src="script.js"></script>
