@@ -518,9 +518,15 @@ function showAntarcticaMessage(){
 
 async function fetchMovie(twoLetterCode, countryName){
   const t = {
-    loading: currentLanguage==='pt-PT' ? 'A carregar filme...' : 'Loading movie...',
-    none:    currentLanguage==='pt-PT' ? 'Nenhum filme encontrado.' : 'No movies found from this country.',
-    noDesc:  currentLanguage==='pt-PT' ? 'Sem descrição disponível.' : 'No description available.',
+    loading: currentLanguage==='pt-PT'
+      ? 'A escolher um filme...'
+      : 'Picking a film...',
+    none:    currentLanguage==='pt-PT'
+      ? 'Não encontrámos nenhum filme agora. Tenta novamente ou escolhe um país vizinho.'
+      : 'We couldn’t find a film right now. Try again or pick a nearby country.',
+    noDesc:  currentLanguage==='pt-PT'
+      ? 'Sem descrição disponível.'
+      : 'No description available.',
     seeLetterboxd: currentLanguage==='pt-PT' ? 'Ver no Letterboxd' : 'See on Letterboxd',
     another: currentLanguage==='pt-PT' ? 'Outro' : 'Another one',
     copy:    currentLanguage==='pt-PT' ? 'Copiar' : 'Copy',
@@ -538,6 +544,7 @@ async function fetchMovie(twoLetterCode, countryName){
   movieTitleTranslatedEl.textContent = '';
   directorLineEl.style.visibility = 'hidden';
   overviewTextEl.textContent = t.loading;
+  overviewTextEl.classList.add('loading');   // estado de loading
   actionsRowEl.style.visibility = 'hidden';
 
   letterboxdBtn.textContent = t.seeLetterboxd;
@@ -564,6 +571,7 @@ async function fetchMovie(twoLetterCode, countryName){
   }
 
   clearInterval(lotteryInterval);
+  overviewTextEl.classList.remove('loading');   // remove estado de loading
 
   if(!movie){
     movieTitleOriginalEl.textContent = countryName;
