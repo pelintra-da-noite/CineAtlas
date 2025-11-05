@@ -1,1139 +1,940 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CineAtlas</title>
-    <!-- Title font -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
-    <style>
-      :root {
-        --accent: #d8a300;
-        /* toasted yellow */
-        --brand-red: #8b0000;
-        /* dark red */
-        --text-main: #fff9d6;
-        --text-dim: #cfc7a0;
-        --bg-deep: #000;
-        --panel-bg: rgba(0, 0, 0, .8);
-        --panel-border: rgba(216, 163, 0, .6);
-        --panel-glow: rgba(216, 163, 0, .35);
-        --lang-border: rgba(216, 163, 0, .35);
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CineAtlas</title>
 
-      /* FULL LIGHT THEME */
-      html[data-theme="light"] {
-        --text-main: #1c1a14;
-        --text-dim: #3b3729;
-        --bg-deep: #f7f3e7;
-        /* warm paper */
-        --panel-bg: rgba(255, 255, 255, .92);
-        --panel-border: rgba(216, 163, 0, .55);
-        --panel-glow: rgba(216, 163, 0, .22);
-        --lang-border: rgba(216, 163, 0, .45);
-      }
+  <!-- Title + body fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden;
-        background: var(--bg-deep);
-        font-family: system-ui, -apple-system, Roboto, sans-serif;
-        color: var(--text-main);
-        background-image:
-          radial-gradient(2px 2px at 20px 20px, #fff 0%, rgba(0, 0, 0, 0) 100%),
-          radial-gradient(2px 2px at 60px 40px, #ffffffcc 0%, rgba(0, 0, 0, 0) 100%);
-        background-size: 200px 200px;
-        animation: starsFadeIn 1s ease forwards;
-      }
+  <style>
+    :root{
+      --accent:#d8a300;          /* toasted yellow */
+      --brand-red:#8b0000;       /* dark red */
 
-      html[data-theme="light"] body {
-        background-image:
-          radial-gradient(2px 2px at 20px 20px, #7a6b2b 0%, rgba(0, 0, 0, 0) 100%),
-          radial-gradient(2px 2px at 60px 40px, #b79a3a99 0%, rgba(0, 0, 0, 0) 100%);
-      }
+      --text-main:#fff9d6;
+      --text-dim:#cfc7a0;
+      --bg-deep:#000;
+      --panel-bg:rgba(0,0,0,.8);
+      --panel-border:rgba(216,163,0,.6);
+      --panel-glow:rgba(216,163,0,.35);
+      --lang-border:rgba(216,163,0,.35);
+    }
 
-      @keyframes starsFadeIn {
-        from {
-          opacity: 0;
-        }
+    /* FULL LIGHT THEME */
+    html[data-theme="light"]{
+      --text-main:#1c1a14;
+      --text-dim:#3b3729;
+      --bg-deep:#f7f3e7;
+      --panel-bg:rgba(255,255,255,.92);
+      --panel-border:rgba(216,163,0,.55);
+      --panel-glow:rgba(216,163,0,.22);
+      --lang-border:rgba(216,163,0,.45);
+    }
 
-        to {
-          opacity: 1;
-        }
-      }
+    html,body{
+      margin:0;padding:0;height:100%;overflow:hidden;
+      background:var(--bg-deep);
+      font-family:'Inter',system-ui,-apple-system,Roboto,sans-serif;
+      color:var(--text-main);
+    }
 
-      /* Gentle transitions for theme change (UI colors) */
-      * {
-        transition: color .25s ease, background-color .25s ease, border-color .25s ease, box-shadow .25s ease;
-      }
+    * { transition: color .25s ease, background-color .25s ease, border-color .25s ease, box-shadow .25s ease; }
 
-      header {
-        position: absolute;
-        top: 0;
-        width: 100%;
-        text-align: center;
-        padding: 1rem 0;
-        font-family: 'Cinzel', serif;
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--brand-red);
-        text-shadow: 0 0 15px var(--brand-red);
-        z-index: 1200;
-        cursor: pointer;
-        user-select: none;
-        animation: pulse 5s ease-in-out infinite;
-        pointer-events: auto;
-      }
+    /* ===== HEADER (simple red + thin black outline) ===== */
+    header{
+      position:absolute;top:18px;width:100%;text-align:center;
+      font-family:'Cinzel',serif;font-size:1.9rem;font-weight:700;
+      color:var(--brand-red);
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000;
+      z-index:1200;cursor:default;user-select:none;pointer-events:auto;
+    }
 
-      @keyframes pulse {
+    /* Subtítulo com outline subtil */
+    #tagline{
+      position:absolute;top:60px;width:100%;text-align:center;
+      font-size:.9rem;font-weight:500;letter-spacing:.08em;
+      text-transform:uppercase;color:var(--text-dim);z-index:1190;
+      text-shadow:
+        -1px -1px 0 #5a0000,
+         1px -1px 0 #5a0000,
+        -1px  1px 0 #5a0000,
+         1px  1px 0 #5a0000,
+         0    0   8px rgba(0,0,0,.85);
+    }
 
-        0%,
-        100% {
-          text-shadow: 0 0 10px var(--brand-red);
-        }
+    html[data-theme="light"] header{ color:#b02323; }
+    html[data-theme="light"] #tagline{
+      color:#5e5230;
+      text-shadow:
+        -1px -1px 0 #7a1212,
+         1px -1px 0 #7a1212,
+        -1px  1px 0 #7a1212,
+         1px  1px 0 #7a1212,
+         0    0   6px rgba(255,255,255,.9);
+    }
 
-        50% {
-          text-shadow: 0 0 25px var(--brand-red);
-        }
-      }
+    /* Starfield canvas (dark mode) */
+    #starsCanvas{
+      position:fixed; inset:0; z-index:0; pointer-events:none; opacity:1;
+      background:radial-gradient(circle at top, rgba(255,255,255,0.12) 0, transparent 50%);
+    }
+    html[data-theme="light"] #starsCanvas{ opacity:0; }
 
-      #globeViz {
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-        opacity: 0;
-        animation: fadeIn 1s forwards .4s;
-      }
+    #globeViz{position:absolute;inset:0;z-index:1;opacity:0;animation:fadeIn 1s forwards .4s;}
+    @keyframes fadeIn{to{opacity:1;}}
 
-      @keyframes fadeIn {
-        to {
-          opacity: 1;
-        }
-      }
+    /* Initial fade-in */
+    #fadeOverlay{
+      position:fixed;inset:0;background:#000;opacity:1;z-index:3000;transition:opacity 1s ease;pointer-events:none;
+    }
 
-      /* Page fade overlay for title-click refresh (2s total: 1s out + 1s in) */
-      #fadeOverlay {
-        position: fixed;
-        inset: 0;
-        background: #000;
-        opacity: 1;
-        z-index: 3000;
-        transition: opacity 1s ease;
-        pointer-events: none;
-      }
+    /* Theme fade overlay */
+    #themeFade {
+      position: fixed; inset: 0; background: var(--bg-deep); opacity: 0; pointer-events: none;
+      transition: opacity .28s ease; z-index: 2500;
+    }
 
-      /* Theme fade overlay (for light/dark crossfade) */
-      #themeFade {
-        position: fixed;
-        inset: 0;
-        background: var(--bg-deep);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity .28s ease;
-        z-index: 2500;
-        /* below fadeOverlay, above UI */
-      }
+    /* THEME SWITCH + RANDOM (top-right) */
+    #themeSwitch{
+      position:absolute;top:14px;right:16px;z-index:1300;display:flex;align-items:center;gap:.5rem;
+      background:rgba(0,0,0,.55);border:1px solid var(--panel-border);padding:.35rem .6rem;border-radius:999px;
+      box-shadow:0 0 12px var(--panel-glow);
+    }
+    html[data-theme="light"] #themeSwitch{ background:rgba(255,255,255,.75); }
+    .switch { position: relative; width: 56px; height: 28px; display:inline-block; }
+    .switch input { display:none; }
+    .slider {
+      position:absolute; cursor:pointer; inset:0; background:#444; border:1px solid var(--panel-border);
+      transition:.2s; border-radius:999px;
+    }
+    html[data-theme="light"] .slider{ background:#e5e1d3; }
+    .slider:before {
+      content:""; position:absolute; height:22px; width:22px; left:3px; top:2px;
+      background:white; border-radius:50%; transition:.2s; box-shadow: 0 2px 6px rgba(0,0,0,.4);
+    }
+    input:checked + .slider { background: var(--accent); }
+    input:checked + .slider:before { transform: translateX(28px); background: #000; }
+    #themeLabel{ font-size:.8rem; font-weight:700; color:var(--text-main); user-select:none; }
 
-      /* THEME SWITCH (top-right) — slider */
-      #themeSwitch {
-        position: absolute;
-        top: 14px;
-        right: 16px;
-        z-index: 1300;
-        display: flex;
-        align-items: center;
-        gap: .5rem;
-        background: rgba(0, 0, 0, .55);
-        border: 1px solid var(--panel-border);
-        padding: .35rem .5rem;
-        border-radius: 999px;
-        box-shadow: 0 0 12px var(--panel-glow);
-      }
+    /* Randomizer button */
+    .iconBtn{
+      margin-left:.25rem; width:28px;height:28px; border-radius:999px;
+      border:1px solid var(--panel-border); background:rgba(0,0,0,.2);
+      color:var(--accent); display:flex;align-items:center;justify-content:center;
+      cursor:pointer; font-size:1rem; padding:0; box-shadow:none;
+      transition: background .15s ease, color .15s ease, border-color .15s ease, transform .15s ease;
+    }
+    .iconBtn:hover{ background:var(--accent); color:#000; border-color:var(--accent); transform:translateY(-1px); }
+    html[data-theme="light"] .iconBtn{ background:rgba(255,255,255,.7); border-color:rgba(0,0,0,.12); color:#b02323; }
 
-      html[data-theme="light"] #themeSwitch {
-        background: rgba(255, 255, 255, .75);
-      }
+    /* Language (bottom-right) */
+    #controlsBar{
+      position:absolute;right:20px;bottom:20px;z-index:1300;display:flex;gap:.5rem;align-items:center;
+      background:rgba(0,0,0,.6);border:1px solid var(--panel-border);border-radius:10px;padding:.4rem .5rem;
+      box-shadow:0 0 12px var(--panel-glow);
+    }
+    html[data-theme="light"] #controlsBar{ background:rgba(255,255,255,.8); }
+    .langBtn{
+      appearance:none;background:transparent;border:1px solid var(--lang-border);
+      color:var(--text-dim);padding:.35rem .6rem;border-radius:6px;cursor:pointer;
+      font-size:.8rem;font-weight:600;
+      transition:transform .15s ease, color .15s ease, background .15s ease, border-color .15s ease;
+    }
+    .langBtn:hover{ color:var(--text-main); transform:translateY(-1px); }
+    .langBtn.active{ background:var(--accent); color:#000; border-color:var(--accent); }
+    html[data-theme="light"] .langBtn{ color:#6b5b2a; }
+    html[data-theme="light"] .langBtn.active{ color:#000; }
 
-      .switch {
-        position: relative;
-        width: 56px;
-        height: 28px;
-        display: inline-block;
-      }
+    /* Donate (bottom-left) */
+    #donateBar{
+      position:absolute;left:20px;bottom:20px;z-index:1300;display:flex;
+      background:rgba(0,0,0,.6);border:1px solid var(--panel-border);
+      border-radius:10px;padding:.4rem .5rem;box-shadow:0 0 12px var(--panel-glow);
+    }
+    html[data-theme="light"] #donateBar{ background:rgba(255,255,255,.8); }
+    .donateBtn{
+      appearance:none; background:var(--accent); color:#000; border:1px solid transparent;
+      border-radius:8px; box-sizing:border-box; padding:.45rem .8rem; font-weight:800; cursor:pointer;
+      text-decoration:none; box-shadow:0 0 10px var(--panel-glow);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+    }
+    .donateBtn:hover{ background:#000; color:var(--accent); border-color:var(--accent); transform:translateY(-1px); }
+    html[data-theme="light"] .donateBtn{ box-shadow:0 0 10px rgba(216,163,0,.35); }
 
-      .switch input {
-        display: none;
-      }
+    /* POPUP – cinematic glass */
+    #popup{
+      position:fixed;top:50%;left:50%;
+      transform:translate(-50%,-50%) scale(.96);
+      width:min(720px, 92vw); max-height:80vh; min-height:360px;
+      background:linear-gradient(135deg, rgba(0,0,0,0.36), rgba(20,12,0,0.72));
+      color:var(--text-main); padding:1.1rem 1.2rem 1rem; border-radius:18px;
+      box-shadow:0 24px 60px rgba(0,0,0,.85), 0 0 0 1px rgba(216,163,0,0.45);
+      backdrop-filter:blur(22px) saturate(120%); -webkit-backdrop-filter:blur(22px) saturate(120%);
+      z-index:1250; display:none; opacity:0; transition:opacity .25s ease,transform .25s ease; overflow:hidden;
+    }
+    #popup.show{ display:flex; flex-direction:column; opacity:1; transform:translate(-50%,-50%) scale(1); }
 
-      .slider {
-        position: absolute;
-        cursor: pointer;
-        inset: 0;
-        background: #444;
-        border: 1px solid var(--panel-border);
-        transition: .2s;
-        border-radius: 999px;
-      }
+    #popupHeader{ display:flex;align-items:flex-start;justify-content:space-between; margin-bottom:.8rem; }
+    #countryBlock{
+      font-size:.85rem;line-height:1.3;font-weight:700; color:var(--accent);
+      display:flex;align-items:center;gap:.45rem; letter-spacing:.08em; text-transform:uppercase;
+    }
+    #countryFlagImg{ height:18px;width:auto;border-radius:3px; box-shadow:none; }
+    #countryName{ font-size:.92rem; }
 
-      html[data-theme="light"] .slider {
-        background: #e5e1d3;
-      }
+    #closePopup{
+      background:transparent; color:var(--text-dim); border:1px solid rgba(255,255,255,.18);
+      font-size:1rem;line-height:1rem; width:1.8rem;height:1.8rem; border-radius:999px; cursor:pointer;font-weight:700;
+      display:flex;align-items:center;justify-content:center; box-shadow:none;
+      transition:background .15s ease,color .15s ease,border-color .15s ease,transform .15s ease;
+    }
+    #closePopup:hover{ background:var(--accent); color:#000; border-color:var(--accent); transform:translateY(-1px); }
 
-      .slider:before {
-        content: "";
-        position: absolute;
-        height: 22px;
-        width: 22px;
-        left: 3px;
-        top: 2px;
-        background: white;
-        border-radius: 50%;
-        transition: .2s;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, .4);
-      }
+    #popupBody{ display:flex; flex-direction:row; align-items:flex-start; gap:1rem; flex:1; overflow:hidden; }
 
-      input:checked+.slider {
-        background: var(--accent);
-      }
+    .posterCol{ flex:0 0 210px;max-width:210px; }
+    #moviePoster{ width:100%;max-width:210px; border-radius:12px; box-shadow:none; border:1px solid rgba(255,255,255,.14); display:block; }
 
-      input:checked+.slider:before {
-        transform: translateX(28px);
-        background: #000;
-      }
+    .infoCol{ flex:1; min-width:0; display:flex; flex-direction:column; min-height:0; }
 
-      #themeLabel {
-        font-size: .8rem;
-        font-weight: 700;
-        color: var(--text-main);
-        user-select: none;
-      }
+    #movieTitle{ margin:0 0 .45rem; font-size:1.15rem;line-height:1.3; color:var(--accent); font-weight:800; letter-spacing:.03em; }
+    .directorLine{ font-size:.85rem;line-height:1.3; color:var(--text-main); font-weight:600; margin:0 0 .55rem; opacity:.95; }
+    #overviewText{ font-size:.9rem;line-height:1.55; color:var(--text-dim); margin:0; flex:1; overflow:auto; padding-right:.25rem; }
 
-      /* Language (bottom-right) */
-      #controlsBar {
-        position: absolute;
-        right: 20px;
-        bottom: 20px;
-        z-index: 1300;
-        display: flex;
-        gap: .5rem;
-        align-items: center;
-        background: rgba(0, 0, 0, .6);
-        border: 1px solid var(--panel-border);
-        border-radius: 10px;
-        padding: .4rem .5rem;
-        box-shadow: 0 0 12px var(--panel-glow);
-      }
+    .actionsRow{ margin-top:auto; padding-top:.7rem; display:flex; flex-wrap:wrap; gap:.55rem; }
+    .actionBtn{
+      display:inline-block; background:var(--accent); color:#000; text-decoration:none; padding:.45rem .75rem;
+      border-radius:999px; font-weight:800; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase;
+      cursor:pointer; border:1px solid transparent; box-sizing:border-box; box-shadow:none;
+      transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+    }
+    .actionBtn:hover{ background:#000; color:var(--accent); border-color:var(--accent); transform:translateY(-1px); }
 
-      html[data-theme="light"] #controlsBar {
-        background: rgba(255, 255, 255, .8);
-      }
+    /* Light theme popup */
+    html[data-theme="light"] #popup{
+      background:linear-gradient(135deg, rgba(255,255,255,0.70), rgba(252,244,220,0.86));
+      box-shadow:0 18px 40px rgba(0,0,0,.18), 0 0 0 1px rgba(216,163,0,.45);
+      backdrop-filter:blur(130%); -webkit-backdrop-filter:blur(130%);
+    }
+    html[data-theme="light"] #overviewText{ color:#5a4c26; }
+    html[data-theme="light"] #closePopup{ color:#7a6b2b; border-color:rgba(0,0,0,.08); }
+    html[data-theme="light"] #closePopup:hover{ background:var(--accent); color:#000; border-color:var(--accent); }
 
-      .langBtn {
-        appearance: none;
-        background: transparent;
-        border: 1px solid var(--lang-border);
-        color: var(--text-dim);
-        padding: .35rem .6rem;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: .8rem;
-        font-weight: 600;
-        transition: transform .15s ease, color .15s ease, background .15s ease, border-color .15s ease;
-      }
+    /* Snow */
+    #snowOverlay{ position:fixed; inset:0; pointer-events:none; z-index:2000; opacity:0; transition:opacity 1s ease; }
+    #snowOverlay.show{ opacity:1; }
 
-      .langBtn:hover {
-        color: var(--text-main);
-        transform: translateY(-1px);
-      }
+    /* Responsividade */
+    @media (max-width: 900px){
+      #themeSwitch{ top:12px;right:12px; transform:scale(.9); }
+      #controlsBar,#donateBar{ bottom:14px; }
+      #tagline{ top:56px; font-size:.8rem; padding:0 .75rem; }
+    }
+    @media (max-width: 720px){
+      #popup{ padding:0.9rem 0.9rem 0.8rem; border-radius:14px; width:94vw; max-height:78vh; min-height:340px; }
+      #popupBody{ flex-direction:column; }
+      .posterCol{ align-self:center; flex:0 0 auto; max-width:70%; }
+      #moviePoster{ max-width:100%; }
+      .infoCol{ width:100%; }
+      #movieTitle{ font-size:1.05rem; }
+      #controlsBar, #donateBar{ padding:.35rem .4rem; gap:.35rem; }
+      .langBtn{ padding:.3rem .5rem; font-size:.78rem; }
+      .donateBtn{ padding:.4rem .65rem; font-size:.78rem; }
+    }
+    @media (max-width: 480px){
+      header{ font-size:1.55rem; }
+      #tagline{ top:54px; font-size:.75rem; }
+      #themeSwitch{ transform:scale(.85); }
+    }
+  </style>
+</head>
+<body>
+  <header id="siteTitle">CineAtlas</header>
+  <div id="tagline">Click a country for a random film</div>
+  <div id="fadeOverlay"></div>
+  <div id="themeFade"></div>
 
-      .langBtn.active {
-        background: var(--accent);
-        color: #000;
-        border-color: var(--accent);
-      }
+  <!-- Starfield canvas -->
+  <canvas id="starsCanvas"></canvas>
 
-      /* Donate (bottom-left) */
-      #donateBar {
-        position: absolute;
-        left: 20px;
-        bottom: 20px;
-        z-index: 1300;
-        display: flex;
-        background: rgba(0, 0, 0, .6);
-        border: 1px solid var(--panel-border);
-        border-radius: 10px;
-        padding: .4rem .5rem;
-        box-shadow: 0 0 12px var(--panel-glow);
-      }
+  <!-- Theme switch (top-right) + randomizer -->
+  <div id="themeSwitch" aria-label="Theme">
+    <span id="themeLabel">Dark</span>
+    <label class="switch" aria-label="Toggle theme">
+      <input id="themeCheckbox" type="checkbox" />
+      <span class="slider"></span>
+    </label>
+    <button id="randomBtn" class="iconBtn" title="Random country">🎲</button>
+  </div>
 
-      html[data-theme="light"] #donateBar {
-        background: rgba(255, 255, 255, .8);
-      }
+  <!-- Language buttons (bottom-right) -->
+  <div id="controlsBar" role="toolbar" aria-label="Controls">
+    <button class="langBtn active" data-lang="en-US" aria-pressed="true">English</button>
+    <button class="langBtn" data-lang="pt-PT" aria-pressed="false">Português</button>
+  </div>
 
-      .donateBtn {
-        appearance: none;
-        background: var(--accent);
-        color: #000;
-        border: none;
-        border-radius: 8px;
-        padding: .45rem .8rem;
-        font-weight: 800;
-        cursor: pointer;
-        text-decoration: none;
-        box-shadow: 0 0 10px var(--panel-glow);
-        transition: transform .15s ease, box-shadow .15s ease;
-      }
+  <!-- Donate (bottom-left) -->
+  <div id="donateBar">
+    <a id="donateBtn" class="donateBtn" href="https://www.buymeacoffee.com/alexandresd" target="_blank" rel="noopener">Donate us</a>
+  </div>
 
-      .donateBtn:hover {
-        background: #000;
-        color: var(--accent);
-        border: 1px solid var(--accent);
-        transform: translateY(-1px);
-      }
-
-      /* POPUP */
-      #popup {
-        position: absolute;
-        top: 100px;
-        left: 20px;
-        width: 640px;
-        max-width: calc(100% - 40px);
-        max-height: 86vh;
-        background: var(--panel-bg);
-        color: var(--text-main);
-        padding: 1rem;
-        border-radius: 14px;
-        box-shadow: 0 0 24px var(--panel-glow);
-        border: 1px solid var(--panel-border);
-        z-index: 1250;
-        display: none;
-        opacity: 0;
-        transform: translateX(-16px);
-        transition: opacity .25s ease, transform .25s ease;
-        overflow: hidden;
-      }
-
-      #popup.show {
-        display: block;
-        opacity: 1;
-        transform: translateX(0)
-      }
-
-      #popupHeader {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        margin-bottom: .75rem
-      }
-
-      #countryBlock {
-        font-size: .9rem;
-        line-height: 1.3;
-        font-weight: 700;
-        color: var(--accent);
-        display: flex;
-        align-items: center;
-        gap: .4rem
-      }
-
-      #countryFlagImg {
-        height: 16px;
-        width: auto;
-        border-radius: 2px;
-        box-shadow: 0 0 6px rgba(0, 0, 0, .25)
-      }
-
-      #countryName {
-        font-size: .9rem;
-        letter-spacing: .05em
-      }
-
-      #closePopup {
-        background: var(--accent);
-        color: #000;
-        border: none;
-        font-size: 1rem;
-        line-height: 1rem;
-        width: 1.6rem;
-        height: 1.6rem;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: 700;
-        box-shadow: 0 0 10px var(--panel-glow)
-      }
-
-      #popupBody {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 1rem
-      }
-
-      .posterCol {
-        flex: 0 0 200px;
-        max-width: 200px
-      }
-
-      #moviePoster {
-        width: 100%;
-        max-width: 200px;
-        border-radius: 10px;
-        box-shadow: 0 8px 24px var(--panel-glow);
-        border: 1px solid var(--panel-border);
-        display: block
-      }
-
-      .infoCol {
-        flex: 1;
-        min-width: 0;
-        display: flex;
-        flex-direction: column
-      }
-
-      #popup h4 {
-        margin: 0 0 .4rem;
-        font-size: 1.05rem;
-        line-height: 1.3;
-        color: var(--accent);
-        font-weight: 800;
-        text-shadow: 0 0 8px rgba(216, 163, 0, .7);
-        word-wrap: break-word
-      }
-
-      .directorLine {
-        font-size: .85rem;
-        line-height: 1.3;
-        color: var(--text-main);
-        font-weight: 600;
-        margin: 0 0 .5rem;
-        word-wrap: break-word
-      }
-
-      #popup .overviewText {
-        font-size: .9rem;
-        line-height: 1.48;
-        color: var(--text-dim);
-        margin: 0;
-        max-height: 16em;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        word-wrap: break-word
-      }
-
-      .actionsRow {
-        margin-top: .7rem;
-        display: flex;
-        flex-wrap: wrap;
-        gap: .5rem
-      }
-
-      .actionBtn {
-        display: inline-block;
-        background: var(--accent);
-        color: #000;
-        text-decoration: none;
-        padding: .45rem .6rem;
-        border-radius: 6px;
-        font-weight: 800;
-        font-size: .8rem;
-        line-height: 1rem;
-        cursor: pointer;
-        border: 0;
-        box-shadow: 0 0 10px var(--panel-glow);
-        transition: transform .15s ease, box-shadow .15s ease
-      }
-
-      .actionBtn:hover {
-        background: #000;
-        color: var(--accent);
-        border: 1px solid var(--accent);
-        box-shadow: 0 0 12px rgba(216, 163, 0, .9);
-        transform: translateY(-1px);
-      }
-
-      /* Snow */
-      #snowOverlay {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 2000;
-        opacity: 0;
-        transition: opacity 1s ease;
-      }
-
-      #snowOverlay.show {
-        opacity: 1;
-      }
-    </style>
-  </head>
-  <body>
-    <header id="siteTitle" title="Click to refresh">CineAtlas</header>
-    <div id="fadeOverlay"></div>
-    <div id="themeFade"></div>
-    <!-- Theme switch (top-right) -->
-    <div id="themeSwitch" aria-label="Theme">
-      <span id="themeLabel">Dark</span>
-      <label class="switch" aria-label="Toggle theme">
-        <input id="themeCheckbox" type="checkbox" />
-        <span class="slider"></span>
-      </label>
+  <!-- popup -->
+  <div id="popup">
+    <div id="popupHeader">
+      <div id="countryBlock">
+        <img id="countryFlagImg" alt="flag"/>
+        <div id="countryName">Country</div>
+      </div>
+      <button id="closePopup">×</button>
     </div>
-    <!-- Language buttons (bottom-right) -->
-    <div id="controlsBar" role="toolbar" aria-label="Controls">
-      <button class="langBtn active" data-lang="en-US" aria-pressed="true">English</button>
-      <button class="langBtn" data-lang="pt-PT" aria-pressed="false">Português</button>
-    </div>
-    <!-- Donate (bottom-left) -->
-    <div id="donateBar">
-      <a id="donateBtn" class="donateBtn" href="https://gofund.me/c4e0c3422" target="_blank" rel="noopener">Donate us</a>
-    </div>
-    <!-- popup -->
-    <div id="popup">
-      <div id="popupHeader">
-        <div id="countryBlock">
-          <img id="countryFlagImg" alt="flag" />
-          <div id="countryName">Country</div>
+    <div id="popupBody">
+      <div class="posterCol">
+        <a id="posterLink" href="#" target="_blank" style="text-decoration:none;display:block;">
+          <img id="moviePoster" src="" alt="" />
+        </a>
+      </div>
+      <div class="infoCol">
+        <h4 id="movieTitle"></h4>
+        <div class="directorLine" id="directorLine">
+          <strong id="directorLabel">Director:</strong>
+          <span id="directorName"></span>
         </div>
-        <button id="closePopup">×</button>
-      </div>
-      <div id="popupBody">
-        <div class="posterCol" id="posterCol"></div>
-        <div class="infoCol" id="infoCol"></div>
+        <p class="overviewText" id="overviewText"></p>
+        <div class="actionsRow" id="actionsRow">
+          <a class="actionBtn" id="letterboxdBtn" href="#" target="_blank">See on Letterboxd</a>
+          <button class="actionBtn" id="anotherBtn">Another one</button>
+          <button class="actionBtn" id="copyBtn">Copy</button>
+        </div>
       </div>
     </div>
-    <!-- snow canvas -->
-    <canvas id="snowOverlay"></canvas>
-    <div id="globeViz"></div>
-    <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
-    <script src="https://unpkg.com/globe.gl"></script>
-    <script>
-      // ===== Config =====
-      const TMDB_V3_KEY = 'e13babf6040c059ae724858b95312213'; // demo key you chose
-      let currentLanguage = 'en-US';
-      let selectedFeature = null;
-      let lastCountryCode = null;
-      let lastCountryName = null;
-      // ===== Title fade-to-black refresh (2s total) =====
-      const fadeOverlay = document.getElementById('fadeOverlay');
-      window.addEventListener('load', () => {
-        requestAnimationFrame(() => fadeOverlay.style.opacity = '0');
-      });
-      document.getElementById('siteTitle').addEventListener('click', () => {
-        fadeOverlay.style.opacity = '1';
-        setTimeout(() => location.reload(), 1000); // 1s fade-out, then reload; fade-in on load
-      });
-      // ===== Theme slider (force dark start; no persistence) + FADE =====
-      const htmlEl = document.documentElement;
-      const themeCheckbox = document.getElementById('themeCheckbox');
-      const themeLabel = document.getElementById('themeLabel');
-      const themeFade = document.getElementById('themeFade');
-      htmlEl.setAttribute('data-theme', 'dark');
-      themeCheckbox.checked = false;
-      themeLabel.textContent = 'Dark';
-      themeCheckbox.addEventListener('change', () => {
-        // Fade in overlay
-        themeFade.style.opacity = '1';
-        setTimeout(() => {
-          const next = themeCheckbox.checked ? 'light' : 'dark';
-          htmlEl.setAttribute('data-theme', next);
-          themeLabel.textContent = next === 'light' ? 'Light' : 'Dark';
-          applyThemeToGlobe();
-          // Fade out overlay next frame
-          requestAnimationFrame(() => themeFade.style.opacity = '0');
-        }, 120);
-      });
-      // ===== Language buttons =====
-      document.querySelectorAll('.langBtn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const newLang = btn.dataset.lang;
-          if (newLang === currentLanguage) return;
-          currentLanguage = newLang;
-          document.querySelectorAll('.langBtn').forEach(b => {
-            const active = b.dataset.lang === currentLanguage;
-            b.classList.toggle('active', active);
-            b.setAttribute('aria-pressed', active ? 'true' : 'false');
-          });
-          document.getElementById('donateBtn').textContent = currentLanguage === 'pt-PT' ? 'Ajude-nos' : 'Donate us';
-          hidePopup();
+  </div>
+
+  <!-- snow canvas -->
+  <canvas id="snowOverlay"></canvas>
+
+  <div id="globeViz"></div>
+
+  <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
+  <script src="https://unpkg.com/globe.gl"></script>
+  <script>
+    // ===== Config =====
+    const TMDB_V3_KEY = 'e13babf6040c059ae724858b95312213'; // demo key
+    let currentLanguage = 'en-US';
+    let selectedFeature = null;
+    let lastCountryCode = null;
+    let lastCountryName = null;
+    let hoverFeature = null;
+    let currentClipText = '';
+    let worldFeatures = [];
+    let lastPolygonClickTime = 0;
+
+    const donateBtn = document.getElementById('donateBtn');
+    const taglineEl = document.getElementById('tagline');
+    const randomBtn = document.getElementById('randomBtn');
+
+    // popup refs
+    const popupEl = document.getElementById('popup');
+    const countryFlagImg = document.getElementById('countryFlagImg');
+    const countryNameEl = document.getElementById('countryName');
+
+    const posterLinkEl = document.getElementById('posterLink');
+    const moviePosterEl = document.getElementById('moviePoster');
+    const movieTitleEl = document.getElementById('movieTitle');
+    const directorLineEl = document.getElementById('directorLine');
+    const directorLabelEl = document.getElementById('directorLabel');
+    const directorNameEl = document.getElementById('directorName');
+    const overviewTextEl = document.getElementById('overviewText');
+    const actionsRowEl = document.getElementById('actionsRow');
+    const letterboxdBtn = document.getElementById('letterboxdBtn');
+    const anotherBtn = document.getElementById('anotherBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    const starsCanvas = document.getElementById('starsCanvas');
+    let starsCtx = starsCanvas.getContext('2d');
+    let stars = [];
+    let starsWidth = 0;
+    let starsHeight = 0;
+
+    function createStars(){
+      stars = [];
+      const area = starsWidth * starsHeight;
+      const count = Math.min(900, Math.max(200, Math.floor(area / 2500)));
+      for(let i=0; i<count; i++){
+        stars.push({
+          x: Math.random() * starsWidth,
+          y: Math.random() * starsHeight,
+          r: Math.random() * 1.4 + 0.3,
+          baseAlpha: 0.35 + Math.random() * 0.65,
+          twinkleSpeed: 0.0007 + Math.random() * 0.0014,
+          offset: Math.random() * Math.PI * 2
         });
+      }
+    }
+
+    function resizeStars(){
+      const DPR = window.devicePixelRatio || 1;
+      starsWidth = window.innerWidth;
+      starsHeight = window.innerHeight;
+      starsCanvas.width = Math.floor(starsWidth * DPR);
+      starsCanvas.height = Math.floor(starsHeight * DPR);
+      starsCanvas.style.width = starsWidth + 'px';
+      starsCanvas.style.height = starsHeight + 'px';
+      starsCtx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      createStars();
+    }
+
+    function renderStars(time){
+      if(!starsCtx) return;
+      starsCtx.clearRect(0,0,starsWidth, starsHeight);
+      starsCtx.globalCompositeOperation = 'lighter';
+
+      for(const s of stars){
+        const alpha = s.baseAlpha * (0.5 + 0.5 * Math.sin(time * s.twinkleSpeed + s.offset));
+        starsCtx.globalAlpha = alpha;
+        starsCtx.beginPath();
+        starsCtx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        starsCtx.fillStyle = '#ffffff';
+        starsCtx.fill();
+      }
+      starsCtx.globalAlpha = 1;
+
+      requestAnimationFrame(renderStars);
+    }
+
+    function initStarfield(){
+      resizeStars();
+      window.addEventListener('resize', resizeStars);
+      requestAnimationFrame(renderStars);
+    }
+
+    function applyLanguageTexts(){
+      if(currentLanguage === 'pt-PT'){
+        taglineEl.textContent = 'Clique num país para um filme aleatório';
+        donateBtn.textContent = 'Ajude-nos';
+      } else {
+        taglineEl.textContent = 'Click a country for a random film';
+        donateBtn.textContent = 'Donate us';
+      }
+    }
+    applyLanguageTexts();
+
+    const fadeOverlay = document.getElementById('fadeOverlay');
+    window.addEventListener('load', ()=>{
+      initStarfield();
+      requestAnimationFrame(()=> fadeOverlay.style.opacity='0');
+    });
+
+    const htmlEl = document.documentElement;
+    const themeCheckbox = document.getElementById('themeCheckbox');
+    const themeLabel = document.getElementById('themeLabel');
+    const themeFade = document.getElementById('themeFade');
+
+    htmlEl.setAttribute('data-theme', 'dark');
+    themeCheckbox.checked = false;
+    themeLabel.textContent = 'Dark';
+
+    themeCheckbox.addEventListener('change', ()=>{
+      themeFade.style.opacity = '1';
+      setTimeout(() => {
+        const next = themeCheckbox.checked ? 'light' : 'dark';
+        htmlEl.setAttribute('data-theme', next);
+        themeLabel.textContent = next === 'light' ? 'Light' : 'Dark';
+        applyThemeToGlobe();
+        requestAnimationFrame(()=> themeFade.style.opacity = '0');
+      }, 120);
+    });
+
+    document.querySelectorAll('.langBtn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const newLang = btn.dataset.lang;
+        if(newLang === currentLanguage) return;
+
+        currentLanguage = newLang;
+
+        document.querySelectorAll('.langBtn').forEach(b=>{
+          const active = b.dataset.lang === currentLanguage;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+
+        applyLanguageTexts();
+        hidePopup();
       });
-      // ===== Popup helpers =====
-      const popupEl = document.getElementById('popup');
-      const posterCol = document.getElementById('posterCol');
-      const infoCol = document.getElementById('infoCol');
-      const countryFlagImg = document.getElementById('countryFlagImg');
-      const countryNameEl = document.getElementById('countryName');
-      document.getElementById('closePopup').onclick = () => hidePopup();
+    });
 
-      function showPopup() {
-        popupEl.style.display = 'block';
-        requestAnimationFrame(() => popupEl.classList.add('show'));
-      }
+    document.getElementById('closePopup').onclick = () => hidePopup();
+    function showPopup(){ popupEl.style.display='block'; requestAnimationFrame(()=>popupEl.classList.add('show')); }
+    function hidePopup(){
+      popupEl.classList.remove('show');
+      setTimeout(()=>{ if(!popupEl.classList.contains('show')) popupEl.style.display='none'; },200);
+    }
 
-      function hidePopup() {
-        popupEl.classList.remove('show');
-        setTimeout(() => {
-          if (!popupEl.classList.contains('show')) popupEl.style.display = 'none';
-        }, 200);
-      }
+    function setCountryFlag(twoLetterCode){
+      const cc = (twoLetterCode||'').toLowerCase();
+      countryFlagImg.src = `https://flagcdn.com/${cc}.svg`;
+      countryFlagImg.onerror = ()=>{ countryFlagImg.style.display='none'; };
+      countryFlagImg.style.display = 'inline-block';
+    }
 
-      function setCountryFlag(twoLetterCode) {
-        const cc = (twoLetterCode || '').toLowerCase();
-        countryFlagImg.src = `https://flagcdn.com/${cc}.svg`;
-        countryFlagImg.onerror = () => {
-          countryFlagImg.style.display = 'none';
-        };
-        countryFlagImg.style.display = 'inline-block';
-      }
-      // ===== Name normalization (West Bank/Gaza Strip -> Palestine) =====
-      function normalizedDisplayName(props) {
-        const raw = (props.name || props.ADMIN || 'Unknown').trim();
-        if (/^\s*west\s*bank\s*$/i.test(raw)) return 'Palestine';
-        if (/^\s*gaza(\s*strip)?\s*$/i.test(raw)) return 'Palestine';
-        return raw;
-      }
-      // ===== Globe (no auto-rotate) + highlight + zoom limits + texture fallback =====
-      const globe = Globe()(document.getElementById('globeViz')).backgroundColor('rgba(0,0,0,0)').showAtmosphere(true).atmosphereColor('#d8a300').atmosphereAltitude(0.15).showGraticules(true).polygonAltitude(0.01).polygonCapColor(d => d === selectedFeature ? 'rgba(139,0,0,0.65)' : themeCap()).polygonSideColor(d => d === selectedFeature ? 'rgba(139,0,0,0.25)' : themeSide()).polygonStrokeColor(d => d === selectedFeature ? 'rgba(139,0,0,0.95)' : themeStroke()).polygonLabel(({
-        properties: p
-      }) => normalizedDisplayName(p)).polygonsTransitionDuration(300);
-      const controls = globe.controls();
-      controls.minDistance = 160; // zoom limits
-      controls.maxDistance = 460;
-      controls.minPolarAngle = 0.2;
-      controls.maxPolarAngle = Math.PI - 0.2;
-      controls.enablePan = false;
-      let lastHover;
-      globe.onPolygonHover(h => {
-        if (h === lastHover) return;
-        lastHover = h;
-        globe.polygonAltitude(d => d === h || d === selectedFeature ? 0.12 : 0.01);
-      });
-      // ---- Texture fallback logic ----
-      let usingSolidGlobe = false;
-      let solidMat = null;
+    function normalizedDisplayName(props){
+      const raw = (props.name || props.ADMIN || 'Unknown').trim();
+      if (/^\s*west\s*bank\s*$/i.test(raw)) return 'Palestine';
+      if (/^\s*gaza(\s*strip)?\s*$/i.test(raw)) return 'Palestine';
+      return raw;
+    }
 
-      function tryLoadGlobeTexture() {
-        const url = 'assets/earth-minimal.jpg';
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-          globe.globeImageUrl(url); // texture OK
-          usingSolidGlobe = false;
-          solidMat = null;
-        };
-        img.onerror = () => {
-          // Use solid material fallback (theme-aware)
-          usingSolidGlobe = true;
-          solidMat = new THREE.MeshPhongMaterial({
-            color: getGlobeBaseColor(),
-            emissive: 0x000000,
-            shininess: 8
-          });
-          globe.globeMaterial(solidMat);
-        };
-        img.src = url;
-      }
-      tryLoadGlobeTexture();
+    function isLight(){ return document.documentElement.getAttribute('data-theme') === 'light'; }
+    function themeCap(){ return isLight() ? 'rgba(216,163,0,0.22)' : 'rgba(216,163,0,0.30)'; }
+    function themeSide(){ return isLight() ? 'rgba(216,163,0,0.12)' : 'rgba(216,163,0,0.10)'; }
+    function themeStroke(){ return isLight() ? '#a07800' : '#d8a300'; }
+    function getGlobeBaseColor(){ return isLight() ? 0xffffff : 0x000000; }
 
-      function isLight() {
-        return document.documentElement.getAttribute('data-theme') === 'light';
-      }
+    const globe = Globe()(document.getElementById('globeViz'))
+      .backgroundColor('rgba(0,0,0,0)')
+      .showAtmosphere(true)
+      .atmosphereColor('#ffd58a')
+      .atmosphereAltitude(0.22)
+      .showGraticules(false)
+      .polygonAltitude(0.01)
+      .polygonCapColor(d => themeCap())
+      .polygonSideColor(d => themeSide())
+      .polygonStrokeColor(d => themeStroke())
+      .polygonLabel(({properties:p}) => normalizedDisplayName(p))
+      .polygonsTransitionDuration(300);
 
-      function themeCap() {
-        return isLight() ? 'rgba(216,163,0,0.22)' : 'rgba(216,163,0,0.30)';
-      }
+    const controls = globe.controls();
+    controls.minDistance = 160;
+    controls.maxDistance = 460;
+    controls.minPolarAngle = 0.2;
+    controls.maxPolarAngle = Math.PI - 0.2;
+    controls.enablePan = false;
 
-      function themeSide() {
-        return isLight() ? 'rgba(216,163,0,0.12)' : 'rgba(216,163,0,0.10)';
-      }
+    globe.onPolygonHover(h => {
+      if(h === hoverFeature) return;
+      hoverFeature = h;
+      globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
+      applyThemeToGlobe();
+    });
 
-      function themeStroke() {
-        return isLight() ? '#a07800' : '#d8a300';
-      }
+    let usingSolidGlobe = false;
+    let solidMat = null;
 
-      function getGlobeBaseColor() {
-        return isLight() ? 0xffffff : 0x000000;
-      }
+    function tryLoadGlobeTexture(){
+      const url = 'assets/earth-minimal.jpg';
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = ()=> { globe.globeImageUrl(url); usingSolidGlobe = false; solidMat = null; };
+      img.onerror = ()=> {
+        usingSolidGlobe = true;
+        solidMat = new THREE.MeshPhongMaterial({ color: getGlobeBaseColor(), emissive: 0x000000, shininess: 8 });
+        globe.globeMaterial(solidMat);
+      };
+      img.src = url;
+    }
+    tryLoadGlobeTexture();
 
-      function applyThemeToGlobe() {
-        globe.polygonCapColor(d => d === selectedFeature ? 'rgba(139,0,0,0.65)' : themeCap()).polygonSideColor(d => d === selectedFeature ? 'rgba(139,0,0,0.25)' : themeSide()).polygonStrokeColor(d => d === selectedFeature ? 'rgba(139,0,0,0.95)' : themeStroke());
-        if (usingSolidGlobe && solidMat) {
-          solidMat.color.setHex(getGlobeBaseColor());
-          solidMat.needsUpdate = true;
-        }
+    function applyThemeToGlobe(){
+      globe
+        .atmosphereColor(isLight() ? '#f4c75a' : '#ffd58a')
+        .polygonCapColor(d =>
+          d === selectedFeature
+            ? 'rgba(139,0,0,0.65)'
+            : (d === hoverFeature ? 'rgba(216,163,0,0.65)' : themeCap())
+        )
+        .polygonSideColor(d =>
+          d === selectedFeature
+            ? 'rgba(139,0,0,0.25)'
+            : (d === hoverFeature ? 'rgba(216,163,0,0.40)' : themeSide())
+        )
+        .polygonStrokeColor(d =>
+          d === selectedFeature ? 'rgba(139,0,0,0.95)' : themeStroke()
+        );
+      if(usingSolidGlobe && solidMat){ solidMat.color.setHex(getGlobeBaseColor()); solidMat.needsUpdate = true; }
+    }
+
+    function getFeatureCenter(f){
+      try{
+        const g = f.geometry; if(!g) return null;
+        let pts=[];
+        if(g.type==='Polygon'){ g.coordinates.forEach(ring => ring.forEach(([lng,lat]) => pts.push([lng,lat]))); }
+        else if(g.type==='MultiPolygon'){ g.coordinates.forEach(poly => poly.forEach(ring => ring.forEach(([lng,lat]) => pts.push([lng,lat])))); }
+        else return null;
+        if(!pts.length) return null;
+        const sum = pts.reduce((a,[lng,lat]) => (a.lng+=lng, a.lat+=lat, a), {lng:0,lat:0});
+        return { lng: sum.lng/pts.length, lat: sum.lat/pts.length };
+      }catch(e){ return null; }
+    }
+
+    function spinGlobe(onDone){
+      const duration = 900;
+      const startPOV = globe.pointOfView();
+      const startLng = startPOV.lng || 0;
+      const startLat = startPOV.lat || 0;
+      const startAlt = startPOV.altitude || startPOV.alt || 1.5;
+      const totalRot = 540;
+
+      const startTime = performance.now();
+      function step(now){
+        const t = Math.min(1, (now - startTime) / duration);
+        const eased = t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
+        const pov = { lat: startLat, lng: startLng + totalRot * eased, altitude: startAlt + 0.4 * (1 - eased) };
+        globe.pointOfView(pov);
+        if(t < 1){ requestAnimationFrame(step); } else if(onDone){ onDone(); }
       }
-      // compute rough center for fly-to
-      function getFeatureCenter(f) {
-        try {
-          const g = f.geometry;
-          if (!g) return null;
-          let pts = [];
-          if (g.type === 'Polygon') {
-            g.coordinates.forEach(ring => ring.forEach(([lng, lat]) => pts.push([lng, lat])));
-          } else if (g.type === 'MultiPolygon') {
-            g.coordinates.forEach(poly => poly.forEach(ring => ring.forEach(([lng, lat]) => pts.push([lng, lat]))));
-          } else return null;
-          if (!pts.length) return null;
-          const sum = pts.reduce((a, [lng, lat]) => (a.lng += lng, a.lat += lat, a), {
-            lng: 0,
-            lat: 0
-          });
-          return {
-            lng: sum.lng / pts.length,
-            lat: sum.lat / pts.length
-          };
-        } catch (e) {
-          return null;
-        }
-      }
-      // ===== Country data & clicks =====
-      fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson').then(r => r.json()).then(geo => {
-        globe.polygonsData(geo.features);
-        globe.onPolygonClick(f => {
+      requestAnimationFrame(step);
+    }
+
+    fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
+      .then(r=>r.json())
+      .then(geo=>{
+        worldFeatures = geo.features || [];
+        globe.polygonsData(worldFeatures);
+
+        globe.onPolygonClick(f=>{
+          lastPolygonClickTime = Date.now();
           selectedFeature = f;
+          globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
           applyThemeToGlobe();
-          globe.polygonAltitude(d => d === lastHover || d === selectedFeature ? 0.12 : 0.01);
+
           const origName = (f.properties.name || f.properties.ADMIN || 'Unknown').trim();
           const displayName = normalizedDisplayName(f.properties);
+
           const rawA3 = f.id || f.properties.iso_a3 || f.properties.ISO_A3;
           const rawA2 = f.properties.iso_a2 || f.properties.ISO_A2;
+
           const isWB = /^\s*west\s*bank\s*$/i.test(origName);
           const isGZ = /^\s*gaza(\s*strip)?\s*$/i.test(origName);
-          let code = (isWB || isGZ) ? 'PS' : (rawA2 && rawA2 !== '-99') ? rawA2.toUpperCase() : rawA3 ? convertToTwoLetterCode(rawA3.toUpperCase()) : null;
-          if (!code || code === '-99') return;
+
+          let code =
+              (isWB || isGZ) ? 'PS'
+            : (rawA2 && rawA2 !== '-99') ? rawA2.toUpperCase()
+            : rawA3 ? convertToTwoLetterCode(rawA3.toUpperCase())
+            : null;
+
+          if(!code || code==='-99') return;
+
           lastCountryCode = code;
           lastCountryName = displayName;
-          // fly-to
+
           const c = getFeatureCenter(f);
-          if (c) globe.pointOfView({
-            lat: c.lat,
-            lng: c.lng,
-            altitude: 1.25
-          }, 1200);
-          // snow gag
+          if (c) globe.pointOfView({ lat: c.lat, lng: c.lng, altitude: 1.25 }, 1200);
+
           const isAntarctica = code === 'AQ' || /antarctica/i.test(displayName);
           const isArcticSnow = code === 'GL' || /greenland/i.test(displayName) || /svalbard|jan\s*mayen|arctic/i.test(displayName);
-          if (isAntarctica) {
-            showAntarcticaMessage();
-            startSnow(10000);
-            return;
-          }
-          if (isArcticSnow) {
-            startSnow(10000);
-          }
+          if (isAntarctica) { showAntarcticaMessage(); startSnow(10000); return; }
+          if (isArcticSnow) { startSnow(10000); }
+
           fetchMovie(code, displayName);
         });
-      }).catch(e => {
-        console.error(e);
-        alert('Failed to load country shapes');
+
+        if(typeof globe.onGlobeClick === 'function'){
+          globe.onGlobeClick(() => {
+            const now = Date.now();
+            if(now - lastPolygonClickTime < 80) return;
+            selectedFeature = null;
+            lastCountryCode = null;
+            lastCountryName = null;
+            globe.polygonAltitude(() => 0.01);
+            applyThemeToGlobe();
+            hidePopup();
+          });
+        }
+      })
+      .catch(e=>{ console.error(e); alert('Failed to load country shapes'); });
+
+    randomBtn.addEventListener('click', ()=>{
+      if(!worldFeatures || !worldFeatures.length) return;
+
+      let pickedFeature = null;
+      let code = null;
+      let displayName = null;
+
+      for(let safety=0; safety<80 && !code; safety++){
+        const f = worldFeatures[Math.floor(Math.random()*worldFeatures.length)];
+        if(!f || !f.properties) continue;
+        const origName = (f.properties.name || f.properties.ADMIN || 'Unknown').trim();
+        const dispName = normalizedDisplayName(f.properties);
+        const rawA3 = f.id || f.properties.iso_a3 || f.properties.ISO_A3;
+        const rawA2 = f.properties.iso_a2 || f.properties.ISO_A2;
+
+        const isWB = /^\s*west\s*bank\s*$/i.test(origName);
+        const isGZ = /^\s*gaza(\s*strip)?\s*$/i.test(origName);
+
+        let c =
+            (isWB || isGZ) ? 'PS'
+          : (rawA2 && rawA2 !== '-99') ? rawA2.toUpperCase()
+          : rawA3 ? convertToTwoLetterCode(rawA3.toUpperCase())
+          : null;
+
+        if(c && c !== '-99'){
+          pickedFeature = f;
+          code = c;
+          displayName = dispName;
+        }
+      }
+
+      if(!code || !pickedFeature) return;
+      const center = getFeatureCenter(pickedFeature) || {lat:0,lng:0};
+
+      spinGlobe(()=>{
+        selectedFeature = pickedFeature;
+        globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
+        applyThemeToGlobe();
+        globe.pointOfView({ lat:center.lat, lng:center.lng, altitude:1.25 }, 900);
+        lastCountryCode = code;
+        lastCountryName = displayName;
+        fetchMovie(code, displayName);
       });
-      // ===== TMDB helpers =====
-      const countryLanguages = {
-        'PT': ['pt'],
-        'ES': ['es'],
-        'FR': ['fr'],
-        'DE': ['de'],
-        'IT': ['it'],
-        'JP': ['ja'],
-        'CN': ['zh', 'cn'],
-        'KR': ['ko'],
-        'IN': ['hi', 'ta', 'te'],
-        'BR': ['pt'],
-        'MX': ['es'],
-        'AR': ['es'],
-        'RU': ['ru'],
-        'TR': ['tr'],
-        'SA': ['ar'],
-        'EG': ['ar'],
-        'DZ': ['ar'],
-        'MA': ['ar'],
-        'TN': ['ar'],
-        'GB': ['en'],
-        'US': ['en'],
-        'CA': ['en', 'fr'],
-        'AU': ['en'],
-        'NZ': ['en'],
-        'SE': ['sv'],
-        'NO': ['no'],
-        'DK': ['da'],
-        'FI': ['fi'],
-        'NL': ['nl'],
-        'BE': ['nl', 'fr'],
-        'PL': ['pl'],
-        'CZ': ['cs'],
-        'GR': ['el'],
-        'IL': ['he'],
-        'PS': ['ar']
-      };
-      async function discoverMovie(twoCode, useLangFilter = true, maxAttempts = 20) {
-        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-          const page = Math.floor(Math.random() * 10) + 1;
-          const url = new URL('https://api.themoviedb.org/3/discover/movie');
-          url.searchParams.set('api_key', TMDB_V3_KEY);
-          url.searchParams.set('with_origin_country', twoCode);
-          url.searchParams.set('language', currentLanguage);
-          url.searchParams.set('sort_by', 'popularity.desc');
-          url.searchParams.set('include_adult', 'false');
-          url.searchParams.set('page', page);
-          try {
-            const res = await fetch(url);
-            const data = await res.json();
-            let results = (data && data.results) ? data.results : [];
-            if (!results.length) {
-              if (attempt === 8) useLangFilter = false;
-              continue;
-            }
-            if (useLangFilter) {
-              const expected = countryLanguages[twoCode];
-              if (expected) {
-                const byLang = results.filter(m => expected.includes(m.original_language));
-                if (byLang.length) results = byLang;
-              }
-            }
-            const withPoster = results.filter(m => m.poster_path);
-            const pool = withPoster.length ? withPoster : results;
-            const pick = pool[Math.floor(Math.random() * pool.length)];
-            if (pick) return pick;
-          } catch (_) {}
-        }
-        return null;
-      }
-      async function getDirector(movieId) {
-        try {
-          const url = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${TMDB_V3_KEY}&language=${currentLanguage}`;
+    });
+
+    const countryLanguages = {
+      'PT':['pt'],'ES':['es'],'FR':['fr'],'DE':['de'],'IT':['it'],'JP':['ja'],'CN':['zh','cn'],'KR':['ko'],
+      'IN':['hi','ta','te'],'BR':['pt'],'MX':['es'],'AR':['es'],'RU':['ru'],'TR':['tr'],'SA':['ar'],'EG':['ar'],
+      'DZ':['ar'],'MA':['ar'],'TN':['ar'],'GB':['en'],'US':['en'],'CA':['en','fr'],'AU':['en'],'NZ':['en'],
+      'SE':['sv'],'NO':['no'],'DK':['da'],'FI':['fi'],'NL':['nl'],'BE':['nl','fr'],'PL':['pl'],'CZ':['cs'],
+      'GR':['el'],'IL':['he'],'PS':['ar']
+    };
+
+    async function discoverMovie(twoCode, useLangFilter=true, maxAttempts=20){
+      for(let attempt=1; attempt<=maxAttempts; attempt++){
+        const page = Math.floor(Math.random()*10)+1;
+        const url = new URL('https://api.themoviedb.org/3/discover/movie');
+        url.searchParams.set('api_key', TMDB_V3_KEY);
+        url.searchParams.set('with_origin_country', twoCode);
+        url.searchParams.set('language', currentLanguage);
+        url.searchParams.set('sort_by', 'popularity.desc');
+        url.searchParams.set('include_adult', 'false');
+        url.searchParams.set('page', page);
+
+        try{
           const res = await fetch(url);
-          const credits = await res.json();
-          const dir = (credits && credits.crew || []).find(p => p.job === 'Director');
-          return dir ? dir.name : '';
-        } catch (_) {
-          return '';
-        }
-      }
+          const data = await res.json();
+          let results = (data && data.results) ? data.results : [];
+          if(!results.length){ if(attempt===8) useLangFilter=false; continue; }
 
-      function showAntarcticaMessage() {
-        const t = {
-          title: currentLanguage === 'pt-PT' ? 'Antártida' : 'Antarctica',
-          text: currentLanguage === 'pt-PT' ? 'Não encontramos nenhum filme, mas encontramos neve.' : "We didn’t find any movies, but we found snow."
-        };
-        setCountryFlag('AQ');
-        countryNameEl.innerText = t.title.toUpperCase();
-        posterCol.innerHTML = '';
-        infoCol.innerHTML = `
-				<h4>${t.title}</h4>
-				<p class="overviewText">${t.text}</p>`;
-        showPopup();
-      }
-      async function fetchMovie(twoLetterCode, countryName) {
-        const t = {
-          loading: currentLanguage === 'pt-PT' ? 'A carregar filme...' : 'Loading movie...',
-          none: currentLanguage === 'pt-PT' ? 'Nenhum filme encontrado.' : 'No movies found from this country.',
-          noDesc: currentLanguage === 'pt-PT' ? 'Sem descrição disponível.' : 'No description available.',
-          seeLetterboxd: 'See on Letterboxd',
-          another: 'Another one',
-          copy: 'Copy',
-          directorLabel: currentLanguage === 'pt-PT' ? 'Realizador:' : 'Director:'
-        };
-        setCountryFlag(twoLetterCode);
-        countryNameEl.innerText = countryName.toUpperCase();
-        posterCol.innerHTML = '';
-        infoCol.innerHTML = `
-				<div style="color:var(--accent);font-weight:800;">${t.loading}</div>`;
-        showPopup();
-        const movie = await discoverMovie(twoLetterCode, true, 20);
-        if (!movie) {
-          if (twoLetterCode === 'PS') {
-            infoCol.innerHTML = `
-				<p class="overviewText" style="font-weight:700;color:var(--accent);">FREE PALESTINE</p>`;
-          } else {
-            infoCol.innerHTML = `
-				<p class="overviewText">${t.none}</p>`;
-          }
-          return;
-        }
-        const directorName = await getDirector(movie.id);
-        const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '';
-        const movieYear = movie.release_date ? movie.release_date.slice(0, 4) : '';
-        const overview = movie.overview || t.noDesc;
-        const letterboxdQuery = encodeURIComponent(`${movie.title} ${movieYear}`);
-        const letterboxdUrl = `https://letterboxd.com/search/${letterboxdQuery}/`;
-        const clipText = `${countryName} → ${movie.title}${movieYear?` (${movieYear})`:''}`;
-        posterCol.innerHTML = posterUrl ? `
-				<a href="${letterboxdUrl}" target="_blank" style="text-decoration:none;display:block;">
-					<img id="moviePoster" src="${posterUrl}" alt="${movie.title}" />
-				</a>` : `
-				<div style="font-size:.8rem;color:var(--text-dim);padding-top:.3rem;">(no poster)</div>`;
-        infoCol.innerHTML = `
-        
-				<h4>${movie.title}${movieYear?` (${movieYear})`:''}</h4>
-				<div class="directorLine">
-					<strong>${t.directorLabel}</strong> ${directorName || '—'}
-				</div>
-				<p class="overviewText">${overview}</p>
-				<div class="actionsRow">
-					<a class="actionBtn" href="${letterboxdUrl}" target="_blank">${t.seeLetterboxd}</a>
-					<button class="actionBtn" id="anotherBtn">${t.another}</button>
-					<button class="actionBtn" id="copyBtn">${t.copy}</button>
-				</div>
-      `;
-        const anotherBtn = document.getElementById('anotherBtn');
-        const copyBtn = document.getElementById('copyBtn');
-        if (anotherBtn) {
-          anotherBtn.addEventListener('click', () => {
-            if (lastCountryCode && lastCountryName) {
-              fetchMovie(lastCountryCode, lastCountryName);
+          if(useLangFilter){
+            const expected = countryLanguages[twoCode];
+            if(expected){
+              const byLang = results.filter(m => expected.includes(m.original_language));
+              if(byLang.length) results = byLang;
             }
-          });
-        }
-        if (copyBtn) {
-          copyBtn.addEventListener('click', () => {
-            if (!navigator.clipboard) return;
-            navigator.clipboard.writeText(clipText);
-            const prev = copyBtn.textContent;
-            copyBtn.textContent = 'Copied';
-            setTimeout(() => copyBtn.textContent = prev, 800);
-          });
-        }
-        lastCountryCode = twoLetterCode;
-        lastCountryName = countryName;
-      }
-      // ISO_A3 -> ISO_A2
-      function convertToTwoLetterCode(a3) {
-        const m = {
-          'AFG': 'AF',
-          'ALB': 'AL',
-          'DZA': 'DZ',
-          'AND': 'AD',
-          'AGO': 'AO',
-          'ARG': 'AR',
-          'ARM': 'AM',
-          'AUS': 'AU',
-          'AUT': 'AT',
-          'AZE': 'AZ',
-          'BHS': 'BS',
-          'BHR': 'BH',
-          'BGD': 'BD',
-          'BRB': 'BB',
-          'BLR': 'BY',
-          'BEL': 'BE',
-          'BLZ': 'BZ',
-          'BEN': 'BJ',
-          'BTN': 'BT',
-          'BOL': 'BO',
-          'BIH': 'BA',
-          'BWA': 'BW',
-          'BRA': 'BR',
-          'BRN': 'BN',
-          'BGR': 'BG',
-          'BFA': 'BF',
-          'BDI': 'BI',
-          'KHM': 'KH',
-          'CMR': 'CM',
-          'CAN': 'CA',
-          'CPV': 'CV',
-          'CAF': 'CF',
-          'TCD': 'TD',
-          'CHL': 'CL',
-          'CHN': 'CN',
-          'COL': 'CO',
-          'COM': 'KM',
-          'COG': 'CG',
-          'COD': 'CD',
-          'CRI': 'CR',
-          'HRV': 'HR',
-          'CUB': 'CU',
-          'CYP': 'CY',
-          'CZE': 'CZ',
-          'DNK': 'DK',
-          'DJI': 'DJ',
-          'DOM': 'DO',
-          'ECU': 'EC',
-          'EGY': 'EG',
-          'SLV': 'SV',
-          'GNQ': 'GQ',
-          'ERI': 'ER',
-          'EST': 'EE',
-          'ETH': 'ET',
-          'FJI': 'FJ',
-          'FIN': 'FI',
-          'FRA': 'FR',
-          'GAB': 'GA',
-          'GMB': 'GM',
-          'GEO': 'GE',
-          'DEU': 'DE',
-          'GHA': 'GH',
-          'GRC': 'GR',
-          'GTM': 'GT',
-          'GIN': 'GN',
-          'GNB': 'GW',
-          'GUY': 'GY',
-          'HTI': 'HT',
-          'HND': 'HN',
-          'HUN': 'HU',
-          'ISL': 'IS',
-          'IND': 'IN',
-          'IDN': 'ID',
-          'IRN': 'IR',
-          'IRQ': 'IQ',
-          'IRL': 'IE',
-          'ISR': 'IL',
-          'ITA': 'IT',
-          'JAM': 'JM',
-          'JPN': 'JP',
-          'JOR': 'JO',
-          'KAZ': 'KZ',
-          'KEN': 'KE',
-          'KWT': 'KW',
-          'KGZ': 'KG',
-          'LAO': 'LA',
-          'LVA': 'LV',
-          'LBN': 'LB',
-          'LSO': 'LS',
-          'LBR': 'LR',
-          'LBY': 'LY',
-          'LTU': 'LT',
-          'LUX': 'LU',
-          'MDG': 'MG',
-          'MWI': 'MW',
-          'MYS': 'MY',
-          'MDV': 'MV',
-          'MLI': 'ML',
-          'MLT': 'MT',
-          'MRT': 'MR',
-          'MUS': 'MU',
-          'MEX': 'MX',
-          'MDA': 'MD',
-          'MCO': 'MC',
-          'MNG': 'MN',
-          'MNE': 'ME',
-          'MAR': 'MA',
-          'MOZ': 'MZ',
-          'MMR': 'MM',
-          'NAM': 'NA',
-          'NPL': 'NP',
-          'NLD': 'NL',
-          'NZL': 'NZ',
-          'NIC': 'NI',
-          'NER': 'NE',
-          'NGA': 'NG',
-          'PRK': 'KP',
-          'NOR': 'NO',
-          'OMN': 'OM',
-          'PAK': 'PK',
-          'PAN': 'PA',
-          'PNG': 'PG',
-          'PRY': 'PY',
-          'PER': 'PE',
-          'PHL': 'PH',
-          'POL': 'PL',
-          'PRT': 'PT',
-          'QAT': 'QA',
-          'ROU': 'RO',
-          'RUS': 'RU',
-          'RWA': 'RW',
-          'SAU': 'SA',
-          'SEN': 'SN',
-          'SRB': 'RS',
-          'SLE': 'SL',
-          'SGP': 'SG',
-          'SVK': 'SK',
-          'SVN': 'SI',
-          'SOM': 'SO',
-          'ZAF': 'ZA',
-          'KOR': 'KR',
-          'SSD': 'SS',
-          'ESP': 'ES',
-          'LKA': 'LK',
-          'SDN': 'SD',
-          'SUR': 'SR',
-          'SWZ': 'SZ',
-          'SWE': 'SE',
-          'CHE': 'CH',
-          'SYR': 'SY',
-          'TWN': 'TW',
-          'TJK': 'TJ',
-          'TZA': 'TZ',
-          'THA': 'TH',
-          'TGO': 'TG',
-          'TTO': 'TT',
-          'TUN': 'TN',
-          'TUR': 'TR',
-          'TKM': 'TM',
-          'UGA': 'UG',
-          'UKR': 'UA',
-          'ARE': 'AE',
-          'GBR': 'GB',
-          'USA': 'US',
-          'URY': 'UY',
-          'UZB': 'UZ',
-          'VEN': 'VE',
-          'VNM': 'VN',
-          'YEM': 'YE',
-          'ZMB': 'ZM',
-          'ZWE': 'ZW'
-        };
-        return m[a3] || a3;
-      }
-      // ===== Snow animation (10s + fade-out) =====
-      const snowCanvas = document.getElementById('snowOverlay');
-
-      function startSnow(durationMs = 10000) {
-        const ctx = snowCanvas.getContext('2d');
-        const DPR = window.devicePixelRatio || 1;
-        const resize = () => {
-          snowCanvas.width = Math.floor(window.innerWidth * DPR);
-          snowCanvas.height = Math.floor(window.innerHeight * DPR);
-          snowCanvas.style.width = window.innerWidth + 'px';
-          snowCanvas.style.height = window.innerHeight + 'px';
-          ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-        };
-        resize();
-        window.addEventListener('resize', resize);
-        const count = Math.min(220, Math.floor(window.innerWidth * 0.28));
-        const flakes = new Array(count).fill(0).map(() => ({
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * -window.innerHeight,
-          r: Math.random() * 2 + 1,
-          s: Math.random() * 0.6 + 0.2,
-          w: Math.random() * 1.5 - 0.75,
-          a: Math.random() * Math.PI * 2
-        }));
-        let running = true;
-        const start = performance.now();
-        snowCanvas.classList.add('show');
-
-        function step(now) {
-          const elapsed = now - start;
-          if (elapsed > durationMs) running = false;
-          ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-          ctx.fillStyle = 'rgba(255,255,255,0.95)';
-          for (const f of flakes) {
-            f.a += 0.01;
-            f.x += f.w + Math.sin(f.a) * 0.2;
-            f.y += f.s;
-            if (f.y > window.innerHeight + 5) {
-              f.y = -10;
-              f.x = Math.random() * window.innerWidth;
-            }
-            if (f.x < -10) f.x = window.innerWidth + 10;
-            if (f.x > window.innerWidth + 10) f.x = -10;
-            ctx.beginPath();
-            ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-            ctx.fill();
           }
-          if (running) requestAnimationFrame(step);
-          else {
-            snowCanvas.classList.remove('show');
-            setTimeout(() => {
-              ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-              window.removeEventListener('resize', resize);
-            }, 1000);
-          }
-        }
-        requestAnimationFrame(step);
+
+          const withPoster = results.filter(m => m.poster_path);
+          const pool = withPoster.length ? withPoster : results;
+          const pick = pool[Math.floor(Math.random()*pool.length)];
+          if(pick) return pick;
+        }catch(_){}
       }
-    </script>
-  </body>
+      return null;
+    }
+
+    async function getDirector(movieId){
+      try{
+        const url = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${TMDB_V3_KEY}&language=${currentLanguage}`;
+        const res = await fetch(url);
+        const credits = await res.json();
+        const dir = (credits && credits.crew || []).find(p => p.job==='Director');
+        return dir ? dir.name : '';
+      }catch(_){ return ''; }
+    }
+
+    function showAntarcticaMessage(){
+      const t = {
+        title: currentLanguage==='pt-PT' ? 'Antártida' : 'Antarctica',
+        text:  currentLanguage==='pt-PT'
+                ? 'Não encontramos nenhum filme, mas encontramos neve.'
+                : "We didn’t find any movies, but we found snow."
+      };
+      setCountryFlag('AQ');
+      countryNameEl.innerText = t.title.toUpperCase();
+
+      moviePosterEl.style.display = 'none';
+      posterLinkEl.href = '#';
+
+      movieTitleEl.textContent = t.title;
+      directorLineEl.style.visibility = 'hidden';
+      overviewTextEl.textContent = t.text;
+      actionsRowEl.style.visibility = 'hidden';
+
+      showPopup();
+    }
+
+    async function fetchMovie(twoLetterCode, countryName){
+      const t = {
+        loading: currentLanguage==='pt-PT' ? 'A carregar filme...' : 'Loading movie...',
+        none:    currentLanguage==='pt-PT' ? 'Nenhum filme encontrado.' : 'No movies found from this country.',
+        noDesc:  currentLanguage==='pt-PT' ? 'Sem descrição disponível.' : 'No description available.',
+        seeLetterboxd: 'See on Letterboxd',
+        another: 'Another one',
+        copy:    'Copy',
+        directorLabel: currentLanguage==='pt-PT' ? 'Realizador:' : 'Director:'
+      };
+
+      setCountryFlag(twoLetterCode);
+      countryNameEl.innerText = countryName.toUpperCase();
+
+      moviePosterEl.style.display = 'none';
+      posterLinkEl.href = '#';
+      moviePosterEl.alt = '';
+
+      movieTitleEl.textContent = '';
+      directorLineEl.style.visibility = 'hidden';
+      overviewTextEl.textContent = t.loading;
+      actionsRowEl.style.visibility = 'hidden';
+
+      letterboxdBtn.textContent = t.seeLetterboxd;
+      anotherBtn.textContent = t.another;
+      copyBtn.textContent = t.copy;
+
+      showPopup();
+
+      const lotteryPhrases = currentLanguage === 'pt-PT'
+        ? ['A rodar a bobine...', 'A escolher um clássico...', 'À procura de cinema de culto...', 'Quase lá...']
+        : ['Spinning the reel...', 'Picking a classic...', 'Searching world cinema...', 'Almost there...'];
+
+      let idx = 0;
+      const lotteryInterval = setInterval(() => {
+        idx = (idx + 1) % lotteryPhrases.length;
+        overviewTextEl.textContent = lotteryPhrases[idx];
+      }, 160);
+
+      let movie = await discoverMovie(twoLetterCode, true, 20);
+
+      if(!movie && twoLetterCode === 'GL'){
+        movie = await discoverMovie('DK', true, 20);
+      }
+
+      clearInterval(lotteryInterval);
+
+      if(!movie){
+        movieTitleEl.textContent = countryName;
+        if (twoLetterCode === 'PS') {
+          overviewTextEl.textContent = 'FREE PALESTINE';
+        } else {
+          overviewTextEl.textContent = t.none;
+        }
+        directorLineEl.style.visibility = 'hidden';
+        actionsRowEl.style.visibility = 'hidden';
+        return;
+      }
+
+      const directorName = await getDirector(movie.id);
+
+      const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '';
+      const movieYear = movie.release_date ? movie.release_date.slice(0,4) : '';
+      const overview = movie.overview || t.noDesc;
+      const letterboxdQuery = encodeURIComponent(`${movie.title} ${movieYear}`);
+      const letterboxdUrl = `https://letterboxd.com/search/${letterboxdQuery}/`;
+      const clipText = `${countryName} → ${movie.title}${movieYear?` (${movieYear})`:''}`;
+
+      if(posterUrl){
+        moviePosterEl.src = posterUrl;
+        moviePosterEl.alt = movie.title;
+        moviePosterEl.style.display = 'block';
+        posterLinkEl.href = letterboxdUrl;
+      } else {
+        moviePosterEl.style.display = 'none';
+        posterLinkEl.href = letterboxdUrl;
+      }
+
+      movieTitleEl.textContent = `${movie.title}${movieYear?` (${movieYear})`:''}`;
+      directorLabelEl.textContent = t.directorLabel;
+      directorNameEl.textContent = directorName || '—';
+      directorLineEl.style.visibility = 'visible';
+
+      overviewTextEl.textContent = overview;
+
+      letterboxdBtn.href = letterboxdUrl;
+      currentClipText = clipText;
+
+      actionsRowEl.style.visibility = 'visible';
+
+      lastCountryCode = twoLetterCode;
+      lastCountryName = countryName;
+    }
+
+    anotherBtn.addEventListener('click', ()=>{
+      if(lastCountryCode && lastCountryName){ fetchMovie(lastCountryCode,lastCountryName); }
+    });
+
+    copyBtn.addEventListener('click', ()=>{
+      if(!navigator.clipboard || !currentClipText) return;
+      navigator.clipboard.writeText(currentClipText);
+      const prev = copyBtn.textContent;
+      copyBtn.textContent = 'Copied';
+      setTimeout(()=> copyBtn.textContent = prev, 800);
+    });
+
+    function convertToTwoLetterCode(a3){
+      const m={'AFG':'AF','ALB':'AL','DZA':'DZ','AND':'AD','AGO':'AO','ARG':'AR','ARM':'AM','AUS':'AU','AUT':'AT','AZE':'AZ','BHS':'BS','BHR':'BH','BGD':'BD','BRB':'BB','BLR':'BY','BEL':'BE','BLZ':'BZ','BEN':'BJ','BTN':'BT','BOL':'BO','BIH':'BA','BWA':'BW','BRA':'BR','BRN':'BN','BGR':'BG','BFA':'BF','BDI':'BI','KHM':'KH','CMR':'CM','CAN':'CA','CPV':'CV','CAF':'CF','TCD':'TD','CHL':'CL','CHN':'CN','COL':'CO','COM':'KM','COG':'CG','COD':'CD','CRI':'CR','HRV':'HR','CUB':'CU','CYP':'CY','CZE':'CZ','DNK':'DK','DJI':'DJ','DOM':'DO','ECU':'EC','EGY':'EG','SLV':'SV','GNQ':'GQ','ERI':'ER','EST':'EE','ETH':'ET','FJI':'FJ','FIN':'FI','FRA':'FR','GAB':'GA','GMB':'GM','GEO':'GE','DEU':'DE','GHA':'GH','GRC':'GR','GTM':'GT','GIN':'GN','GNB':'GW','GUY':'GY','HTI':'HT','HND':'HN','HUN':'HU','ISL':'IS','IND':'IN','IDN':'ID','IRN':'IR','IRQ':'IQ','IRL':'IE','ISR':'IL','ITA':'IT','JAM':'JM','JPN':'JP','JOR':'JO','KAZ':'KZ','KEN':'KE','KWT':'KW','KGZ':'KG','LAO':'LA','LVA':'LV','LBN':'LB','LSO':'LS','LBR':'LR','LBY':'LY','LTU':'LT','LUX':'LU','MDG':'MG','MWI':'MW','MYS':'MY','MDV':'MV','MLI':'ML','MLT':'MT','MRT':'MR','MUS':'MU','MEX':'MX','MDA':'MD','MCO':'MC','MNG':'MN','MNE':'ME','MAR':'MA','MOZ':'MZ','MMR':'MM','NAM':'NA','NPL':'NP','NLD':'NL','NZL':'NZ','NIC':'NI','NER':'NE','NGA':'NG','PRK':'KP','NOR':'NO','OMN':'OM','PAK':'PK','PAN':'PA','PNG':'PG','PRY':'PY','PER':'PE','PHL':'PH','POL':'PL','PRT':'PT','QAT':'QA','ROU':'RO','RUS':'RU','RWA':'RW','SAU':'SA','SEN':'SN','SRB':'RS','SLE':'SL','SGP':'SG','SVK':'SK','SVN':'SI','SOM':'SO','ZAF':'ZA','KOR':'KR','SSD':'SS','ESP':'ES','LKA':'LK','SDN':'SD','SUR':'SR','SWZ':'SZ','SWE':'SE','CHE':'CH','SYR':'SY','TWN':'TW','TJK':'TJ','TZA':'TZ','THA':'TH','TGO':'TG','TTO':'TT','TUN':'TN','TUR':'TR','TKM':'TM','UGA':'UG','UKR':'UA','ARE':'AE','GBR':'GB','USA':'US','URY':'UY','UZB':'UZ','VEN':'VE','VNM':'VN','YEM':'YE','ZMB':'ZM','ZWE':'ZW'};return m[a3]||a3;
+    }
+
+    const snowCanvas = document.getElementById('snowOverlay');
+    function startSnow(durationMs=10000){
+      const ctx = snowCanvas.getContext('2d');
+      const DPR = window.devicePixelRatio || 1;
+      const resize = ()=>{
+        snowCanvas.width = Math.floor(window.innerWidth * DPR);
+        snowCanvas.height = Math.floor(window.innerHeight * DPR);
+        snowCanvas.style.width = window.innerWidth + 'px';
+        snowCanvas.style.height = window.innerHeight + 'px';
+        ctx.setTransform(DPR,0,0,DPR,0,0);
+      };
+      resize();
+      window.addEventListener('resize', resize);
+
+      const count = Math.min(220, Math.floor(window.innerWidth * 0.28));
+      const flakes = new Array(count).fill(0).map(()=>({
+        x: Math.random()*window.innerWidth,
+        y: Math.random()*-window.innerHeight,
+        r: Math.random()*2 + 1,
+        s: Math.random()*0.6 + 0.2,
+        w: Math.random()*1.5 - 0.75,
+        a: Math.random()*Math.PI*2
+      }));
+
+      let running = true;
+      const start = performance.now();
+      snowCanvas.classList.add('show');
+
+      function step(now){
+        const elapsed = now - start;
+        if(elapsed > durationMs) running = false;
+
+        ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+        ctx.fillStyle = 'rgba(255,255,255,0.95)';
+
+        for(const f of flakes){
+          f.a += 0.01;
+          f.x += f.w + Math.sin(f.a)*0.2;
+          f.y += f.s;
+          if(f.y > window.innerHeight + 5) { f.y = -10; f.x = Math.random()*window.innerWidth; }
+          if(f.x < -10) f.x = window.innerWidth + 10;
+          if(f.x > window.innerWidth + 10) f.x = -10;
+
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
+          ctx.fill();
+        }
+
+        if(running) requestAnimationFrame(step);
+        else {
+          snowCanvas.classList.remove('show');
+          setTimeout(()=>{
+            ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+            window.removeEventListener('resize', resize);
+          }, 1000);
+        }
+      }
+      requestAnimationFrame(step);
+    }
+  </script>
+</body>
 </html>
