@@ -574,6 +574,25 @@ html[data-theme="light"] .donateBtn{
   vertical-align:middle;
 }
 
+/* garante que o texto e o spinner nunca causam scroll lateral */
+#overviewText::-webkit-scrollbar {
+  width: 6px;
+}
+#overviewText::-webkit-scrollbar-thumb {
+  background: rgba(216,163,0,0.35);
+  border-radius: 3px;
+}
+#overviewText::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* corrige o bug da barra lateral aparecendo */
+#overviewText {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: clip; /* substitui hidden, bloqueia 1px ghost-scroll */
+}
+
 /* animação de rotação do spinner */
 @keyframes spinner{
   to { transform:rotate(360deg); }
