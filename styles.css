@@ -30,6 +30,7 @@ html,body{
   background:var(--bg-deep);
   font-family:'Inter',system-ui,-apple-system,Roboto,sans-serif;
   color:var(--text-main);
+  -webkit-tap-highlight-color: transparent;
 }
 
 * {
@@ -256,6 +257,7 @@ input:checked + .slider:before {
   padding:0;
   box-shadow:none;
   transition: background .15s ease, color .15s ease, border-color .15s ease;
+  touch-action: manipulation;
 }
 .iconBtn:hover{
   background:rgba(216,163,0,.16);
@@ -329,6 +331,7 @@ html[data-theme="light"] #controlsBar{ background:rgba(255,255,255,.8); }
   min-width:110px;
   text-align:center;
   transition: color .15s ease, background .15s ease, border-color .15s ease;
+  touch-action: manipulation;
 }
 .langBtn:hover{
   background:rgba(216,163,0,.15);
@@ -376,6 +379,8 @@ html[data-theme="light"] #donateBar{ background:rgba(255,255,255,.8); }
   text-decoration:none;
   box-shadow:0 0 10px var(--panel-glow);
   transition: box-shadow .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+  white-space:nowrap;
+  touch-action: manipulation;
 }
 .donateBtn:hover{
   background:#000;
@@ -477,6 +482,7 @@ html[data-theme="light"] .donateBtn{
   padding:0;
   box-shadow:none;
   transition:background .15s ease,color .15s ease,border-color .15s ease;
+  touch-action: manipulation;
 }
 #closePopup span{
   display:block;
@@ -580,6 +586,7 @@ html[data-theme="light"] .donateBtn{
   box-sizing:border-box;
   box-shadow:none;
   transition: background .15s ease, color .15s ease, border-color .15s ease;
+  touch-action: manipulation;
 }
 .actionBtn:hover{
   background:#000;
@@ -628,25 +635,33 @@ html[data-theme="light"] #closePopup:hover{
 }
 #snowOverlay.show{ opacity:1; }
 
-/* Responsividade */
+/* ========================= */
+/*        RESPONSIVE         */
+/* ========================= */
+
 @media (max-width: 900px){
   #themeSwitch{ top:12px;right:12px; transform:scale(.9); }
   #controlsBar,#donateBar{ bottom:14px; }
   #tagline{ top:80px; font-size:.8rem; padding:0 .75rem; }
 }
+
 @media (max-width: 720px){
-  #popup{
-    padding:0.9rem 0.9rem 0.8rem;
-    border-radius:14px;
-    width:94vw;
-    max-height:78vh;
-    min-height:340px;
+  header{
+    font-size:2.4rem;
+    top:16px;
   }
-  #popupBody{ flex-direction:column; }
-  .posterCol{ align-self:center; flex:0 0 auto; max-width:70%; }
-  #moviePoster{ max-width:100%; }
-  .infoCol{ width:100%; }
-  #movieTitleOriginal{ font-size:1.05rem; }
+  #tagline{
+    top:74px;
+    font-size:.8rem;
+    padding:0 1rem;
+  }
+
+  #themeSwitch{
+    top:70px;
+    right:12px;
+    transform:scale(.9);
+  }
+
   #controlsBar, #donateBar{
     padding:.35rem .4rem;
     gap:.35rem;
@@ -654,14 +669,77 @@ html[data-theme="light"] #closePopup:hover{
   .langBtn{
     padding:.35rem .7rem;
     min-width:auto;
+    font-size:.78rem;
   }
   .donateBtn{
     padding:.4rem .65rem;
     font-size:.78rem;
   }
+  #creditText{
+    font-size:.7rem;
+  }
+
+  #popup{
+    padding:0.9rem 0.9rem 0.8rem;
+    border-radius:14px;
+    width:94vw;
+    max-height:78vh;
+    min-height:340px;
+  }
+  #popupBody{
+    flex-direction:column;
+  }
+  .posterCol{
+    align-self:center;
+    flex:0 0 auto;
+    max-width:70%;
+  }
+  #moviePoster{ max-width:100%; }
+  .infoCol{ width:100%; }
+  #movieTitleOriginal{ font-size:1.05rem; }
 }
+
 @media (max-width: 480px){
-  header{ font-size:2.2rem; }
-  #tagline{ top:76px; font-size:.75rem; }
-  #themeSwitch{ transform:scale(.85); }
+  header{
+    font-size:2rem;
+    top:14px;
+  }
+  #tagline{
+    top:62px;
+    font-size:.75rem;
+    padding:0 .8rem;
+  }
+
+  #themeSwitch{
+    top:60px;
+    right:10px;
+    transform:scale(.8);
+  }
+
+  #controlsBar{
+    right:10px;
+    bottom:12px;
+  }
+  #donateBar{
+    left:10px;
+    bottom:12px;
+  }
+
+  .langBtn{
+    padding:.32rem .6rem;
+    font-size:.75rem;
+  }
+  .donateBtn{
+    padding:.35rem .6rem;
+    font-size:.75rem;
+  }
+
+  #popup{
+    width:96vw;
+    max-height:80vh;
+    padding:0.8rem 0.8rem 0.7rem;
+  }
+  #overviewText{
+    font-size:.85rem;
+  }
 }
