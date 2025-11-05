@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<<<<<<< HEAD
   <title>CineAtlas</title>
 
   <!-- Title + body fonts -->
@@ -58,6 +59,85 @@
     <span id="credits">SaramagaBytes © 2025</span>
   </div>
 
+=======
+
+  <title>CineAtlas – World Cinema Explorer</title>
+  <meta name="description" content="Click a country on the globe and discover a random film from that place. CineAtlas é o teu mapa de cinema mundial." />
+
+  <!-- Cor da barra do browser (sobretudo em mobile) -->
+  <meta name="theme-color" content="#000000" />
+
+  <!-- Open Graph (WhatsApp / Facebook / LinkedIn) -->
+  <meta property="og:title" content="CineAtlas – World Cinema Explorer" />
+  <meta property="og:description" content="Descobre filmes aleatórios de qualquer país clicando no globo. Cinema mundial, numa só página." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://O_TEU_PROJETO.vercel.app/" />
+  <meta property="og:image" content="https://O_TEU_PROJETO.vercel.app/assets/cineatlas-cover.jpg" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="CineAtlas – World Cinema Explorer" />
+  <meta name="twitter:description" content="Click a country on the globe and get a random film suggestion from that place." />
+  <meta name="twitter:image" content="https://O_TEU_PROJETO.vercel.app/assets/cineatlas-cover.jpg" />
+
+  <!-- Favicon e ícones -->
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+
+  <!-- Fontes (Playfair título + Inter corpo) -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header id="siteTitle">CineAtlas</header>
+  <div id="tagline">Click a country for a random film</div>
+  <div id="fadeOverlay"></div>
+  <div id="themeFade"></div>
+
+  <!-- Starfield canvas -->
+  <canvas id="starsCanvas"></canvas>
+
+  <!-- Theme switch (top-right) + randomizer -->
+  <div id="themeSwitch" aria-label="Theme">
+    <span id="themeLabel"></span>
+    <label class="switch" aria-label="Toggle theme">
+      <input id="themeCheckbox" type="checkbox" />
+      <span class="slider"></span>
+    </label>
+    <button
+      id="randomBtn"
+      class="iconBtn"
+      title="Random country"
+      aria-label="Random country"
+      type="button"
+    >
+      <svg class="icon-die" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="4.5" y="4.5" width="15" height="15"></rect>
+        <circle cx="9" cy="9" r="1.5"></circle>
+        <circle cx="15" cy="15" r="1.5"></circle>
+        <circle cx="12" cy="12" r="1.5"></circle>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Language buttons (bottom-right) -->
+  <div id="controlsBar" role="toolbar" aria-label="Controls">
+    <button class="langBtn active" data-lang="en-US" aria-pressed="true">English</button>
+    <button class="langBtn" data-lang="pt-PT" aria-pressed="false">Português</button>
+  </div>
+
+  <!-- Donate (bottom-left) -->
+  <div id="donateBar">
+    <a id="donateBtn" class="donateBtn" href="https://www.buymeacoffee.com/alexandresd" target="_blank" rel="noopener">
+      Support us
+    </a>
+    <span id="credits">SaramagaBytes © 2025</span>
+  </div>
+
+>>>>>>> 7f90b9720971d5e25676cf48269e858d9fa17dcc
   <!-- popup -->
   <div id="popup" role="dialog" aria-modal="true" aria-labelledby="movieTitleOriginal">
     <div id="popupHeader">
