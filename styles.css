@@ -409,8 +409,8 @@ html[data-theme="light"] .donateBtn{
   left:50%;
   transform:translate(-50%,-46%) scale(.96);
   width:min(720px, 92vw);
-  max-height:80vh;
-  min-height:360px;
+  max-height:90vh; /* mais alto, quase o ecrã todo */
+  min-height:0;    /* deixa encolher em ecrãs baixos */
   background:linear-gradient(135deg, rgba(0,0,0,0.36), rgba(20,12,0,0.72));
   color:var(--text-main);
   padding:1.1rem 1.2rem 1rem;
@@ -418,10 +418,11 @@ html[data-theme="light"] .donateBtn{
   box-shadow:0 24px 60px rgba(0,0,0,.85), 0 0 0 1px rgba(216,163,0,0.45);
   backdrop-filter:blur(22px) saturate(120%);
   -webkit-backdrop-filter:blur(22px) saturate(120%);
-  z-index:1800; /* MAIS ALTO QUE BARRAS E SWITCH */
+  z-index:1800;
   display:none;
   opacity:0;
-  overflow:hidden;
+  overflow-y:auto;
+  overflow-x:hidden;
 }
 
 /* animação do popup */
@@ -501,7 +502,7 @@ html[data-theme="light"] .donateBtn{
   align-items:flex-start;
   gap:1rem;
   flex:1;
-  overflow:hidden;
+  min-height:0;       
 }
 
 .posterCol{ flex:0 0 210px;max-width:210px; }
