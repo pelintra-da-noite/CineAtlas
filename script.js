@@ -437,51 +437,61 @@ const countryLanguages = {
   'GR':['el'],'IL':['he'],'PS':['ar']
 };
 
-async function discoverMovie(twoCode, useLangFilter=true, maxAttempts=20){
-  for(let attempt=1; attempt<=maxAttempts; attempt++){
-    const page = Math.floor(Math.random()*10)+1;
-    const url = new URL('https://api.themoviedb.org/3/discover/movie');
-    url.searchParams.set('api_key', TMDB_V3_KEY);
-    url.searchParams.set('with_origin_country', twoCode);
-    url.searchParams.set('language', currentLanguage);
-    url.searchParams.set('sort_by', 'popularity.desc');
-    url.searchParams.set('include_adult', 'false');
-    url.searchParams.set('page', page);
+async function discoverMovie(twoCode, useLangFilter = true, maxAttempts = 20){
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const page = Math.floor(Math.random() * 10) + 1;
 
-    try{
+    // chama a função serverless da Vercel
+    const url = new URL('/api/discover', window.location.origin);
+    url.searchParams.set('country', twoCode);
+    url.searchParams.set('language', currentLanguage);
+    url.searchParams.set('page', String(page));
+
+    try {
       const res = await fetch(url);
       const data = await res.json();
-      let results = (data && data.results) ? data.results : [];
-      if(!results.length){
-        if(attempt===8) useLangFilter=false;
-        continue;
-      }
 
-      if(useLangFilter){
+      if (!res.ok || !data || !data.results) continue;
+
+      let results = data.results;
+      if (!results.length) continue;
+
+      // mantém o teu filtro por idioma
+      if (useLangFilter) {
         const expected = countryLanguages[twoCode];
-        if(expected){
+        if (expected) {
           const byLang = results.filter(m => expected.includes(m.original_language));
-          if(byLang.length) results = byLang;
+          if (byLang.length) results = byLang;
         }
       }
 
       const withPoster = results.filter(m => m.poster_path);
       const pool = withPoster.length ? withPoster : results;
-      const pick = pool[Math.floor(Math.random()*pool.length)];
-      if(pick) return pick;
-    }catch(_){}
+      const pick = pool[Math.floor(Math.random() * pool.length)];
+      if (pick) return pick;
+
+    } catch (e) {
+      console.error('discoverMovie error', e);
+    }
   }
   return null;
 }
 
 async function getDirector(movieId){
-  try{
-    const url = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${TMDB_V3_KEY}&language=${currentLanguage}`;
+  try {
+    const url = new URL('/api/credits', window.location.origin);
+    url.searchParams.set('id', String(movieId));
+    url.searchParams.set('language', currentLanguage);
+
     const res = await fetch(url);
     const credits = await res.json();
-    const dir = (credits && credits.crew || []).find(p => p.job==='Director');
+    const crew = (credits && credits.crew) || [];
+    const dir = crew.find(p => p.job === 'Director');
     return dir ? dir.name : '';
-  }catch(_){ return ''; }
+  } catch (e) {
+    console.error('getDirector error', e);
+    return '';
+  }
 }
 
 function showAntarcticaMessage(){
