@@ -401,6 +401,9 @@ html[data-theme="light"] .donateBtn{
   line-height:1;
   user-select:none;
 }
+#creditText a:hover {
+  color: #c01624; /* vermelho do outline */
+}
 
 /* POPUP – cinematic glass */
 #popup{
