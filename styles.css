@@ -645,19 +645,20 @@ html[data-theme="light"] #closePopup:hover{
   #tagline{ top:80px; font-size:.8rem; padding:0 .75rem; }
 }
 
+/* tablets / telemóveis médios */
 @media (max-width: 720px){
   header{
     font-size:2.4rem;
-    top:16px;
+    top:52px;              /* empurra o título para baixo do switch */
   }
   #tagline{
-    top:74px;
+    top:104px;             /* subtítulo vem logo abaixo do título */
     font-size:.8rem;
     padding:0 1rem;
   }
 
   #themeSwitch{
-    top:70px;
+    top:12px;              /* grupo slider + random bem em cima */
     right:12px;
     transform:scale(.9);
   }
@@ -699,30 +700,36 @@ html[data-theme="light"] #closePopup:hover{
   #movieTitleOriginal{ font-size:1.05rem; }
 }
 
+/* telemóveis pequenos */
 @media (max-width: 480px){
   header{
     font-size:2rem;
-    top:14px;
+    top:60px;              /* ainda mais para baixo para não colidir com o switch */
   }
   #tagline{
-    top:62px;
+    top:108px;
     font-size:.75rem;
     padding:0 .8rem;
   }
 
   #themeSwitch{
-    top:60px;
+    top:12px;
     right:10px;
     transform:scale(.8);
   }
 
-  #controlsBar{
-    right:10px;
-    bottom:12px;
+  /* barras de baixo empilhadas verticalmente e centradas */
+  #controlsBar,
+  #donateBar{
+    left:50%;
+    right:auto;
+    transform:translateX(-50%);
   }
   #donateBar{
-    left:10px;
-    bottom:12px;
+    bottom:60px;          /* Support us + créditos em cima */
+  }
+  #controlsBar{
+    bottom:12px;          /* idiomas por baixo */
   }
 
   .langBtn{
