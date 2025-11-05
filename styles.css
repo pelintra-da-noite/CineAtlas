@@ -267,7 +267,7 @@ html[data-theme="light"] .iconBtn{
   color:#b02323;
 }
 
-/* animação do dado ao clicar (classe adicionada via JS se quiseres) */
+/* animação do dado ao clicar */
 .iconBtn.is-rolling{
   animation: dice-roll 0.6s ease-in-out;
 }
@@ -550,52 +550,8 @@ html[data-theme="light"] .donateBtn{
   margin:0;
   flex:1;
   overflow-y:auto;
-  overflow-x:hidden;   /* evita scroll horizontal por causa do spinner */
-  padding-right:.15rem;
-}
-
-/* estado de carregamento do texto da descrição */
-#overviewText.loading{
-  opacity:0.9;
-  position:relative;
-}
-
-/* pequeno “spinner” minimal ao lado do texto durante o loading */
-#overviewText.loading::after{
-  content:"";
-  display:inline-block;
-  width:0.8em;
-  height:0.8em;
-  margin-left:.4em;
-  border-radius:50%;
-  border:2px solid rgba(216,163,0,.4);
-  border-top-color:var(--accent);
-  animation: spinner .7s linear infinite;
-  vertical-align:middle;
-}
-
-/* garante que o texto e o spinner nunca causam scroll lateral */
-#overviewText::-webkit-scrollbar {
-  width: 6px;
-}
-#overviewText::-webkit-scrollbar-thumb {
-  background: rgba(216,163,0,0.35);
-  border-radius: 3px;
-}
-#overviewText::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* corrige o bug da barra lateral aparecendo */
-#overviewText {
-  max-width: 100%;
-  box-sizing: border-box;
-  overflow-x: clip; /* substitui hidden, bloqueia 1px ghost-scroll */
-}
-
-/* animação de rotação do spinner */
-@keyframes spinner{
-  to { transform:rotate(360deg); }
+  overflow-x:hidden;
+  padding-right:.25rem;
 }
 
 .actionsRow{
