@@ -553,6 +553,31 @@ html[data-theme="light"] .donateBtn{
   padding-right:.25rem;
 }
 
+/* estado de carregamento do texto da descrição */
+#overviewText.loading{
+  opacity:0.9;
+  position:relative;
+}
+
+/* pequeno “spinner” minimal ao lado do texto durante o loading */
+#overviewText.loading::after{
+  content:"";
+  display:inline-block;
+  width:0.8em;
+  height:0.8em;
+  margin-left:.4em;
+  border-radius:50%;
+  border:2px solid rgba(216,163,0,.4);
+  border-top-color:var(--accent);
+  animation: spinner .7s linear infinite;
+  vertical-align:middle;
+}
+
+/* animação de rotação do spinner */
+@keyframes spinner{
+  to { transform:rotate(360deg); }
+}
+
 .actionsRow{
   margin-top:auto;
   padding-top:.7rem;
