@@ -401,6 +401,11 @@ html[data-theme="light"] .donateBtn{
   line-height:1;
   user-select:none;
 }
+#creditText a {
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color .25s ease;
+}
 #creditText a:hover {
   color: #c01624; /* vermelho do outline */
 }
