@@ -392,22 +392,22 @@ html[data-theme="light"] .donateBtn{
 }
 
 /* créditos ao lado do botão */
-#creditText{
-  font-size:.75rem;
-  font-weight:500;
-  color:var(--text-dim);
-  letter-spacing:.03em;
-  text-align:center;
-  line-height:1;
-  user-select:none;
-}
 #creditText a {
-  color: var(--text-dim);
+  color: var(--text-dim) !important;  /* força a cor base */
   text-decoration: none;
   transition: color .25s ease;
 }
+
+#creditText a:visited {
+  color: var(--text-dim) !important;  /* evita o roxo padrão */
+}
+
 #creditText a:hover {
-  color: #c01624; /* vermelho do outline */
+  color: #c01624 !important;          /* vermelho do outline */
+}
+
+#creditText a:active {
+  color: #d8a300 !important;          /* pequeno toque amarelo ao clicar (opcional) */
 }
 
 /* POPUP – cinematic glass */
