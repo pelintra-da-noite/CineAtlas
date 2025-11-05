@@ -549,8 +549,9 @@ html[data-theme="light"] .donateBtn{
   color:var(--text-dim);
   margin:0;
   flex:1;
-  overflow:auto;
-  padding-right:.25rem;
+  overflow-y:auto;
+  overflow-x:hidden;   /* evita scroll horizontal por causa do spinner */
+  padding-right:.15rem;
 }
 
 /* estado de carregamento do texto da descrição */
