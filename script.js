@@ -1,5 +1,4 @@
 // ===== Config =====
-const TMDB_V3_KEY = 'e13babf6040c059ae724858b95312213'; // demo key
 let currentLanguage = 'en-US';
 let selectedFeature = null;
 let lastCountryCode = null;
