@@ -91,10 +91,9 @@ header{
     0 3px 18px rgba(0,0,0,1);
 }
 
-/* Subtítulo — ligeiramente mais perto do título */
 #tagline{
   position:absolute;
-  top:88px;
+  top:110px;              
   width:100%;
   text-align:center;
   font-size:.9rem;
@@ -109,6 +108,7 @@ header{
   opacity:0;
   animation: fadeSlideIn 1s ease forwards .2s;
 }
+
 
 html[data-theme="light"] #siteTitle{
   color:#b02323;
@@ -789,7 +789,12 @@ body::before{
 @media (max-width: 900px){
   #themeSwitch{ top:12px;right:12px; transform:scale(.9); }
   #controlsBar,#donateBar{ bottom:14px; }
-  #tagline{ top:80px; font-size:.8rem; padding:0 .75rem; }
+
+  #tagline{
+    top:100px;            /* mais abaixo que antes */
+    font-size:.8rem;
+    padding:0 .75rem;
+  }
 }
 
 /* tablets / telemóveis médios */
@@ -800,8 +805,9 @@ body::before{
   #siteTitle{
     font-size:2.4rem;
   }
+
   #tagline{
-    top:104px;
+    top:120px;           /* afasta ainda mais em ecrãs médios */
     font-size:.8rem;
     padding:0 1rem;
   }
@@ -811,42 +817,7 @@ body::before{
     right:12px;
     transform:scale(.9);
   }
-
-  #controlsBar, #donateBar{
-    padding:.35rem .4rem;
-    gap:.35rem;
-  }
-  .langBtn{
-    padding:.35rem .7rem;
-    min-width:auto;
-    font-size:.78rem;
-  }
-  .donateBtn{
-    padding:.35rem .65rem;
-    font-size:.78rem;
-  }
-  #creditText{
-    font-size:.7rem;
-  }
-
-  #popup{
-    padding:0.9rem 0.9rem 0.8rem;
-    border-radius:14px;
-    width:94vw;
-    max-height:78vh;
-    min-height:340px;
-  }
-  #popupBody{
-    flex-direction:column;
-  }
-  .posterCol{
-    align-self:center;
-    flex:0 0 auto;
-    max-width:70%;
-  }
-  #moviePoster{ max-width:100%; }
-  .infoCol{ width:100%; }
-  #movieTitleOriginal{ font-size:1.05rem; }
+  ...
 }
 
 /* telemóveis pequenos */
@@ -857,8 +828,9 @@ body::before{
   #siteTitle{
     font-size:2rem;
   }
+
   #tagline{
-    top:108px;
+    top:130px;          /* bem abaixo do título no mobile */
     font-size:.75rem;
     padding:0 .8rem;
   }
@@ -868,6 +840,8 @@ body::before{
     right:10px;
     transform:scale(.8);
   }
+  ...
+}
 
   /* barras de baixo — largura quase total, centradas, empilhadas */
   #donateBar,
