@@ -34,7 +34,7 @@ html,body{
   transition: background-color .35s ease;
 }
 
-/* Transições apenas em elementos interativos / painéis */
+/* Transições em elementos interativos / painéis */
 button,
 a,
 .langBtn,
@@ -51,18 +51,11 @@ a,
               box-shadow .25s ease;
 }
 
-/* Focus visível para acessibilidade */
+/* Focus visível simples */
 button:focus-visible,
 a:focus-visible{
   outline:2px solid var(--accent);
   outline-offset:2px;
-}
-
-.iconBtn:focus-visible,
-.langBtn:focus-visible,
-.donateBtn:focus-visible,
-.actionBtn:focus-visible{
-  box-shadow:0 0 0 2px rgba(216,163,0,.65);
 }
 
 /* ===== HEADER ===== */
@@ -91,9 +84,10 @@ header{
     0 3px 18px rgba(0,0,0,1);
 }
 
+/* Subtítulo sem overlap */
 #tagline{
   position:absolute;
-  top:110px;              
+  top:110px;
   width:100%;
   text-align:center;
   font-size:.9rem;
@@ -108,7 +102,6 @@ header{
   opacity:0;
   animation: fadeSlideIn 1s ease forwards .2s;
 }
-
 
 html[data-theme="light"] #siteTitle{
   color:#b02323;
@@ -168,7 +161,7 @@ html[data-theme="light"] #starsCanvas{ opacity:0; }
   pointer-events:none;
 }
 
-/* Theme fade overlay – melhora o crossfade dark/light */
+/* Theme fade overlay – suaviza o crossfade dark/light */
 #themeFade {
   position: fixed;
   inset: 0;
@@ -179,7 +172,7 @@ html[data-theme="light"] #starsCanvas{ opacity:0; }
   z-index: 2500;
 }
 
-/* THEME SWITCH + RANDOM (top-right) */
+/* THEME SWITCH + RANDOM (top-right) – grupo em pílula */
 #themeSwitch{
   position:absolute;
   top:14px;
@@ -191,7 +184,7 @@ html[data-theme="light"] #starsCanvas{ opacity:0; }
   background:rgba(0,0,0,.6);
   border:1px solid #c01624;
   padding:.3rem .6rem;
-  border-radius:10px;              /* igual aos outros grupos */
+  border-radius:999px;
   box-shadow:0 0 12px var(--panel-glow);
   backdrop-filter:blur(8px);
   opacity:0;
@@ -358,7 +351,7 @@ html[data-theme="light"] .iconBtn{
   stroke:none;
 }
 
-/* Language (bottom-right) */
+/* Language (bottom-right) – grupo em pílula */
 #controlsBar{
   position:absolute;
   right:20px;
@@ -369,7 +362,7 @@ html[data-theme="light"] .iconBtn{
   align-items:center;
   background:rgba(0,0,0,.6);
   border:1px solid #c01624;
-  border-radius:10px;
+  border-radius:999px;
   padding:.4rem .5rem;
   box-shadow:0 0 12px var(--panel-glow);
   opacity:0;
@@ -383,7 +376,7 @@ html[data-theme="light"] #controlsBar{ background:rgba(255,255,255,.8); }
   border:1px solid var(--lang-border);
   color:var(--text-dim);
   padding:.45rem .8rem;
-  border-radius:8px;
+  border-radius:999px;
   cursor:pointer;
   font-size:.8rem;
   font-weight:700;
@@ -403,7 +396,7 @@ html[data-theme="light"] #controlsBar{ background:rgba(255,255,255,.8); }
 html[data-theme="light"] .langBtn{ color:#6b5b2a; }
 html[data-theme="light"] .langBtn.active{ color:#000; }
 
-/* Donate (bottom-left) — tamanho semelhante às línguas */
+/* Donate (bottom-left) – grupo em pílula */
 #donateBar{
   position:absolute;
   left:20px;
@@ -416,7 +409,7 @@ html[data-theme="light"] .langBtn.active{ color:#000; }
   gap:.5rem;
   background:rgba(0,0,0,.6);
   border:1px solid #c01624;
-  border-radius:10px;
+  border-radius:999px;
   padding:.35rem .5rem;
   box-shadow:0 0 12px var(--panel-glow);
   opacity:0;
@@ -429,7 +422,7 @@ html[data-theme="light"] #donateBar{ background:rgba(255,255,255,.8); }
   background:var(--accent);
   color:#000;
   border:1px solid transparent;
-  border-radius:8px;
+  border-radius:999px;
   box-sizing:border-box;
   padding:.35rem .8rem;
   font-weight:700;
@@ -490,9 +483,8 @@ html[data-theme="light"] .donateBtn{
   top:50%;
   left:50%;
   transform:translate(-50%,-46%) scale(.96);
-  width:min(720px, 92vw);
-  max-height:90vh;
-  min-height:0;
+  width:min(640px, 90vw);
+  max-height:80vh;
   background:linear-gradient(135deg, rgba(0,0,0,0.36), rgba(20,12,0,0.72));
   color:var(--text-main);
   padding:1.1rem 1.2rem 1rem;
@@ -577,6 +569,7 @@ html[data-theme="light"] .donateBtn{
   border-color:var(--accent);
 }
 
+/* Popup body */
 #popupBody{
   display:flex;
   flex-direction:row;
@@ -586,7 +579,7 @@ html[data-theme="light"] .donateBtn{
   min-height:0;
 }
 
-/* Poster – outline amarelo sempre, vermelho no hover */
+/* Poster – amarelo sempre, vermelho no hover, sem “saltar” */
 .posterCol{
   flex:0 0 210px;
   max-width:210px;
@@ -594,7 +587,6 @@ html[data-theme="light"] .donateBtn{
 #posterLink{
   display:block;
   border-radius:12px;
-  overflow:hidden;
 }
 #moviePoster{
   width:100%;
@@ -602,7 +594,7 @@ html[data-theme="light"] .donateBtn{
   border-radius:12px;
   box-shadow:none;
   border:2px solid rgba(216,163,0,.85);   /* sempre amarelo */
-  box-sizing:border-box;                   /* evita “desalinhamento” */
+  box-sizing:border-box;                   /* evita desalinhamento */
   display:block;
   transition: border-color .25s ease;
 }
@@ -666,6 +658,7 @@ html[data-theme="light"] #titleBlock{
   font-style:italic;
 }
 
+/* Ações no popup */
 .actionsRow{
   margin-top:auto;
   padding-top:.7rem;
@@ -789,9 +782,8 @@ body::before{
 @media (max-width: 900px){
   #themeSwitch{ top:12px;right:12px; transform:scale(.9); }
   #controlsBar,#donateBar{ bottom:14px; }
-
   #tagline{
-    top:100px;            /* mais abaixo que antes */
+    top:100px;
     font-size:.8rem;
     padding:0 .75rem;
   }
@@ -807,7 +799,7 @@ body::before{
   }
 
   #tagline{
-    top:120px;           /* afasta ainda mais em ecrãs médios */
+    top:120px;
     font-size:.8rem;
     padding:0 1rem;
   }
@@ -817,7 +809,41 @@ body::before{
     right:12px;
     transform:scale(.9);
   }
-  ...
+
+  #controlsBar, #donateBar{
+    padding:.35rem .4rem;
+    gap:.35rem;
+  }
+  .langBtn{
+    padding:.35rem .7rem;
+    min-width:auto;
+    font-size:.78rem;
+  }
+  .donateBtn{
+    padding:.35rem .65rem;
+    font-size:.78rem;
+  }
+  #creditText{
+    font-size:.7rem;
+  }
+
+  #popup{
+    padding:0.9rem 0.9rem 0.8rem;
+    border-radius:14px;
+    width:94vw;
+    max-height:78vh;
+  }
+  #popupBody{
+    flex-direction:column;
+  }
+  .posterCol{
+    align-self:center;
+    flex:0 0 auto;
+    max-width:70%;
+  }
+  #moviePoster{ max-width:100%; }
+  .infoCol{ width:100%; }
+  #movieTitleOriginal{ font-size:1.05rem; }
 }
 
 /* telemóveis pequenos */
@@ -830,7 +856,7 @@ body::before{
   }
 
   #tagline{
-    top:130px;          /* bem abaixo do título no mobile */
+    top:130px;
     font-size:.75rem;
     padding:0 .8rem;
   }
@@ -840,24 +866,20 @@ body::before{
     right:10px;
     transform:scale(.8);
   }
-  ...
-}
 
-  /* barras de baixo — largura quase total, centradas, empilhadas */
-  #donateBar,
-  #controlsBar{
-    left:10px;
-    right:10px;
-    transform:none;
-    justify-content:space-between;
-  }
-
+  /* barras de baixo compactas, não full width */
   #donateBar{
-    bottom:64px;
+    left:10px;
+    right:auto;
+    bottom:18px;
+    transform:none;
   }
 
   #controlsBar{
-    bottom:12px;
+    right:10px;
+    left:auto;
+    bottom:18px;
+    transform:none;
     justify-content:center;
   }
 
