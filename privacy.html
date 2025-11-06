@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>CineAtlas – Privacy & Cookies</title>
+  <meta name="description" content="Privacy and cookies information for CineAtlas, including details on Google Analytics usage."/>
+  <meta name="theme-color" content="#000000">
+
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/favicon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --accent:#d8a300;
+      --brand-red:#8b0000;
+      --text-main:#fff9d6;
+      --text-dim:#cfc7a0;
+      --bg-deep:#000;
+      --panel-bg:rgba(0,0,0,.8);
+    }
+    html[data-theme="light"]{
+      --text-main:#1c1a14;
+      --text-dim:#3b3729;
+      --bg-deep:#f7f3e7;
+      --panel-bg:rgba(255,255,255,.94);
+    }
+
+    *{ box-sizing:border-box; }
+
+    html,body{
+      margin:0;
+      padding:0;
+      min-height:100%;
+      font-family:'Inter',system-ui,-apple-system,Roboto,sans-serif;
+      background:radial-gradient(circle at top, #111 0, #000 55%);
+      color:var(--text-main);
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-1;
+      opacity:.18;
+      mix-blend-mode:soft-light;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+      animation: grain 1.5s steps(2,end) infinite;
+    }
+    @keyframes grain{
+      0%{ transform:translate(0,0); }
+      25%{ transform:translate(-10px,5px); }
+      50%{ transform:translate(5px,-10px); }
+      75%{ transform:translate(-5px,10px); }
+      100%{ transform:translate(0,0); }
+    }
+
+    .page{
+      max-width:820px;
+      margin:0 auto;
+      padding:2.5rem 1.5rem 3rem;
+    }
+
+    header{
+      text-align:center;
+      margin-bottom:2rem;
+    }
+
+    #siteTitle{
+      margin:0;
+      font-family:'Playfair Display',serif;
+      font-size:2.5rem;
+      font-style:italic;
+      font-weight:600;
+      color:var(--brand-red);
+      text-shadow:
+        0 0 10px rgba(0,0,0,.8),
+        0 3px 18px rgba(0,0,0,1);
+    }
+    #subtitle{
+      margin-top:.4rem;
+      font-size:.85rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--text-dim);
+    }
+
+    .lang-toggle{
+      margin:1.5rem auto 0;
+      display:flex;
+      justify-content:center;
+      gap:.5rem;
+    }
+    .lang-btn{
+      appearance:none;
+      border-radius:999px;
+      border:1px solid rgba(216,163,0,.4);
+      padding:.35rem .9rem;
+      font-size:.78rem;
+      font-weight:600;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      background:transparent;
+      color:var(--text-dim);
+      cursor:pointer;
+    }
+    .lang-btn.active{
+      background:var(--accent);
+      color:#000;
+      border-color:var(--accent);
+    }
+
+    .panel{
+      margin-top:2rem;
+      background:var(--panel-bg);
+      border-radius:18px;
+      padding:1.7rem 1.6rem 1.4rem;
+      box-shadow:0 18px 40px rgba(0,0,0,.8), 0 0 0 1px rgba(216,163,0,.35);
+      backdrop-filter:blur(14px) saturate(120%);
+      -webkit-backdrop-filter:blur(14px) saturate(120%);
+    }
+
+    h2{
+      margin-top:0;
+      font-size:1.25rem;
+      color:var(--accent);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    h3{
+      margin-top:1.6rem;
+      margin-bottom:.4rem;
+      font-size:.95rem;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      color:var(--text-main);
+    }
+
+    p{
+      font-size:.9rem;
+      line-height:1.6;
+      color:var(--text-dim);
+      margin:.3rem 0 .6rem;
+    }
+
+    ul{
+      margin:.3rem 0 .9rem 1.2rem;
+      padding:0;
+      color:var(--text-dim);
+      font-size:.9rem;
+      line-height:1.6;
+    }
+
+    a{
+      color:var(--accent);
+      text-decoration:none;
+    }
+    a:hover{
+      text-decoration:underline;
+    }
+
+    .muted{
+      font-size:.8rem;
+      opacity:.8;
+    }
+
+    .back-link{
+      margin-top:1.5rem;
+      font-size:.85rem;
+    }
+
+    .section{
+      margin-bottom:1.4rem;
+      border-top:1px solid rgba(255,255,255,.08);
+      padding-top:1.1rem;
+    }
+    .section:first-of-type{
+      border-top:none;
+      padding-top:0;
+    }
+
+    .lang-block{
+      display:none;
+    }
+    .lang-block.active{
+      display:block;
+    }
+
+    @media (max-width:600px){
+      #siteTitle{
+        font-size:2rem;
+      }
+      .panel{
+        padding:1.4rem 1.1rem 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1 id="siteTitle">CineAtlas</h1>
+      <div id="subtitle">Privacy &amp; Cookies</div>
+
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en">English</button>
+        <button class="lang-btn" data-lang="pt">Português</button>
+      </div>
+    </header>
+
+    <main class="panel">
+      <!-- ENGLISH -->
+      <section class="lang-block active" id="block-en">
+        <h2>Privacy &amp; Cookies Notice</h2>
+
+        <div class="section">
+          <h3>1. Who we are</h3>
+          <p>
+            CineAtlas is a personal, non-commercial project that helps you discover films from around the world by clicking on a globe.
+            This page explains how we use cookies and analytics data.
+          </p>
+          <p>
+            If you have any questions about this notice, you can contact the maintainer at:
+            <strong>alexandresd (at) proton.me</strong> (replace “(at)” with “@”).
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>2. What data we collect</h3>
+          <p>
+            We do not ask you to create an account, and we do not knowingly collect information that directly identifies you
+            (such as your name or email) when you use CineAtlas.
+          </p>
+          <p>
+            However, we use <strong>Google Analytics 4 (GA4)</strong> to understand how people use the site, for example:
+          </p>
+          <ul>
+            <li>which pages are visited and for how long</li>
+            <li>the type of browser and device used</li>
+            <li>general location (e.g. country or city), based on IP</li>
+            <li>technical events like errors or loading times</li>
+          </ul>
+          <p>
+            This data is collected in an <strong>aggregated and pseudonymous</strong> way. Your IP address may be processed by Google
+            but is not shared with us in a way that directly identifies you.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>3. Cookies and similar technologies</h3>
+          <p>
+            CineAtlas itself does not set cookies for features like login or preferences.
+            Google Analytics, however, may set cookies or use similar technologies to:
+          </p>
+          <ul>
+            <li>remember that a visitor has been on the site before</li>
+            <li>measure how people move between pages</li>
+            <li>help us understand which content is more popular</li>
+          </ul>
+          <p>
+            You can find more details in Google’s own documentation:
+            <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">
+              how Google uses data from partner sites
+            </a>.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>4. Why we collect this data (legal basis)</h3>
+          <p>
+            We use analytics data only to understand usage and improve CineAtlas – for example,
+            to see which countries are most clicked or whether a feature is working correctly.
+          </p>
+          <p>
+            Depending on your country, the legal basis under data protection law may be:
+          </p>
+          <ul>
+            <li><strong>your consent</strong>, where required before analytics cookies are used; and/or</li>
+            <li><strong>our legitimate interest</strong> in understanding and improving how the site is used, in a way that respects your privacy.</li>
+          </ul>
+          <p class="muted">
+            This description is provided for information only and does not constitute legal advice. If you are unsure which legal basis applies,
+            you should seek local legal guidance.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>5. How to control cookies and analytics</h3>
+          <p>
+            You have several options to control or limit how Google Analytics and cookies are used in your browser:
+          </p>
+          <ul>
+            <li>
+              Use your browser settings to block or delete cookies.
+            </li>
+            <li>
+              Use private / incognito mode to limit tracking between sessions.
+            </li>
+            <li>
+              Install browser add-ons or extensions that block analytics scripts.
+            </li>
+          </ul>
+          <p>
+            For more details on Google Analytics data practices, you can read:
+            <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">
+              Google’s “How Google uses information from sites or apps that use our services”
+            </a>.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>6. Data retention</h3>
+          <p>
+            Analytics data is stored by Google Analytics for a limited period, according to the configuration of the account.
+            We use this information only in aggregated form (for example, total number of visits per country).
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>7. Third-party services</h3>
+          <p>
+            The main third-party service involved in data collection on CineAtlas is:
+          </p>
+          <ul>
+            <li>
+              <strong>Google Analytics 4</strong>, provided by Google LLC and its affiliates.
+            </li>
+          </ul>
+          <p>
+            This means that some technical data (such as your IP address and browser information) may be processed on Google’s servers.
+            Google acts as an independent data controller for some of this processing.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>8. Children’s privacy</h3>
+          <p>
+            CineAtlas is not specifically targeted at children, and we do not knowingly collect personal data from children under 13.
+            If you believe that a child has provided personal information via this site, you can contact us and we will review the situation.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>9. Changes to this notice</h3>
+          <p>
+            We may update this Privacy &amp; Cookies Notice from time to time, for example if we change which analytics tools we use.
+            When that happens, we will update the “last updated” date at the bottom of this page.
+          </p>
+          <p class="muted">
+            Last updated: November 2025
+          </p>
+        </div>
+
+        <div class="back-link">
+          <a href="/">← Back to CineAtlas</a>
+        </div>
+      </section>
+
+      <!-- PORTUGUÊS -->
+      <section class="lang-block" id="block-pt">
+        <h2>Aviso de Privacidade &amp; Cookies</h2>
+
+        <div class="section">
+          <h3>1. Quem somos</h3>
+          <p>
+            O CineAtlas é um projeto pessoal e não comercial que lhe permite descobrir filmes de todo o mundo ao clicar num globo.
+            Esta página explica como utilizamos cookies e dados de análise.
+          </p>
+          <p>
+            Se tiver dúvidas sobre este aviso, pode contactar o responsável do projeto através do e-mail:
+            <strong>alexandresd (at) proton.me</strong> (substitua “(at)” por “@”).
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>2. Que dados recolhemos</h3>
+          <p>
+            Não lhe pedimos para criar conta e não recolhemos, de forma intencional, dados que o identifiquem diretamente
+            (como nome ou endereço de e-mail) quando utiliza o CineAtlas.
+          </p>
+          <p>
+            No entanto, utilizamos o <strong>Google Analytics 4 (GA4)</strong> para compreender como o site é utilizado, por exemplo:
+          </p>
+          <ul>
+            <li>que páginas são visitadas e durante quanto tempo</li>
+            <li>o tipo de navegador e dispositivo utilizado</li>
+            <li>localização geral (por exemplo, país ou cidade), com base no IP</li>
+            <li>eventos técnicos como erros ou tempos de carregamento</li>
+          </ul>
+          <p>
+            Estes dados são recolhidos de forma <strong>agregada e pseudonimizada</strong>.
+            O seu endereço IP pode ser processado pela Google, mas não é disponibilizado ao projeto de forma que o identifique diretamente.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>3. Cookies e tecnologias semelhantes</h3>
+          <p>
+            O próprio CineAtlas não define cookies para funcionalidades como login ou preferências de utilizador.
+            No entanto, o Google Analytics pode definir cookies ou utilizar tecnologias semelhantes para:
+          </p>
+          <ul>
+            <li>reconhecer que um visitante já acedeu ao site anteriormente</li>
+            <li>medir como as pessoas navegam entre páginas</li>
+            <li>ajudar a perceber que conteúdo é mais utilizado</li>
+          </ul>
+          <p>
+            Pode encontrar mais detalhes na documentação da Google:
+            <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">
+              como a Google utiliza dados de sites e apps dos parceiros
+            </a>.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>4. Por que motivo recolhemos estes dados (fundamento jurídico)</h3>
+          <p>
+            Utilizamos os dados de análise apenas para compreender a utilização e melhorar o CineAtlas – por exemplo,
+            para perceber que países são mais clicados ou se uma funcionalidade está a funcionar corretamente.
+          </p>
+          <p>
+            Dependendo da legislação aplicável no seu país, o fundamento jurídico para este tratamento pode ser:
+          </p>
+          <ul>
+            <li><strong>o seu consentimento</strong>, quando exigido antes da utilização de cookies de análise; e/ou</li>
+            <li><strong>o nosso interesse legítimo</strong> em compreender e melhorar a utilização do site, de forma proporcional e respeitando a sua privacidade.</li>
+          </ul>
+          <p class="muted">
+            Esta descrição é meramente informativa e não constitui aconselhamento jurídico.
+            Se não tiver a certeza de qual o fundamento jurídico aplicável ao seu caso, deverá procurar aconselhamento legal.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>5. Como controlar cookies e análises</h3>
+          <p>
+            Tem várias opções para controlar ou limitar a forma como o Google Analytics e os cookies são utilizados no seu navegador:
+          </p>
+          <ul>
+            <li>Usar as definições do navegador para bloquear ou apagar cookies.</li>
+            <li>Utilizar o modo privado / incógnito, que limita o acompanhamento entre sessões.</li>
+            <li>Instalar extensões ou complementos de navegador que bloqueiem scripts de análise.</li>
+          </ul>
+          <p>
+            Para mais detalhes sobre as práticas de dados do Google Analytics, pode consultar:
+            <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">
+              a página da Google “Como utilizamos informação de sites ou apps que usam os nossos serviços”
+            </a>.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>6. Conservação dos dados</h3>
+          <p>
+            Os dados de análise são armazenados pelo Google Analytics durante um período limitado, conforme a configuração da conta.
+            Utilizamos esta informação apenas de forma agregada (por exemplo, número total de visitas por país).
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>7. Serviços de terceiros</h3>
+          <p>
+            O principal serviço de terceiros envolvido na recolha de dados no CineAtlas é:
+          </p>
+          <ul>
+            <li>
+              <strong>Google Analytics 4</strong>, fornecido pela Google LLC e suas afiliadas.
+            </li>
+          </ul>
+          <p>
+            Isto significa que alguns dados técnicos (como o endereço IP e informações sobre o navegador) podem ser processados nos servidores da Google.
+            A Google atua como responsável pelo tratamento (data controller) para parte deste processamento.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>8. Privacidade de menores</h3>
+          <p>
+            O CineAtlas não é especificamente dirigido a crianças, e não recolhemos intencionalmente dados pessoais de menores de 13 anos.
+            Se considerar que uma criança forneceu dados pessoais através deste site, pode contactar-nos para analisarmos a situação.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>9. Alterações a este aviso</h3>
+          <p>
+            Podemos atualizar este Aviso de Privacidade &amp; Cookies de tempos a tempos, por exemplo se alterarmos as ferramentas de análise que utilizamos.
+            Quando isso acontecer, atualizaremos a data de “última atualização” no final desta página.
+          </p>
+          <p class="muted">
+            Última atualização: novembro de 2025
+          </p>
+        </div>
+
+        <div class="back-link">
+          <a href="/">← Voltar ao CineAtlas</a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const langBtns = document.querySelectorAll('.lang-btn');
+    const blocks = {
+      en: document.getElementById('block-en'),
+      pt: document.getElementById('block-pt')
+    };
+
+    langBtns.forEach(btn => {
+      btn.addEventListener('click', ()=>{
+        const lang = btn.dataset.lang;
+        langBtns.forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+        Object.keys(blocks).forEach(k => {
+          blocks[k].classList.toggle('active', k === lang);
+        });
+        document.documentElement.lang = lang === 'pt' ? 'pt-PT' : 'en';
+      });
+    });
+  </script>
+</body>
+</html>
