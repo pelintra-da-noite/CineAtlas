@@ -182,10 +182,12 @@ function applyLanguageTexts(){
     document.documentElement.lang = 'pt-PT';
 
     if (cookieTextEl && cookieAcceptBtn && cookieRejectBtn){
-      cookieTextEl.textContent =
-        'Usamos o Google Analytics para estatísticas anónimas de utilização. Pode aceitar ou usar apenas o essencial.';
-      cookieAcceptBtn.textContent = 'Aceitar análises';
-      cookieRejectBtn.textContent = 'Só essencial';
+      cookieTextEl.innerHTML =
+        'Usamos um pouco de Google Analytics para perceber como o CineAtlas é usado e continuar a melhorá-lo. ' +
+        'Pode aceitar ou seguir apenas com cookies essenciais. ' +
+        '<a href="/privacy.html" target="_blank" rel="noopener">Ver detalhes de Privacidade &amp; Cookies</a>.';
+      cookieAcceptBtn.textContent = 'Permitir análises';
+      cookieRejectBtn.textContent = 'Só essenciais';
     }
   } else {
     taglineEl.textContent = 'Click a country for a random film';
@@ -193,10 +195,12 @@ function applyLanguageTexts(){
     document.documentElement.lang = 'en';
 
     if (cookieTextEl && cookieAcceptBtn && cookieRejectBtn){
-      cookieTextEl.textContent =
-        'We use Google Analytics for anonymous usage statistics. You can accept or continue with essential only.';
-      cookieAcceptBtn.textContent = 'Accept analytics';
-      cookieRejectBtn.textContent = 'Only essential';
+      cookieTextEl.innerHTML =
+        'We use a bit of Google Analytics to see how CineAtlas is used and keep improving it. ' +
+        'You can accept or continue with essential cookies only. ' +
+        '<a href="/privacy.html" target="_blank" rel="noopener">See Privacy &amp; Cookies details</a>.';
+      cookieAcceptBtn.textContent = 'Allow analytics';
+      cookieRejectBtn.textContent = 'Essential only';
     }
   }
 }
