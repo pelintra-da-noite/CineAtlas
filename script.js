@@ -1,4 +1,6 @@
-// ===== Config =====
+// ==========================
+//   CONFIG & GLOBAL STATE
+// ==========================
 let currentLanguage = 'en-US';
 let selectedFeature = null;
 let lastCountryCode = null;
@@ -7,6 +9,10 @@ let hoverFeature = null;
 let worldFeatures = [];
 let lastPolygonClickTime = 0;
 
+// Consent key p/ localStorage
+const CONSENT_KEY = 'ca-consent';
+
+// Refs principais
 const donateBtn = document.getElementById('donateBtn');
 const taglineEl = document.getElementById('tagline');
 const randomBtn = document.getElementById('randomBtn');
@@ -28,12 +34,22 @@ const letterboxdBtn = document.getElementById('letterboxdBtn');
 const anotherBtn = document.getElementById('anotherBtn');
 const closePopupBtn = document.getElementById('closePopup');
 
+// Cookie banner
+const cookieBanner = document.getElementById('cookieBanner');
+const cookieTextEl = document.getElementById('cookieText');
+const cookieAcceptBtn = document.getElementById('cookieAccept');
+const cookieRejectBtn = document.getElementById('cookieReject');
+
+// Starfield
 const starsCanvas = document.getElementById('starsCanvas');
 let starsCtx = starsCanvas.getContext('2d');
 let stars = [];
 let starsWidth = 0;
 let starsHeight = 0;
 
+// ==========================
+//   STARFIELD
+// ==========================
 function createStars(){
   stars = [];
   const area = starsWidth * starsHeight;
@@ -86,23 +102,114 @@ function initStarfield(){
   requestAnimationFrame(renderStars);
 }
 
+// ==========================
+//   GOOGLE ANALYTICS + COOKIES
+// ==========================
+function loadAnalytics(){
+  if (window.caAnalyticsLoaded) return;
+  window.caAnalyticsLoaded = true;
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  window.gtag = gtag;
+
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-R1E41RWQL2';
+  s.onload = ()=>{
+    gtag('js', new Date());
+    gtag('config', 'G-R1E41RWQL2', {
+      anonymize_ip: true
+    });
+  };
+  document.head.appendChild(s);
+}
+
+function showCookieBanner(){
+  if (!cookieBanner) return;
+  cookieBanner.classList.add('show');
+}
+
+function hideCookieBanner(){
+  if (!cookieBanner) return;
+  cookieBanner.classList.remove('show');
+}
+
+function applyStoredConsent(){
+  try{
+    const stored = localStorage.getItem(CONSENT_KEY);
+    if (stored === 'analytics') {
+      loadAnalytics();
+      hideCookieBanner();
+    } else if (stored === 'essential') {
+      hideCookieBanner();
+    } else {
+      // primeira visita / sem escolha -> mostra pop-up em baixo
+      showCookieBanner();
+    }
+  }catch(e){
+    // se localStorage falhar, mostra banner na mesma
+    showCookieBanner();
+  }
+}
+
+// Botões do banner
+if (cookieAcceptBtn){
+  cookieAcceptBtn.addEventListener('click', ()=>{
+    try{
+      localStorage.setItem(CONSENT_KEY, 'analytics');
+    }catch(e){}
+    loadAnalytics();
+    hideCookieBanner();
+  });
+}
+if (cookieRejectBtn){
+  cookieRejectBtn.addEventListener('click', ()=>{
+    try{
+      localStorage.setItem(CONSENT_KEY, 'essential');
+    }catch(e){}
+    hideCookieBanner();
+  });
+}
+
+// ==========================
+//   LANGUAGE TEXTS
+// ==========================
 function applyLanguageTexts(){
   if(currentLanguage === 'pt-PT'){
     taglineEl.textContent = 'Clique num país para um filme aleatório';
     donateBtn.textContent = 'Ajude-nos';
-    document.documentElement.lang = 'pt';
+    document.documentElement.lang = 'pt-PT';
+
+    if (cookieTextEl && cookieAcceptBtn && cookieRejectBtn){
+      cookieTextEl.textContent =
+        'Usamos o Google Analytics para estatísticas anónimas de utilização. Pode aceitar ou usar apenas o essencial.';
+      cookieAcceptBtn.textContent = 'Aceitar análises';
+      cookieRejectBtn.textContent = 'Só essencial';
+    }
   } else {
     taglineEl.textContent = 'Click a country for a random film';
     donateBtn.textContent = 'Support us';
     document.documentElement.lang = 'en';
+
+    if (cookieTextEl && cookieAcceptBtn && cookieRejectBtn){
+      cookieTextEl.textContent =
+        'We use Google Analytics for anonymous usage statistics. You can accept or continue with essential only.';
+      cookieAcceptBtn.textContent = 'Accept analytics';
+      cookieRejectBtn.textContent = 'Only essential';
+    }
   }
 }
 applyLanguageTexts();
 
+// ==========================
+//   LOAD & THEME
+// ==========================
 const fadeOverlay = document.getElementById('fadeOverlay');
 window.addEventListener('load', ()=>{
   initStarfield();
   requestAnimationFrame(()=> fadeOverlay.style.opacity='0');
+  applyStoredConsent();
 });
 
 const htmlEl = document.documentElement;
@@ -126,7 +233,9 @@ themeCheckbox.addEventListener('change', ()=>{
   }, 200);
 });
 
-/* Línguas */
+// ==========================
+//   LANGUAGE SWITCH BUTTONS
+// ==========================
 document.querySelectorAll('.langBtn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     const newLang = btn.dataset.lang;
@@ -145,7 +254,9 @@ document.querySelectorAll('.langBtn').forEach(btn=>{
   });
 });
 
-/* Popup show/hide + acessibilidade */
+// ==========================
+//   POPUP SHOW/HIDE
+// ==========================
 closePopupBtn.onclick = () => hidePopup();
 
 function showPopup(){
@@ -179,6 +290,9 @@ function setCountryFlag(twoLetterCode, countryName){
   countryFlagImg.alt = nameForAlt ? `Flag of ${nameForAlt}` : 'Country flag';
 }
 
+// ==========================
+//   GLOBE + THEME
+// ==========================
 function normalizedDisplayName(props){
   const raw = (props.name || props.ADMIN || 'Unknown').trim();
   if (/^\s*west\s*bank\s*$/i.test(raw)) return 'Palestine';
@@ -286,6 +400,9 @@ function getFeatureCenter(f){
   }catch(e){ return null; }
 }
 
+// ==========================
+//   GLOBE INTERACTION
+// ==========================
 function spinGlobe(onDone){
   const duration = 900;
   const startPOV = globe.pointOfView();
@@ -377,10 +494,10 @@ fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/wor
     alert('Failed to load country shapes');
   });
 
+// Random country
 randomBtn.addEventListener('click', ()=>{
   if(!worldFeatures || !worldFeatures.length) return;
 
-  // animação do dado
   randomBtn.classList.add('is-rolling');
   setTimeout(() => {
     randomBtn.classList.remove('is-rolling');
@@ -428,6 +545,9 @@ randomBtn.addEventListener('click', ()=>{
   });
 });
 
+// ==========================
+//   TMDB FETCH
+// ==========================
 const countryLanguages = {
   'PT':['pt'],'ES':['es'],'FR':['fr'],'DE':['de'],'IT':['it'],'JP':['ja'],'CN':['zh','cn'],'KR':['ko'],
   'IN':['hi','ta','te'],'BR':['pt'],'MX':['es'],'AR':['es'],'RU':['ru'],'TR':['tr'],'SA':['ar'],'EG':['ar'],
@@ -624,12 +744,15 @@ anotherBtn.addEventListener('click', ()=>{
   }
 });
 
+// ==========================
+//   UTILS: COUNTRY CODE + SNOW
+// ==========================
 function convertToTwoLetterCode(a3){
   const m={'AFG':'AF','ALB':'AL','DZA':'DZ','AND':'AD','AGO':'AO','ARG':'AR','ARM':'AM','AUS':'AU','AUT':'AT','AZE':'AZ','BHS':'BS','BHR':'BH','BGD':'BD','BRB':'BB','BLR':'BY','BEL':'BE','BLZ':'BZ','BEN':'BJ','BTN':'BT','BOL':'BO','BIH':'BA','BWA':'BW','BRA':'BR','BRN':'BN','BGR':'BG','BFA':'BF','BDI':'BI','KHM':'KH','CMR':'CM','CAN':'CA','CPV':'CV','CAF':'CF','TCD':'TD','CHL':'CL','CHN':'CN','COL':'CO','COM':'KM','COG':'CG','COD':'CD','CRI':'CR','HRV':'HR','CUB':'CU','CYP':'CY','CZE':'CZ','DNK':'DK','DJI':'DJ','DOM':'DO','ECU':'EC','EGY':'EG','SLV':'SV','GNQ':'GQ','ERI':'ER','EST':'EE','ETH':'ET','FJI':'FJ','FIN':'FI','FRA':'FR','GAB':'GA','GMB':'GM','GEO':'GE','DEU':'DE','GHA':'GH','GRC':'GR','GTM':'GT','GIN':'GN','GNB':'GW','GUY':'GY','HTI':'HT','HND':'HN','HUN':'HU','ISL':'IS','IND':'IN','IDN':'ID','IRN':'IR','IRQ':'IQ','IRL':'IE','ISR':'IL','ITA':'IT','JAM':'JM','JPN':'JP','JOR':'JO','KAZ':'KZ','KEN':'KE','KWT':'KW','KGZ':'KG','LAO':'LA','LVA':'LV','LBN':'LB','LSO':'LS','LBR':'LR','LBY':'LY','LTU':'LT','LUX':'LU','MDG':'MG','MWI':'MW','MYS':'MY','MDV':'MV','MLI':'ML','MLT':'MT','MRT':'MR','MUS':'MU','MEX':'MX','MDA':'MD','MCO':'MC','MNG':'MN','MNE':'ME','MAR':'MA','MOZ':'MZ','MMR':'MM','NAM':'NA','NPL':'NP','NLD':'NL','NZL':'NZ','NIC':'NI','NER':'NE','NGA':'NG','PRK':'KP','NOR':'NO','OMN':'OM','PAK':'PK','PAN':'PA','PNG':'PG','PRY':'PY','PER':'PE','PHL':'PH','POL':'PL','PRT':'PT','QAT':'QA','ROU':'RO','RUS':'RU','RWA':'RW','SAU':'SA','SEN':'SN','SRB':'RS','SLE':'SL','SGP':'SG','SVK':'SK','SVN':'SI','SOM':'SO','ZAF':'ZA','KOR':'KR','SSD':'SS','ESP':'ES','LKA':'LK','SDN':'SD','SUR':'SR','SWZ':'SZ','SWE':'SE','CHE':'CH','SYR':'SY','TWN':'TW','TJK':'TJ','TZA':'TZ','THA':'TH','TGO':'TG','TTO':'TT','TUN':'TN','TUR':'TR','TKM':'TM','UGA':'UG','UKR':'UA','ARE':'AE','GBR':'GB','USA':'US','URY':'UY','UZB':'UZ','VEN':'VE','VNM':'VN','YEM':'YE','ZMB':'ZM','ZWE':'ZW'};
   return m[a3]||a3;
 }
 
-/* Neve com fade-out suave sem “travar” */
+/* Neve com fade-out suave */
 const snowCanvas = document.getElementById('snowOverlay');
 function startSnow(durationMs=10000){
   const ctx = snowCanvas.getContext('2d');
