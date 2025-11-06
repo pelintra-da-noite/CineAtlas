@@ -31,6 +31,7 @@ html,body{
   font-family:'Inter',system-ui,-apple-system,Roboto,sans-serif;
   color:var(--text-main);
   -webkit-tap-highlight-color: transparent;
+  transition: background-color .35s ease;
 }
 
 /* Transições apenas em elementos interativos / painéis */
@@ -90,10 +91,10 @@ header{
     0 3px 18px rgba(0,0,0,1);
 }
 
-/* Subtítulo */
+/* Subtítulo — ligeiramente mais perto do título */
 #tagline{
   position:absolute;
-  top:90px;
+  top:88px;
   width:100%;
   text-align:center;
   font-size:.9rem;
@@ -131,6 +132,7 @@ html[data-theme="light"] #tagline{
   pointer-events:none;
   opacity:1;
   background:radial-gradient(circle at top, rgba(255,255,255,0.02) 0, transparent 55%);
+  transition: opacity .45s ease;
 }
 html[data-theme="light"] #starsCanvas{ opacity:0; }
 
@@ -166,14 +168,14 @@ html[data-theme="light"] #starsCanvas{ opacity:0; }
   pointer-events:none;
 }
 
-/* Theme fade overlay */
+/* Theme fade overlay – melhora o crossfade dark/light */
 #themeFade {
   position: fixed;
   inset: 0;
-  background: var(--bg-deep);
+  background: #000;
   opacity: 0;
   pointer-events: none;
-  transition: opacity .28s ease;
+  transition: opacity .45s ease;
   z-index: 2500;
 }
 
@@ -186,17 +188,17 @@ html[data-theme="light"] #starsCanvas{ opacity:0; }
   display:flex;
   align-items:center;
   gap:.45rem;
-  background:rgba(0,0,0,.32);
+  background:rgba(0,0,0,.6);
   border:1px solid #c01624;
   padding:.3rem .6rem;
-  border-radius:999px;
-  box-shadow:0 0 10px rgba(0,0,0,.7);
+  border-radius:10px;              /* igual aos outros grupos */
+  box-shadow:0 0 12px var(--panel-glow);
   backdrop-filter:blur(8px);
   opacity:0;
   animation: fadeSlideIn 1s ease forwards .4s;
 }
 html[data-theme="light"] #themeSwitch{
-  background:rgba(255,255,255,.75);
+  background:rgba(255,255,255,.8);
   border-color:#c01624;
   box-shadow:0 0 8px rgba(0,0,0,.18);
 }
@@ -584,7 +586,7 @@ html[data-theme="light"] .donateBtn{
   min-height:0;
 }
 
-/* Poster hover cinema – só outline amarelo */
+/* Poster – outline amarelo sempre, vermelho no hover */
 .posterCol{
   flex:0 0 210px;
   max-width:210px;
@@ -599,12 +601,13 @@ html[data-theme="light"] .donateBtn{
   max-width:210px;
   border-radius:12px;
   box-shadow:none;
-  border:1px solid rgba(255,255,255,.14);
+  border:2px solid rgba(216,163,0,.85);   /* sempre amarelo */
+  box-sizing:border-box;                   /* evita “desalinhamento” */
   display:block;
   transition: border-color .25s ease;
 }
 #posterLink:hover #moviePoster{
-  border-color:rgba(216,163,0,.9);
+  border-color:#c01624;                    /* vermelho no hover */
 }
 
 .infoCol{
