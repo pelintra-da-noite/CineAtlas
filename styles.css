@@ -33,19 +33,54 @@ html,body{
   -webkit-tap-highlight-color: transparent;
 }
 
-* {
+/* Transições apenas em elementos interativos / painéis */
+button,
+a,
+.langBtn,
+.donateBtn,
+.iconBtn,
+.actionBtn,
+#popup,
+#themeSwitch,
+#controlsBar,
+#donateBar {
   transition: color .25s ease,
               background-color .25s ease,
               border-color .25s ease,
-              box-shadow .25s ease;
+              box-shadow .25s ease,
+              transform .18s ease;
+}
+
+/* Focus visível para acessibilidade */
+button:focus-visible,
+a:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+}
+
+.iconBtn:focus-visible,
+.langBtn:focus-visible,
+.donateBtn:focus-visible,
+.actionBtn:focus-visible{
+  box-shadow:0 0 0 2px rgba(216,163,0,.65);
 }
 
 /* ===== HEADER ===== */
 header{
   position:absolute;
-  top:18px;
+  top:26px;
   width:100%;
   text-align:center;
+  z-index:1200;
+  cursor:default;
+  user-select:none;
+  pointer-events:auto;
+  opacity:0;
+  animation: fadeSlideIn 1s ease forwards;
+}
+
+#siteTitle{
+  margin:0;
   font-family:'Playfair Display',serif;
   font-size:3rem;
   font-style:italic;
@@ -54,12 +89,6 @@ header{
   text-shadow:
     0 0 10px rgba(0,0,0,.9),
     0 3px 18px rgba(0,0,0,1);
-  z-index:1200;
-  cursor:default;
-  user-select:none;
-  pointer-events:auto;
-  opacity:0;
-  animation: fadeSlideIn 1s ease forwards;
 }
 
 /* Subtítulo */
@@ -81,7 +110,7 @@ header{
   animation: fadeSlideIn 1s ease forwards .2s;
 }
 
-html[data-theme="light"] header{
+html[data-theme="light"] #siteTitle{
   color:#b02323;
   text-shadow:
     0 0 7px rgba(255,255,255,.8),
@@ -127,7 +156,7 @@ html[data-theme="light"] #starsCanvas{ opacity:0; }
   }
 }
 
-/* Initial fade-in overlay (mantemos transparente para evitar ecrã preto se JS falhar) */
+/* Initial fade-in overlay */
 #fadeOverlay{
   position:fixed;
   inset:0;
@@ -215,9 +244,8 @@ html[data-theme="light"] #themeSwitch{
   position:absolute;
   cursor:pointer;
   inset:0;
-  background:rgba(150,150,150,.25);  /* mais cinzento em dark mode */
+  background:rgba(150,150,150,.25);
   border-radius:999px;
-  transition:.2s;
 }
 html[data-theme="light"] .slider{
   background:rgba(0,0,0,.06);
@@ -256,13 +284,13 @@ input:checked + .slider:before {
   cursor:pointer;
   padding:0;
   box-shadow:none;
-  transition: background .15s ease, color .15s ease, border-color .15s ease;
   touch-action: manipulation;
 }
 .iconBtn:hover{
   background:rgba(216,163,0,.16);
   color:var(--accent);
   border-color:var(--accent);
+  transform: translateY(-1px);
 }
 html[data-theme="light"] .iconBtn{
   border-color:rgba(0,0,0,.12);
@@ -330,12 +358,12 @@ html[data-theme="light"] #controlsBar{ background:rgba(255,255,255,.8); }
   font-weight:700;
   min-width:110px;
   text-align:center;
-  transition: color .15s ease, background .15s ease, border-color .15s ease;
   touch-action: manipulation;
 }
 .langBtn:hover{
   background:rgba(216,163,0,.15);
   color:var(--text-main);
+  transform: translateY(-1px);
 }
 .langBtn.active{
   background:var(--accent);
@@ -378,7 +406,6 @@ html[data-theme="light"] #donateBar{ background:rgba(255,255,255,.8); }
   cursor:pointer;
   text-decoration:none;
   box-shadow:0 0 10px var(--panel-glow);
-  transition: box-shadow .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
   white-space:nowrap;
   touch-action: manipulation;
 }
@@ -386,6 +413,7 @@ html[data-theme="light"] #donateBar{ background:rgba(255,255,255,.8); }
   background:#000;
   color:var(--accent);
   border-color:var(--accent);
+  transform: translateY(-1px);
 }
 html[data-theme="light"] .donateBtn{
   box-shadow:0 0 10px rgba(216,163,0,.35);
@@ -393,21 +421,20 @@ html[data-theme="light"] .donateBtn{
 
 /* créditos ao lado do botão */
 #creditText a {
-  color: var(--text-dim) !important;  /* força a cor base */
+  color: var(--text-dim) !important;
   text-decoration: none;
-  transition: color .25s ease;
 }
 
 #creditText a:visited {
-  color: var(--text-dim) !important;  /* evita o roxo padrão */
+  color: var(--text-dim) !important;
 }
 
 #creditText a:hover {
-  color: #c01624 !important;          /* vermelho do outline */
+  color: #c01624 !important;
 }
 
 #creditText a:active {
-  color: #d8a300 !important;          /* pequeno toque amarelo ao clicar (opcional) */
+  color: #d8a300 !important;
 }
 
 /* POPUP – cinematic glass */
@@ -417,8 +444,8 @@ html[data-theme="light"] .donateBtn{
   left:50%;
   transform:translate(-50%,-46%) scale(.96);
   width:min(720px, 92vw);
-  max-height:90vh; /* mais alto, quase o ecrã todo */
-  min-height:0;    /* deixa encolher em ecrãs baixos */
+  max-height:90vh;
+  min-height:0;
   background:linear-gradient(135deg, rgba(0,0,0,0.36), rgba(20,12,0,0.72));
   color:var(--text-main);
   padding:1.1rem 1.2rem 1rem;
@@ -490,7 +517,6 @@ html[data-theme="light"] .donateBtn{
   justify-content:center;
   padding:0;
   box-shadow:none;
-  transition:background .15s ease,color .15s ease,border-color .15s ease;
   touch-action: manipulation;
 }
 #closePopup span{
@@ -510,10 +536,19 @@ html[data-theme="light"] .donateBtn{
   align-items:flex-start;
   gap:1rem;
   flex:1;
-  min-height:0;       
+  min-height:0;
 }
 
-.posterCol{ flex:0 0 210px;max-width:210px; }
+/* Poster hover cinema */
+.posterCol{
+  flex:0 0 210px;
+  max-width:210px;
+}
+#posterLink{
+  display:block;
+  border-radius:12px;
+  overflow:hidden;
+}
 #moviePoster{
   width:100%;
   max-width:210px;
@@ -521,6 +556,12 @@ html[data-theme="light"] .donateBtn{
   box-shadow:none;
   border:1px solid rgba(255,255,255,.14);
   display:block;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+#posterLink:hover #moviePoster{
+  transform: translateY(-2px);
+  box-shadow:0 18px 40px rgba(0,0,0,.85);
+  border-color:rgba(216,163,0,.65);
 }
 
 .infoCol{
@@ -532,8 +573,14 @@ html[data-theme="light"] .donateBtn{
 }
 
 #titleBlock{
-  margin:0 0 .45rem;
+  margin:0 0 .6rem;
+  padding-bottom:.4rem;
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
+html[data-theme="light"] #titleBlock{
+  border-bottom-color:rgba(0,0,0,.08);
+}
+
 #movieTitleOriginal{
   margin:0;
   font-size:1.15rem;
@@ -568,6 +615,10 @@ html[data-theme="light"] .donateBtn{
   overflow-x:hidden;
   padding-right:.25rem;
 }
+#overviewText.loading{
+  opacity:.8;
+  font-style:italic;
+}
 
 .actionsRow{
   margin-top:auto;
@@ -594,10 +645,33 @@ html[data-theme="light"] .donateBtn{
   border:1px solid transparent;
   box-sizing:border-box;
   box-shadow:none;
-  transition: background .15s ease, color .15s ease, border-color .15s ease;
   touch-action: manipulation;
 }
 .actionBtn:hover{
+  background:#000;
+  color:var(--accent);
+  border-color:var(--accent);
+  transform: translateY(-1px);
+}
+
+/* Letterboxd destaque */
+#letterboxdBtn{
+  background:#000;
+  color:var(--accent);
+  border-color:var(--accent);
+}
+#letterboxdBtn:hover{
+  background:var(--accent);
+  color:#000;
+  border-color:var(--accent);
+}
+
+/* Copy neutro */
+#copyBtn{
+  background:rgba(0,0,0,.4);
+  color:var(--text-main);
+}
+#copyBtn:hover{
   background:#000;
   color:var(--accent);
   border-color:var(--accent);
@@ -648,6 +722,16 @@ html[data-theme="light"] #closePopup:hover{
 /*        RESPONSIVE         */
 /* ========================= */
 
+@media (min-width: 1200px){
+  header{
+    top:32px;
+  }
+  #siteTitle{
+    font-size:3.6rem;
+  }
+}
+
+/* max 900px */
 @media (max-width: 900px){
   #themeSwitch{ top:12px;right:12px; transform:scale(.9); }
   #controlsBar,#donateBar{ bottom:14px; }
@@ -657,8 +741,10 @@ html[data-theme="light"] #closePopup:hover{
 /* tablets / telemóveis médios */
 @media (max-width: 720px){
   header{
+    top:52px;
+  }
+  #siteTitle{
     font-size:2.4rem;
-    top:52px;              /* título mais baixo para não tocar no switch */
   }
   #tagline{
     top:104px;
@@ -712,8 +798,10 @@ html[data-theme="light"] #closePopup:hover{
 /* telemóveis pequenos */
 @media (max-width: 480px){
   header{
+    top:60px;
+  }
+  #siteTitle{
     font-size:2rem;
-    top:60px;              /* ainda mais para baixo */
   }
   #tagline{
     top:108px;
@@ -737,11 +825,11 @@ html[data-theme="light"] #closePopup:hover{
   }
 
   #donateBar{
-    bottom:64px;      /* em cima */
+    bottom:64px;
   }
 
   #controlsBar{
-    bottom:12px;      /* por baixo */
+    bottom:12px;
     justify-content:center;
   }
 
