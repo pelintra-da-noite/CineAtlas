@@ -62,7 +62,16 @@
 
   <!-- Theme + Randomizer -->
   <div id="themeSwitch" aria-label="Theme switch">
-    <span id="themeLabel"></span>
+    <span id="themeLabel" aria-hidden="true">
+      <!-- sol -->
+      <svg class="icon-sun-min theme-icon" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="6"></circle>
+      </svg>
+      <!-- lua -->
+      <svg class="icon-moon-min theme-icon" viewBox="0 0 24 24">
+        <path d="M18 13.5A6.5 6.5 0 0 1 10.5 6 5.5 5.5 0 1 0 18 13.5Z"></path>
+      </svg>
+    </span>
     <label class="switch" aria-label="Toggle theme">
       <input id="themeCheckbox" type="checkbox" />
       <span class="slider"></span>
@@ -98,6 +107,11 @@
     </span>
   </div>
 
+  <!-- Privacy link -->
+  <a id="privacyLink" class="legalLink" href="/privacy.html" target="_blank" rel="noopener">
+    Privacy &amp; Cookies
+  </a>
+
   <!-- POPUP -->
   <div id="popup" role="dialog" aria-modal="true" aria-labelledby="movieTitleOriginal">
     <div id="popupHeader">
@@ -128,7 +142,6 @@
 
         <div class="actionsRow" id="actionsRow">
           <a class="actionBtn" id="letterboxdBtn" href="#" target="_blank" rel="noopener">See on Letterboxd</a>
-          <button class="actionBtn" id="copyBtn" type="button">Copy</button>
           <button class="actionBtn" id="anotherBtn" type="button">Another one</button>
         </div>
       </div>
