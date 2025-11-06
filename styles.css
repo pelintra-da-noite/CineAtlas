@@ -465,7 +465,7 @@ html[data-theme="light"] #donateBar{
   align-items:center;
   justify-content:center;
   padding:.45rem .8rem;             
-  border-radius:999px;
+  border-radius:none;
   border:1px solid var(--lang-border);
   font-size:.78rem;
   line-height:1;
