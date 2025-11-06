@@ -97,11 +97,6 @@
     </span>
   </div>
 
-  <!-- Privacy link -->
-  <a id="privacyLink" class="legalLink" href="/privacy.html" target="_blank" rel="noopener">
-    Privacy &amp; Cookies
-  </a>
-
   <!-- POPUP -->
   <div id="popup" role="dialog" aria-modal="true" aria-labelledby="movieTitleOriginal">
     <div id="popupHeader">
@@ -153,9 +148,33 @@
     </div>
   </div>
 
+    <!-- Cookie Popup (consent) -->
+  <div id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie notice">
+    <div class="cookie-main">
+      <div id="cookieText" class="cookie-text">
+        <!-- texto é preenchido via JS consoante o idioma -->
+      </div>
+      <a href="/privacy.html"
+         class="cookie-more"
+         target="_blank"
+         rel="noopener">
+        Privacy &amp; Cookies policy
+      </a>
+    </div>
+    <div class="cookie-actions">
+      <button id="cookieAccept" class="cookieBtn primary" type="button">
+        Accept analytics
+      </button>
+      <button id="cookieReject" class="cookieBtn" type="button">
+        Only essential
+      </button>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
   <script src="https://unpkg.com/globe.gl"></script>
   <script src="script.js"></script>
 </body>
 </html>
+
