@@ -10,7 +10,7 @@ let worldFeatures = [];
 let lastPolygonClickTime = 0;
 
 // Consent key p/ localStorage
-const CONSENT_KEY = 'ca-consent';
+const CONSENT_KEY = 'ca-consent-v2';
 
 // Refs principais
 const donateBtn = document.getElementById('donateBtn');
