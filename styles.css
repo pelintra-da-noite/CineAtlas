@@ -1072,6 +1072,22 @@ html[data-theme="light"] #cookieBanner{
   text-decoration:none;
 }
 
+.cookie-link-wrap {
+  display:block;
+  margin-top:.4rem;            /* espaçamento entre texto e link */
+}
+
+.cookie-link-wrap a {
+  color:var(--accent);
+  text-decoration:underline;
+  font-weight:500;
+  font-size:.8rem;
+}
+
+.cookie-link-wrap a:hover {
+  text-decoration:none;
+}
+
 /* botões centrados horizontalmente */
 .cookie-actions{
   display:flex;
