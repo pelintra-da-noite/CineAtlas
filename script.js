@@ -16,7 +16,6 @@ const popupEl = document.getElementById('popup');
 const countryFlagImg = document.getElementById('countryFlagImg');
 const countryNameEl = document.getElementById('countryName');
 
-const posterLinkEl = document.getElementById('posterLink');
 const moviePosterEl = document.getElementById('moviePoster');
 const movieTitleOriginalEl = document.getElementById('movieTitleOriginal');
 const movieTitleTranslatedEl = document.getElementById('movieTitleTranslated');
@@ -503,7 +502,6 @@ function showAntarcticaMessage(){
   countryNameEl.innerText = t.title.toUpperCase();
 
   moviePosterEl.style.display = 'none';
-  posterLinkEl.href = '#';
 
   movieTitleOriginalEl.textContent = t.title;
   movieTitleTranslatedEl.textContent = '';
@@ -534,7 +532,6 @@ async function fetchMovie(twoLetterCode, countryName){
   countryNameEl.innerText = countryName.toUpperCase();
 
   moviePosterEl.style.display = 'none';
-  posterLinkEl.href = '#';
   moviePosterEl.alt = '';
 
   movieTitleOriginalEl.textContent = '';
@@ -594,10 +591,8 @@ async function fetchMovie(twoLetterCode, countryName){
     moviePosterEl.src = posterUrl;
     moviePosterEl.alt = movie.title || 'Movie poster';
     moviePosterEl.style.display = 'block';
-    posterLinkEl.href = letterboxdUrl;
   } else {
     moviePosterEl.style.display = 'none';
-    posterLinkEl.href = letterboxdUrl;
   }
 
   const originalTitle = movie.original_title || movie.title || '';
