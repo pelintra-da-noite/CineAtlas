@@ -459,23 +459,22 @@ html[data-theme="light"] #donateBar{
   border-color:var(--accent);
 }
 
-/* “SaramagaBytes © 2025” a parecer um segundo botão do grupo */
+/* “SaramagaBytes © 2025” */
 #creditText{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  padding:.45rem .8rem;             
-  border-radius:none;
-  border:1px solid var(--lang-border);
+  padding:.45rem .8rem;
+  border:none;                     /* remove o outline */
+  border-radius:999px;
   font-size:.78rem;
   line-height:1;
+  background:transparent;           /* sem fundo extra */
 }
 #creditText a {
   color: var(--text-dim) !important;
   text-decoration: none;
-}
-#creditText a:visited {
-  color: var(--text-dim) !important;
+  transition: color .25s ease;
 }
 #creditText a:hover {
   color: #c01624 !important;
