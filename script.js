@@ -113,6 +113,7 @@ const themeFade = document.getElementById('themeFade');
 htmlEl.setAttribute('data-theme', 'dark');
 themeCheckbox.checked = false;
 
+/* Fade suavizado entre temas */
 themeCheckbox.addEventListener('change', ()=>{
   const next = themeCheckbox.checked ? 'light' : 'dark';
 
@@ -126,6 +127,7 @@ themeCheckbox.addEventListener('change', ()=>{
   }, 200);
 });
 
+/* Línguas */
 document.querySelectorAll('.langBtn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     const newLang = btn.dataset.lang;
@@ -632,7 +634,7 @@ function convertToTwoLetterCode(a3){
   return m[a3]||a3;
 }
 
-/* Neve com fade-out suave sem "travar" */
+/* Neve com fade-out suave sem “travar” */
 const snowCanvas = document.getElementById('snowOverlay');
 function startSnow(durationMs=10000){
   const ctx = snowCanvas.getContext('2d');
