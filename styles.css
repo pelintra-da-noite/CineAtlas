@@ -1018,14 +1018,17 @@ html[data-theme="light"] #cookieBanner{
   position:fixed;
   left:50%;
   transform:translateX(-50%) translateY(10px);
-  bottom:18px;
+  bottom:22px;
   z-index:2100;
+
   display:flex;
-  flex-direction:column;         /* texto em cima, botões em baixo */
-  align-items:stretch;
-  gap:.4rem;
-  max-width:540px;
-  padding:.7rem 1rem .65rem;
+  flex-direction:column;
+  align-items:center;          /* centra conteúdo horizontalmente */
+  justify-content:center;
+  gap:.7rem;
+
+  max-width:560px;
+  padding:1rem 1.4rem 1rem;    /* mais respiro */
   border-radius:999px;
   border:1px solid rgba(192,22,36,.9);
   box-shadow:0 14px 30px rgba(0,0,0,.85), 0 0 0 1px rgba(216,163,0,.25);
@@ -1033,8 +1036,9 @@ html[data-theme="light"] #cookieBanner{
   backdrop-filter:blur(18px) saturate(130%);
   -webkit-backdrop-filter:blur(18px) saturate(130%);
   color:var(--text-main);
-  font-size:.8rem;
-  line-height:1.4;
+  font-size:.85rem;
+  line-height:1.5;
+
   opacity:0;
   pointer-events:none;
   transition:opacity .35s ease, transform .35s ease;
@@ -1050,39 +1054,39 @@ html[data-theme="light"] #cookieBanner{
   transform:translateX(-50%) translateY(0);
 }
 
-.cookie-main{
-  flex:1;
-}
-
-/* texto informativo em cima, horizontal (quebra se for preciso) */
+/* texto em cima, centrado, com respiro */
 .cookie-text{
   margin:0;
+  text-align:center;
   color:var(--text-dim);
+  padding:0 .6rem;
 }
 
 /* link dentro do texto */
 .cookie-text a{
   color:var(--accent);
   text-decoration:underline;
+  font-weight:500;
 }
 .cookie-text a:hover{
   text-decoration:none;
 }
 
-/* botões em baixo, alinhados à direita */
+/* botões centrados horizontalmente */
 .cookie-actions{
   display:flex;
-  justify-content:flex-end;
+  justify-content:center;
   align-items:center;
-  gap:.4rem;
+  gap:.6rem;
+  flex-wrap:wrap;
 }
 
 .cookieBtn{
   appearance:none;
   border-radius:999px;
   border:1px solid var(--lang-border);
-  padding:.35rem .8rem;
-  font-size:.75rem;
+  padding:.4rem 1rem;
+  font-size:.8rem;
   font-weight:600;
   letter-spacing:.06em;
   text-transform:uppercase;
@@ -1090,6 +1094,8 @@ html[data-theme="light"] #cookieBanner{
   color:var(--text-dim);
   cursor:pointer;
   white-space:nowrap;
+  box-shadow:none;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
 .cookieBtn.primary{
   background:var(--accent);
@@ -1111,17 +1117,15 @@ html[data-theme="light"] #cookieBanner{
   outline-offset:2px;
 }
 
-/* Em mobile pequeno, continua a ser tipo cartão, só com mais largura cheia */
+/* mobile: cartão, largura total */
 @media (max-width: 480px){
   #cookieBanner{
     bottom:70px;
     max-width:92vw;
     border-radius:18px;
-    transform:translateX(-50%) translateY(10px);
-  }
-  #cookieBanner.show{
-    transform:translateX(-50%) translateY(0);
+    padding:1rem;
   }
 }
+
 
 
