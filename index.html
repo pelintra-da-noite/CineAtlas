@@ -8,16 +8,6 @@
   <meta name="description" content="Discover a random film from every country on the globe. CineAtlas connects world cinema lovers through an interactive experience."/>
   <meta name="theme-color" content="#000000">
 
-  <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R1E41RWQL2"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-
-    gtag('js', new Date());
-    gtag('config', 'G-R1E41RWQL2');
-  </script>
-
   <!-- Favicon / Icons -->
   <link rel="icon" type="image/png" href="assets/favicon.png" />
   <link rel="apple-touch-icon" href="assets/favicon.png" />
@@ -124,7 +114,6 @@
 
     <div id="popupBody">
       <div class="posterCol">
-        <!-- poster já não é link -->
         <img id="moviePoster" src="" alt="" />
       </div>
 
@@ -152,6 +141,17 @@
 
   <!-- Globe -->
   <div id="globeViz"></div>
+
+  <!-- Cookie Banner -->
+  <div id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie notice">
+    <div id="cookieText" class="cookie-text">
+      <!-- texto preenchido via JS conforme idioma -->
+    </div>
+    <div class="cookie-actions">
+      <button id="cookieAccept" class="cookieBtn primary" type="button">Accept analytics</button>
+      <button id="cookieReject" class="cookieBtn" type="button">Only essential</button>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
