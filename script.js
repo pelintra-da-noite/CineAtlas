@@ -4,7 +4,6 @@ let selectedFeature = null;
 let lastCountryCode = null;
 let lastCountryName = null;
 let hoverFeature = null;
-let currentClipText = '';
 let worldFeatures = [];
 let lastPolygonClickTime = 0;
 
@@ -28,7 +27,6 @@ const overviewTextEl = document.getElementById('overviewText');
 const actionsRowEl = document.getElementById('actionsRow');
 const letterboxdBtn = document.getElementById('letterboxdBtn');
 const anotherBtn = document.getElementById('anotherBtn');
-const copyBtn = document.getElementById('copyBtn');
 const closePopupBtn = document.getElementById('closePopup');
 
 const starsCanvas = document.getElementById('starsCanvas');
@@ -110,35 +108,16 @@ window.addEventListener('load', ()=>{
 
 const htmlEl = document.documentElement;
 const themeCheckbox = document.getElementById('themeCheckbox');
-const themeLabel = document.getElementById('themeLabel');
 const themeFade = document.getElementById('themeFade');
-
-function setThemeIcon(mode){
-  if(mode === 'light'){
-    themeLabel.innerHTML = `
-      <svg class="icon-sun-min" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="12" r="6"></circle>
-      </svg>
-    `;
-  } else {
-    themeLabel.innerHTML = `
-      <svg class="icon-moon-min" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M18 13.5A6.5 6.5 0 0 1 10.5 6 5.5 5.5 0 1 0 18 13.5Z"></path>
-      </svg>
-    `;
-  }
-}
 
 htmlEl.setAttribute('data-theme', 'dark');
 themeCheckbox.checked = false;
-setThemeIcon('dark');
 
 themeCheckbox.addEventListener('change', ()=>{
   themeFade.style.opacity = '1';
   setTimeout(() => {
     const next = themeCheckbox.checked ? 'light' : 'dark';
     htmlEl.setAttribute('data-theme', next);
-    setThemeIcon(next);
     applyThemeToGlobe();
     requestAnimationFrame(()=> themeFade.style.opacity = '0');
   }, 120);
@@ -543,7 +522,6 @@ async function fetchMovie(twoLetterCode, countryName){
       : 'No description available.',
     seeLetterboxd: currentLanguage==='pt-PT' ? 'Ver no Letterboxd' : 'See on Letterboxd',
     another: currentLanguage==='pt-PT' ? 'Outro' : 'Another one',
-    copy:    currentLanguage==='pt-PT' ? 'Copiar' : 'Copy',
     directorLabel: currentLanguage==='pt-PT' ? 'Realizador:' : 'Director:'
   };
 
@@ -563,7 +541,6 @@ async function fetchMovie(twoLetterCode, countryName){
 
   letterboxdBtn.textContent = t.seeLetterboxd;
   anotherBtn.textContent = t.another;
-  copyBtn.textContent = t.copy;
   directorLabelEl.textContent = t.directorLabel;
 
   showPopup();
@@ -607,7 +584,6 @@ async function fetchMovie(twoLetterCode, countryName){
   const overview = movie.overview || t.noDesc;
   const letterboxdQuery = encodeURIComponent((movie.title || '') + ' ' + (movieYear || ''));
   const letterboxdUrl = `https://letterboxd.com/search/${letterboxdQuery}/`;
-  const clipText = countryName + ' → ' + (movie.title || '') + (movieYear ? ` (${movieYear})` : '');
 
   if(posterUrl){
     moviePosterEl.src = posterUrl;
@@ -635,7 +611,6 @@ async function fetchMovie(twoLetterCode, countryName){
   overviewTextEl.textContent = overview;
 
   letterboxdBtn.href = letterboxdUrl;
-  currentClipText = clipText;
 
   actionsRowEl.style.visibility = 'visible';
 
@@ -647,14 +622,6 @@ anotherBtn.addEventListener('click', ()=>{
   if(lastCountryCode && lastCountryName){
     fetchMovie(lastCountryCode,lastCountryName);
   }
-});
-
-copyBtn.addEventListener('click', ()=>{
-  if(!navigator.clipboard || !currentClipText) return;
-  navigator.clipboard.writeText(currentClipText);
-  const prev = copyBtn.textContent;
-  copyBtn.textContent = currentLanguage === 'pt-PT' ? 'Copiado' : 'Copied';
-  setTimeout(()=> copyBtn.textContent = prev, 800);
 });
 
 function convertToTwoLetterCode(a3){
