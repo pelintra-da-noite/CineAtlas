@@ -29,6 +29,7 @@ const actionsRowEl = document.getElementById('actionsRow');
 const letterboxdBtn = document.getElementById('letterboxdBtn');
 const anotherBtn = document.getElementById('anotherBtn');
 const copyBtn = document.getElementById('copyBtn');
+const closePopupBtn = document.getElementById('closePopup');
 
 const starsCanvas = document.getElementById('starsCanvas');
 let starsCtx = starsCanvas.getContext('2d');
@@ -161,11 +162,17 @@ document.querySelectorAll('.langBtn').forEach(btn=>{
   });
 });
 
-document.getElementById('closePopup').onclick = () => hidePopup();
+/* Popup show/hide + acessibilidade */
+closePopupBtn.onclick = () => hidePopup();
+
 function showPopup(){
   popupEl.style.display='block';
-  requestAnimationFrame(()=>popupEl.classList.add('show'));
+  requestAnimationFrame(()=>{
+    popupEl.classList.add('show');
+    closePopupBtn.focus();
+  });
 }
+
 function hidePopup(){
   popupEl.classList.remove('show');
   setTimeout(()=>{
@@ -173,11 +180,20 @@ function hidePopup(){
   },200);
 }
 
-function setCountryFlag(twoLetterCode){
+/* Fechar popup com ESC */
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape' && popupEl.classList.contains('show')){
+    hidePopup();
+  }
+});
+
+function setCountryFlag(twoLetterCode, countryName){
   const cc = (twoLetterCode||'').toLowerCase();
   countryFlagImg.src = `https://flagcdn.com/${cc}.svg`;
   countryFlagImg.onerror = ()=>{ countryFlagImg.style.display='none'; };
   countryFlagImg.style.display = 'inline-block';
+  const nameForAlt = countryName || lastCountryName;
+  countryFlagImg.alt = nameForAlt ? `Flag of ${nameForAlt}` : 'Country flag';
 }
 
 function normalizedDisplayName(props){
@@ -441,7 +457,6 @@ async function discoverMovie(twoCode, useLangFilter = true, maxAttempts = 20){
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const page = Math.floor(Math.random() * 10) + 1;
 
-    // chama a função serverless da Vercel
     const url = new URL('/api/discover', window.location.origin);
     url.searchParams.set('country', twoCode);
     url.searchParams.set('language', currentLanguage);
@@ -456,7 +471,6 @@ async function discoverMovie(twoCode, useLangFilter = true, maxAttempts = 20){
       let results = data.results;
       if (!results.length) continue;
 
-      // mantém o teu filtro por idioma
       if (useLangFilter) {
         const expected = countryLanguages[twoCode];
         if (expected) {
@@ -501,7 +515,7 @@ function showAntarcticaMessage(){
             ? 'Não encontramos nenhum filme, mas encontramos neve.'
             : "We didn’t find any movies, but we found snow."
   };
-  setCountryFlag('AQ');
+  setCountryFlag('AQ', t.title);
   countryNameEl.innerText = t.title.toUpperCase();
 
   moviePosterEl.style.display = 'none';
@@ -533,7 +547,7 @@ async function fetchMovie(twoLetterCode, countryName){
     directorLabel: currentLanguage==='pt-PT' ? 'Realizador:' : 'Director:'
   };
 
-  setCountryFlag(twoLetterCode);
+  setCountryFlag(twoLetterCode, countryName);
   countryNameEl.innerText = countryName.toUpperCase();
 
   moviePosterEl.style.display = 'none';
@@ -544,7 +558,7 @@ async function fetchMovie(twoLetterCode, countryName){
   movieTitleTranslatedEl.textContent = '';
   directorLineEl.style.visibility = 'hidden';
   overviewTextEl.textContent = t.loading;
-  overviewTextEl.classList.add('loading');   // estado de loading
+  overviewTextEl.classList.add('loading');
   actionsRowEl.style.visibility = 'hidden';
 
   letterboxdBtn.textContent = t.seeLetterboxd;
@@ -571,7 +585,7 @@ async function fetchMovie(twoLetterCode, countryName){
   }
 
   clearInterval(lotteryInterval);
-  overviewTextEl.classList.remove('loading');   // remove estado de loading
+  overviewTextEl.classList.remove('loading');
 
   if(!movie){
     movieTitleOriginalEl.textContent = countryName;
@@ -674,13 +688,12 @@ function startSnow(durationMs=10000){
   }));
 
   const start = performance.now();
-  const fadeDuration = 1000; // deve bater com o transition do CSS
+  const fadeDuration = 1000;
   snowCanvas.classList.add('show');
 
   function step(now){
     const elapsed = now - start;
 
-    // quando tempo útil terminar, começa o fade-out
     if (elapsed > durationMs && snowCanvas.classList.contains('show')) {
       snowCanvas.classList.remove('show');
     }
@@ -688,7 +701,6 @@ function startSnow(durationMs=10000){
     ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
     ctx.fillStyle = 'rgba(255,255,255,0.95)';
 
-    // continuar animação mesmo no fade-out
     for(const f of flakes){
       f.a += 0.01;
       f.x += f.w + Math.sin(f.a)*0.2;
