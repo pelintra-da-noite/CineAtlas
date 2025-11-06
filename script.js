@@ -184,8 +184,10 @@ function applyLanguageTexts(){
     if (cookieTextEl && cookieAcceptBtn && cookieRejectBtn){
       cookieTextEl.innerHTML =
         'Usamos um pouco de Google Analytics para perceber como o CineAtlas é usado e continuar a melhorá-lo. ' +
-        'Pode aceitar ou seguir apenas com cookies essenciais. ' +
-        '<a href="/privacy.html" target="_blank" rel="noopener">Ver detalhes de Privacidade &amp; Cookies</a>.';
+        'Pode aceitar ou seguir apenas com cookies essenciais.' +
+        '<br><span class="cookie-link-wrap">' +
+        '<a href="/privacy.html" target="_blank" rel="noopener">Ver detalhes de Privacidade &amp; Cookies</a>' +
+        '</span>';
       cookieAcceptBtn.textContent = 'Permitir análises';
       cookieRejectBtn.textContent = 'Só essenciais';
     }
@@ -197,8 +199,10 @@ function applyLanguageTexts(){
     if (cookieTextEl && cookieAcceptBtn && cookieRejectBtn){
       cookieTextEl.innerHTML =
         'We use a bit of Google Analytics to see how CineAtlas is used and keep improving it. ' +
-        'You can accept or continue with essential cookies only. ' +
-        '<a href="/privacy.html" target="_blank" rel="noopener">See Privacy &amp; Cookies details</a>.';
+        'You can accept or continue with essential cookies only.' +
+        '<br><span class="cookie-link-wrap">' +
+        '<a href="/privacy.html" target="_blank" rel="noopener">See Privacy &amp; Cookies details</a>' +
+        '</span>';
       cookieAcceptBtn.textContent = 'Allow analytics';
       cookieRejectBtn.textContent = 'Essential only';
     }
