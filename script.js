@@ -114,13 +114,16 @@ htmlEl.setAttribute('data-theme', 'dark');
 themeCheckbox.checked = false;
 
 themeCheckbox.addEventListener('change', ()=>{
+  const next = themeCheckbox.checked ? 'light' : 'dark';
+
+  themeFade.style.background = next === 'light' ? '#f7f3e7' : '#000000';
   themeFade.style.opacity = '1';
+
   setTimeout(() => {
-    const next = themeCheckbox.checked ? 'light' : 'dark';
     htmlEl.setAttribute('data-theme', next);
     applyThemeToGlobe();
     requestAnimationFrame(()=> themeFade.style.opacity = '0');
-  }, 120);
+  }, 200);
 });
 
 document.querySelectorAll('.langBtn').forEach(btn=>{
