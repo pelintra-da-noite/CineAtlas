@@ -414,32 +414,45 @@ html[data-theme="light"] .langBtn.active{ color:#000; }
   bottom:20px;
   z-index:1300;
   display:flex;
-  flex-direction:row;
   align-items:center;
-  justify-content:flex-start;
+  justify-content:center;      /* centraliza o conteúdo dentro da pílula */
   gap:.5rem;
   border:1px solid #c01624;
   border-radius:999px;
-  padding:.35rem .5rem;
+  padding:.35rem .75rem;       /* ligeiramente mais espaço lateral */
   box-shadow:0 0 12px var(--panel-glow);
+  background:linear-gradient(135deg, rgba(0,0,0,0.36), rgba(20,12,0,0.72));
+  backdrop-filter:blur(18px) saturate(130%);
+  -webkit-backdrop-filter:blur(18px) saturate(130%);
   opacity:0;
   animation: fadeSlideIn 1s ease forwards .6s;
 }
 
+html[data-theme="light"] #donateBar{
+  background:linear-gradient(135deg, rgba(255,255,255,0.70), rgba(252,244,220,0.86));
+}
+
+/* Botão de suporte perfeitamente centrado */
 .donateBtn{
+  display:flex;                      /* garante alinhamento */
+  align-items:center;                /* centra verticalmente o texto */
+  justify-content:center;            /* centra horizontalmente */
   appearance:none;
   background:var(--accent);
   color:#000;
   border:1px solid transparent;
   border-radius:999px;
   box-sizing:border-box;
-  padding:.35rem .8rem;
+  padding:.4rem .9rem;               /* equilíbrio entre eixos */
   font-weight:700;
   font-size:.8rem;
   cursor:pointer;
   text-decoration:none;
   box-shadow:0 0 6px var(--panel-glow);
   white-space:nowrap;
+  min-width:90px;
+  height:32px;                       /* altura fixa ajuda a centralizar */
+  line-height:1;                     /* remove offset vertical do texto */
   touch-action: manipulation;
 }
 .donateBtn:hover{
@@ -448,22 +461,19 @@ html[data-theme="light"] .langBtn.active{ color:#000; }
   border-color:var(--accent);
 }
 
-/* créditos ao lado do botão */
 #creditText{
   font-size:.78rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
 }
 #creditText a {
   color: var(--text-dim) !important;
   text-decoration: none;
 }
-#creditText a:visited {
-  color: var(--text-dim) !important;
-}
 #creditText a:hover {
   color: #c01624 !important;
-}
-#creditText a:active {
-  color: #d8a300 !important;
 }
 
 /* link Privacy & Cookies centro em baixo */
