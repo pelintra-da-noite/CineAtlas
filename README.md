@@ -26,14 +26,14 @@ Perfect for exploring world cinema without having to spend hours choosing.
 
 - **Frontend:** HTML5, CSS3, JavaScript (Vanilla)
 - **3D / Globe:**
-- [Three.js](https://threejs.org/)
-- [Globe.gl](https://github.com/vasturiano/globe.gl)
+  - [Three.js](https://threejs.org/)
+  - [Globe.gl](https://github.com/vasturiano/globe.gl)
 - **APIs & Backend:**
-- [The Movie Database (TMDB)](https://www.themoviedb.org/)
-- Serverless functions via **Vercel** (`/api/discover`, `/api/credits`)
+  - [The Movie Database (TMDB)](https://www.themoviedb.org/)
+  - Serverless functions via **Vercel** (`/api/discover`, `/api/credits`)
 - **Infrastructure & Deployment:**
-- [Vercel](https://vercel.com/)
-- Linked to **GitHub** repository
+  - [Vercel](https://vercel.com/)
+  - Linked to **GitHub** repository
 
 ---
 
