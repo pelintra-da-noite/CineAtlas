@@ -13,9 +13,9 @@ Perfect for exploring world cinema without having to spend hours choosing.
 - **Country Randomizer** (dice button next to the theme switch)
 - **Movie Suggestions** by country via TMDB API (through serverless functions in Vercel)
 - **Dark/Light Mode** with toggle + minimalist icons (moon/sun)
-- **Multi-language support:** 🇵🇹 🇬🇧 
-- **Portuguese (pt-PT)** interface
-- **English (en-US)** interface
+- **Multi-language support:**
+  - **Portuguese (pt-PT)** interface
+  - **English (en-US)** interface
 - **Visual Easter eggs:** snow in countries like Antarctica/Greenland
 - Direct link to search for the movie on **Letterboxd**
 
