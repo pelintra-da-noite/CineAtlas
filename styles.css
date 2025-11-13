@@ -879,7 +879,7 @@ body::before{
   #tagline{
     top:calc(130px + var(--safe-area-inset-top));
     font-size:.75rem;
-    padding:0 .8rem;
+    padding:0 .9rem;
   }
 
   #themeSwitch{
