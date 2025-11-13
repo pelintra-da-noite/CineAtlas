@@ -200,7 +200,7 @@ html[data-theme="light"] #donateBar{
 
 /* THEME SWITCH + RANDOM (top-right) – grupo em pílula */
 #themeSwitch{
-  position:absolute;
+  position:fixed;
   top:calc(14px + var(--safe-area-inset-top));
   right:calc(16px + var(--safe-area-inset-right));
   z-index:1300;
