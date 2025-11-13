@@ -372,7 +372,7 @@ html[data-theme="light"] .iconBtn{
 
 /* Language (bottom-right) – grupo em pílula */
 #controlsBar{
-  position:fixed;
+  position:absolute;
   right:calc(20px + var(--safe-area-inset-right));
   bottom:calc(20px + var(--safe-area-inset-bottom));
   z-index:1300;
@@ -415,7 +415,7 @@ html[data-theme="light"] .langBtn.active{ color:#000; }
 
 /* Donate (bottom-left) – igual ao grupo de línguas */
 #donateBar{
-  position:fixed;
+  position:absolute;
   left:calc(20px + var(--safe-area-inset-left));
   bottom:calc(20px + var(--safe-area-inset-bottom));
   z-index:1300;
@@ -801,7 +801,7 @@ body::before{
 
 /* max 900px */
 @media (max-width: 900px){
-  #themeSwitch{ top:calc(12px + var(--safe-area-inset-top)); right:calc(12px + var(--safe-area-inset-right)); }
+  #themeSwitch{ top:calc(12px + var(--safe-area-inset-top)); right:calc(12px + var(--safe-area-inset-right)); transform:scale(.9); }
   #controlsBar,#donateBar{ bottom:calc(14px + var(--safe-area-inset-bottom)); }
   #tagline{
     top:100px;
@@ -826,19 +826,9 @@ body::before{
   }
 
   #themeSwitch{
-    top:calc(166px + var(--safe-area-inset-top));
-    right:auto;
-    left:50%;
-    transform:translateX(-50%);
-    width:calc(100vw - 40px - var(--safe-area-inset-left) - var(--safe-area-inset-right));
-    max-width:420px;
-    justify-content:center;
-    gap:.55rem;
-    flex-wrap:wrap;
-  }
-
-  #themeSwitch .iconBtn{
-    margin-left:0;
+    top:calc(12px + var(--safe-area-inset-top));
+    right:calc(12px + var(--safe-area-inset-right));
+    transform:scale(.9);
   }
 
   #controlsBar, #donateBar{
@@ -893,10 +883,25 @@ body::before{
   }
 
   #themeSwitch{
-    top:calc(188px + var(--safe-area-inset-top));
-    width:calc(100vw - 32px - var(--safe-area-inset-left) - var(--safe-area-inset-right));
-    max-width:360px;
-    gap:.5rem;
+    top:calc(10px + var(--safe-area-inset-top));
+    right:calc(10px + var(--safe-area-inset-right));
+    transform:scale(.8);
+  }
+
+  /* barras de baixo compactas, não full width */
+  #donateBar{
+    left:10px;
+    right:auto;
+    bottom:calc(18px + var(--safe-area-inset-bottom));
+    transform:none;
+  }
+
+  #controlsBar{
+    right:10px;
+    left:auto;
+    bottom:calc(18px + var(--safe-area-inset-bottom));
+    transform:none;
+    justify-content:center;
   }
 
   .langBtn{
