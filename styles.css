@@ -372,7 +372,7 @@ html[data-theme="light"] .iconBtn{
 
 /* Language (bottom-right) – grupo em pílula */
 #controlsBar{
-  position:fixed;
+  position:absolute;
   right:calc(20px + var(--safe-area-inset-right));
   bottom:calc(20px + var(--safe-area-inset-bottom));
   z-index:1300;
@@ -415,7 +415,7 @@ html[data-theme="light"] .langBtn.active{ color:#000; }
 
 /* Donate (bottom-left) – igual ao grupo de línguas */
 #donateBar{
-  position:fixed;
+  position:absolute;
   left:calc(20px + var(--safe-area-inset-left));
   bottom:calc(20px + var(--safe-area-inset-bottom));
   z-index:1300;
@@ -801,7 +801,7 @@ body::before{
 
 /* max 900px */
 @media (max-width: 900px){
-  #themeSwitch{ top:calc(12px + var(--safe-area-inset-top)); right:calc(12px + var(--safe-area-inset-right)); }
+  #themeSwitch{ top:calc(12px + var(--safe-area-inset-top)); right:calc(12px + var(--safe-area-inset-right)); transform:scale(.9); }
   #controlsBar,#donateBar{ bottom:calc(14px + var(--safe-area-inset-bottom)); }
   #tagline{
     top:100px;
@@ -813,37 +813,22 @@ body::before{
 /* tablets / telemóveis médios */
 @media (max-width: 720px){
   header{
-    position:relative;
-    top:auto;
-    margin:calc(36px + var(--safe-area-inset-top)) auto 0;
+    top:calc(52px + var(--safe-area-inset-top));
   }
   #siteTitle{
     font-size:2.4rem;
   }
 
   #tagline{
-    position:relative;
-    top:auto;
-    margin:.75rem auto 0;
-    font-size:.82rem;
-    padding:0 1.2rem;
+    top:calc(120px + var(--safe-area-inset-top));
+    font-size:.8rem;
+    padding:0 1rem;
   }
 
   #themeSwitch{
-    position:relative;
-    top:auto;
-    right:auto;
-    left:auto;
-    transform:none;
-    margin:1.1rem auto 0;
-    width:min(420px, calc(100vw - 36px - var(--safe-area-inset-left) - var(--safe-area-inset-right)));
-    justify-content:center;
-    gap:.55rem;
-    flex-wrap:wrap;
-  }
-
-  #themeSwitch .iconBtn{
-    margin-left:0;
+    top:calc(12px + var(--safe-area-inset-top));
+    right:calc(12px + var(--safe-area-inset-right));
+    transform:scale(.9);
   }
 
   #controlsBar, #donateBar{
@@ -885,31 +870,38 @@ body::before{
 /* telemóveis pequenos */
 @media (max-width: 480px){
   header{
-    margin-top:calc(40px + var(--safe-area-inset-top));
+    top:calc(60px + var(--safe-area-inset-top));
   }
   #siteTitle{
     font-size:2rem;
   }
 
   #tagline{
-    margin:.65rem auto 0;
+    top:calc(130px + var(--safe-area-inset-top));
     font-size:.75rem;
     padding:0 .9rem;
   }
 
   #themeSwitch{
-    margin:1rem auto 0;
-    width:min(400px, calc(100vw - 28px - var(--safe-area-inset-left) - var(--safe-area-inset-right)));
-    padding:.45rem .6rem;
-    flex-direction:column;
-    align-items:stretch;
+    top:calc(10px + var(--safe-area-inset-top));
+    right:calc(10px + var(--safe-area-inset-right));
+    transform:scale(.8);
   }
 
-  #themeSwitch .switch{
-    align-self:center;
+  /* barras de baixo compactas, não full width */
+  #donateBar{
+    left:10px;
+    right:auto;
+    bottom:calc(18px + var(--safe-area-inset-bottom));
+    transform:none;
   }
-  #themeSwitch .iconBtn{
-    align-self:center;
+
+  #controlsBar{
+    right:10px;
+    left:auto;
+    bottom:calc(18px + var(--safe-area-inset-bottom));
+    transform:none;
+    justify-content:center;
   }
 
   .langBtn{
