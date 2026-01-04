@@ -49,6 +49,14 @@
 <div aria-hidden="true" id="loadingScreen">
 <div class="loadingLogo">CineAtlas</div>
 </div>
+  <script>
+  // Failsafe: remove o loading aconteça o que acontecer
+  setTimeout(() => {
+    const el = document.getElementById('loadingScreen');
+    if (el) el.classList.add('hide');
+  }, 1400);
+</script>
+
 <!-- Header / Title -->
 <header>
 <h1 id="siteTitle">CineAtlas</h1>
