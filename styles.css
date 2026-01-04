@@ -1390,43 +1390,48 @@ body.modal-open #donateBar{
     padding-right: 74px;
   }
 }
-/* ========= Bottom dock: barras centradas e mais juntas (mobile) ========= */
+/* ===== Mobile: barras em coluna (como antes) mas mais próximas ===== */
 @media (max-width: 720px){
   :root{
-    --bottomDockGap: 10px;   /* espaço entre donateBar e controlsBar */
-    --bottomDockPad: 14px;   /* distância ao fundo */
+    --dock-pad: 14px;      /* distância ao fundo */
+    --dock-gap: 10px;      /* espaço entre donateBar (cima) e controlsBar (baixo) */
+    --controls-h: 54px;    /* altura aproximada do controlsBar */
   }
 
-  /* mesma altura/linha, centradas no ecrã */
-  #donateBar, #controlsBar{
-    bottom: calc(var(--bottomDockPad) + var(--safe-area-inset-bottom, 0px)) !important;
-    top: auto !important;
-  }
-
-  /* donateBar encosta a direita no centro */
-  #donateBar{
-    left: auto !important;
-    right: 50% !important;
-    transform: translateX(calc(-1 * var(--bottomDockGap))) !important;
-
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: .5rem !important;
-  }
-
-  /* controlsBar encosta a esquerda no centro */
+  /* controlsBar (línguas) em baixo, centrado */
   #controlsBar{
-    right: auto !important;
+    position: fixed;
     left: 50% !important;
-    transform: translateX(var(--bottomDockGap)) !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
 
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: .5rem !important;
+    bottom: calc(var(--dock-pad) + var(--safe-area-inset-bottom, 0px)) !important;
+    top: auto !important;
+
+    /* NÃO forces display com !important aqui */
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+  }
+
+  /* donateBar (Support/GitHub) por cima do controlsBar, centrado */
+  #donateBar{
+    position: fixed;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+
+    bottom: calc(var(--dock-pad) + var(--controls-h) + var(--dock-gap) + var(--safe-area-inset-bottom, 0px)) !important;
+    top: auto !important;
+
+    /* mantém coluna como tinhas, mas alinhada e bonita */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
   }
 }
+
 /* ========= Popup sempre dentro do ecrã (mobile) ========= */
 @media (max-width: 720px){
   #popup{
