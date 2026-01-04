@@ -1499,102 +1499,71 @@ body.modal-open #donateBar{
   }
 }
 
+
+
 /* =========================================================
-   Instagram in-app browser: simplified, stable layout
-   (avoids fixed/fullscreen quirks in IG WebView)
+   IN-APP BROWSER SAFE MODE (Instagram/Facebook WebView)
+   Triggered by html.inapp / body.inapp (set in script.js)
    ========================================================= */
-html.in-instagram, body.in-instagram{
-  height: auto !important;
+html.inapp, body.inapp{
+  /* allow natural scrolling; avoid fragile fullscreen tricks */
   overflow: auto !important;
-  overscroll-behavior: auto;
+  height: auto !important;
 }
 
-/* Put a small banner on top (injected by JS) */
-#igInAppBanner{
-  position: sticky;
-  top: 0;
-  z-index: 5000;
-  padding: 10px 12px;
-  background: rgba(0,0,0,0.78);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-#igInAppBanner p{
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.25;
-  opacity: .95;
-}
-#igInAppBanner button{
-  margin-left: auto;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.06);
-  color: inherit;
-  padding: 6px 10px;
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-/* Core: remove true fullscreen in IG; use a stable viewport box instead */
-html.in-instagram #globeViz, body.in-instagram #globeViz{
+html.inapp #globeViz{
+  /* stop forcing true fullscreen inside in-app browsers */
   position: relative !important;
   inset: auto !important;
   width: 100% !important;
-  height: min(62svh, 560px) !important;
+  height: 62svh !important;   /* stable area for WebGL */
+  min-height: 360px !important;
+  max-height: 560px !important;
+  margin: 0 auto !important;
   overflow: hidden !important;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
-/* Ensure the canvas always fills its container */
-html.in-instagram #globeViz canvas, body.in-instagram #globeViz canvas{
+html.inapp #globeViz canvas{
   width: 100% !important;
   height: 100% !important;
   display: block !important;
 }
 
-/* Put bottom controls in the normal flow (no fixed) */
-html.in-instagram #donateBar,
-html.in-instagram #controlsBar,
-body.in-instagram #donateBar,
-body.in-instagram #controlsBar{
+html.inapp #controlsBar,
+html.inapp #donateBar{
+  /* avoid position:fixed quirks in IG; place in normal flow */
   position: relative !important;
   left: auto !important;
   right: auto !important;
   top: auto !important;
   bottom: auto !important;
   transform: none !important;
-  margin: 10px auto 0 !important;
-  z-index: 10 !important;
+  margin: 12px auto 0 !important;
 }
 
-/* Keep the "stacked" mobile look but tighter */
-html.in-instagram #donateBar,
-body.in-instagram #donateBar{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-html.in-instagram #controlsBar,
-body.in-instagram #controlsBar{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 14px !important;
+html.inapp #donateBar{
+  /* keep the 'column' look but centered */
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-/* Popup: always inside the screen in IG */
-html.in-instagram #popup.show,
-body.in-instagram #popup.show{
-  position: fixed !important;
-  inset: 12px !important;
+html.inapp #controlsBar{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+html.inapp #popup.show{
+  /* make sure modal stays inside the visible area */
+  top: 12px !important;
+  left: 12px !important;
+  right: 12px !important;
+  bottom: 12px !important;
   width: auto !important;
-  height: auto !important;
   max-height: none !important;
   transform: none !important;
-  overflow: auto !important;
 }
