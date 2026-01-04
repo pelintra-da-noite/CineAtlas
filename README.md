@@ -17,7 +17,7 @@ Perfect for exploring world cinema without having to spend hours choosing.
   - **Portuguese (pt-PT)** interface
   - **English (en-US)** interface
 - **Visual Easter eggs:** snow in countries like Antarctica/Greenland
-- Direct link to search for the movie on **Letterboxd**
+- Direct link to search for the film on **Letterboxd**
 
 ---
 
