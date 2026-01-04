@@ -454,29 +454,16 @@ function initGlobe(){
     applyThemeToGlobe();
   });
 
-  // Globe texture (try local, fallback to solid)
-  function tryLoadGlobeTexture(){
-    const url = '/assets/earth-minimal.jpg';
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = ()=> {
-      globe.globeImageUrl(url);
-      usingSolidGlobe = false;
-      solidMat = null;
-    };
-    img.onerror = ()=> {
-      usingSolidGlobe = true;
-      solidMat = new THREE.MeshPhongMaterial({
-        color: getGlobeBaseColor(),
-        emissive: 0x000000,
-        shininess: 8
-      });
-      globe.globeMaterial(solidMat);
-      console.warn('earth-minimal.jpg failed to load, using solid globe material');
-    };
-    img.src = url;
-  }
-  tryLoadGlobeTexture();
+  // Globe appearance: solid color that follows the theme (no texture)
+  usingSolidGlobe = true;
+  solidMat = new THREE.MeshStandardMaterial({
+    color: getGlobeBaseColor(),
+    roughness: 1,
+    metalness: 0
+  });
+  globe.globeMaterial(solidMat);
+  applyThemeToGlobe();
+
 
   // Load country polygons (prefer local asset for performance/stability)
   (async () => {
