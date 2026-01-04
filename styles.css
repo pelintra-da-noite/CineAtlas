@@ -1498,4 +1498,27 @@ body.modal-open #donateBar{
     margin: 0 auto !important;
   }
 }
+/* === FIX FINAL: botões inferiores SEMPRE no fundo (mobile) === */
+@media (max-width: 768px){
+  #controlsBar,
+  #donateBar{
+    position: fixed !important;
+    top: auto !important;
+    left: 50% !important;
+    right: auto !important;
+
+    transform: translateX(-50%) !important;
+    z-index: 3000 !important;
+  }
+
+  /* línguas (mais em baixo) */
+  #controlsBar{
+    bottom: calc(14px + var(--safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* support/github (logo acima) */
+  #donateBar{
+    bottom: calc(14px + 54px + 8px + var(--safe-area-inset-bottom, 0px)) !important;
+  }
+}
 
