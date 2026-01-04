@@ -489,7 +489,7 @@ function spinGlobe(onDone){
   requestAnimationFrame(step);
 }
 
-fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
+fetch('/assets/world.geojson')
   .then(r=>r.json())
   .then(geo=>{
     worldFeatures = geo.features || [];
