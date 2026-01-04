@@ -1454,3 +1454,13 @@ body.modal-open #donateBar{
   }
 }
 
+/* Mobile: centrar perfeitamente o texto por baixo do título */
+@media (max-width: 720px){
+  #tagline{
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
