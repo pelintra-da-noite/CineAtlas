@@ -12,26 +12,21 @@ let lastPolygonClickTime = 0;
 // Consent key p/ localStorage
 const CONSENT_KEY = 'ca-consent-v2';
 
-// ==========================
-//   LOADING SCREEN (simple)
-// ==========================
-const loadingScreen = document.getElementById('loadingScreen');
-const LOADING_MS = 1400; // short splash
-
-let loadingHideScheduled = false;
-function hideLoadingSoon(ms = LOADING_MS){
-  if(!loadingScreen || loadingHideScheduled) return;
-  loadingHideScheduled = true;
-  setTimeout(() => loadingScreen.classList.add('hide'), ms);
-}
-
-// Start hiding splash as soon as this script runs (scripts are loaded with defer)
-hideLoadingSoon();
-
 // Refs principais
 const donateBtn = document.getElementById('donateBtn');
 const taglineEl = document.getElementById('tagline');
 const randomBtn = document.getElementById('randomBtn');
+
+// Loading screen (simple: disappears after a short time, never blocks)
+const loadingScreen = document.getElementById('loadingScreen');
+const LOADING_MS = 1400;// shorter splash
+
+
+function hideLoadingSoon(ms = LOADING_MS){
+  if(!loadingScreen) return;
+  setTimeout(() => loadingScreen.classList.add('hide'), ms);
+}
+
 
 // popup refs
 const popupEl = document.getElementById('popup');
@@ -58,7 +53,7 @@ const cookieRejectBtn = document.getElementById('cookieReject');
 
 // Starfield
 const starsCanvas = document.getElementById('starsCanvas');
-let starsCtx = starsCanvas ? starsCanvas.getContext('2d') : null;
+let starsCtx = starsCanvas.getContext('2d');
 let stars = [];
 let starsWidth = 0;
 let starsHeight = 0;
@@ -84,7 +79,6 @@ function createStars(){
 }
 
 function resizeStars(){
-  if(!starsCanvas || !starsCtx) return;
   const DPR = window.devicePixelRatio || 1;
   starsWidth = window.innerWidth;
   starsHeight = window.innerHeight;
@@ -170,9 +164,11 @@ function applyStoredConsent(){
     } else if (stored === 'essential') {
       hideCookieBanner();
     } else {
+      // primeira visita / sem escolha -> mostra pop-up em baixo
       showCookieBanner();
     }
   }catch(e){
+    // se localStorage falhar, mostra banner na mesma
     showCookieBanner();
   }
 }
@@ -180,14 +176,18 @@ function applyStoredConsent(){
 // Botões do banner
 if (cookieAcceptBtn){
   cookieAcceptBtn.addEventListener('click', ()=>{
-    try{ localStorage.setItem(CONSENT_KEY, 'analytics'); }catch(e){}
+    try{
+      localStorage.setItem(CONSENT_KEY, 'analytics');
+    }catch(e){}
     loadAnalytics();
     hideCookieBanner();
   });
 }
 if (cookieRejectBtn){
   cookieRejectBtn.addEventListener('click', ()=>{
-    try{ localStorage.setItem(CONSENT_KEY, 'essential'); }catch(e){}
+    try{
+      localStorage.setItem(CONSENT_KEY, 'essential');
+    }catch(e){}
     hideCookieBanner();
   });
 }
@@ -197,24 +197,28 @@ if (cookieRejectBtn){
 // ==========================
 function applyLanguageTexts(){
   if(currentLanguage === 'pt-PT'){
-    if(taglineEl) taglineEl.textContent = 'Clique num país para um filme aleatório';
-    if(donateBtn) donateBtn.textContent = 'Ajude-nos';
+    taglineEl.textContent = 'Clique num país para um filme aleatório';
+    donateBtn.textContent = 'Ajude-nos';
     document.documentElement.lang = 'pt-PT';
 
     if (cookieTextEl && cookieAcceptBtn && cookieRejectBtn){
-      cookieTextEl.textContent =
-        'Usamos um pouco de Google Analytics para perceber como o CineAtlas é usado e continuar a melhorá-lo. Pode aceitar ou seguir apenas com cookies essenciais.';
+      cookieTextEl.innerHTML =
+        'Usamos um pouco de Google Analytics para perceber como o CineAtlas é usado e continuar a melhorá-lo. ' +
+        'Pode aceitar ou seguir apenas com cookies essenciais.' +
+        '</span>';
       cookieAcceptBtn.textContent = 'Permitir análises';
       cookieRejectBtn.textContent = 'Só essenciais';
     }
   } else {
-    if(taglineEl) taglineEl.textContent = 'Click a country for a random film';
-    if(donateBtn) donateBtn.textContent = 'Support us';
+    taglineEl.textContent = 'Click a country for a random film';
+    donateBtn.textContent = 'Support us';
     document.documentElement.lang = 'en';
 
     if (cookieTextEl && cookieAcceptBtn && cookieRejectBtn){
-      cookieTextEl.textContent =
-        'We use a bit of Google Analytics to see how CineAtlas is used and keep improving it. You can accept or continue with essential cookies only.';
+      cookieTextEl.innerHTML =
+        'We use a bit of Google Analytics to see how CineAtlas is used and keep improving it. ' +
+        'You can accept or continue with essential cookies only.' +
+        '</span>';
       cookieAcceptBtn.textContent = 'Allow analytics';
       cookieRejectBtn.textContent = 'Essential only';
     }
@@ -229,9 +233,8 @@ const fadeOverlay = document.getElementById('fadeOverlay');
 window.addEventListener('load', ()=>{
   hideLoadingSoon();
   initStarfield();
-  if (fadeOverlay) requestAnimationFrame(()=> fadeOverlay.style.opacity='0');
+  requestAnimationFrame(()=> fadeOverlay.style.opacity='0');
   applyStoredConsent();
-
   const startGlobe = () => { try { initGlobe(); } catch(e){ console.error('initGlobe error', e); } };
   if ('requestIdleCallback' in window) {
     requestIdleCallback(startGlobe, { timeout: 1200 });
@@ -245,12 +248,21 @@ const themeCheckbox = document.getElementById('themeCheckbox');
 const themeFade = document.getElementById('themeFade');
 
 htmlEl.setAttribute('data-theme', 'dark');
-if (themeCheckbox) themeCheckbox.checked = false;
+themeCheckbox.checked = false;
 
-function isLight(){ return document.documentElement.getAttribute('data-theme') === 'light'; }
-function themeCap(){ return isLight() ? 'rgba(216,163,0,0.22)' : 'rgba(216,163,0,0.30)'; }
-function themeSide(){ return isLight() ? 'rgba(216,163,0,0.12)' : 'rgba(216,163,0,0.10)'; }
-function themeStroke(){ return isLight() ? '#a07800' : '#d8a300'; }
+/* Fade suavizado entre temas */
+themeCheckbox.addEventListener('change', ()=>{
+  const next = themeCheckbox.checked ? 'light' : 'dark';
+
+  themeFade.style.background = next === 'light' ? '#f7f3e7' : '#000000';
+  themeFade.style.opacity = '1';
+
+  setTimeout(() => {
+    htmlEl.setAttribute('data-theme', next);
+    applyThemeToGlobe();
+    requestAnimationFrame(()=> themeFade.style.opacity = '0');
+  }, 200);
+});
 
 // ==========================
 //   LANGUAGE SWITCH BUTTONS
@@ -276,19 +288,17 @@ document.querySelectorAll('.langBtn').forEach(btn=>{
 // ==========================
 //   POPUP SHOW/HIDE
 // ==========================
-if (closePopupBtn) closePopupBtn.onclick = () => hidePopup();
+closePopupBtn.onclick = () => hidePopup();
 
 function showPopup(){
-  if(!popupEl) return;
   popupEl.style.display='block';
   requestAnimationFrame(()=>{
     popupEl.classList.add('show');
-    if (closePopupBtn) closePopupBtn.focus();
+    closePopupBtn.focus();
   });
 }
 
 function hidePopup(){
-  if(!popupEl) return;
   popupEl.classList.remove('show');
   setTimeout(()=>{
     if(!popupEl.classList.contains('show')) popupEl.style.display='none';
@@ -297,13 +307,12 @@ function hidePopup(){
 
 /* Fechar popup com ESC */
 document.addEventListener('keydown', (e)=>{
-  if(e.key === 'Escape' && popupEl && popupEl.classList.contains('show')){
+  if(e.key === 'Escape' && popupEl.classList.contains('show')){
     hidePopup();
   }
 });
 
 function setCountryFlag(twoLetterCode, countryName){
-  if(!countryFlagImg) return;
   const cc = (twoLetterCode||'').toLowerCase();
   countryFlagImg.src = `https://flagcdn.com/${cc}.svg`;
   countryFlagImg.onerror = ()=>{ countryFlagImg.style.display='none'; };
@@ -313,7 +322,7 @@ function setCountryFlag(twoLetterCode, countryName){
 }
 
 // ==========================
-//   GLOBE + THEME (lazy init)
+//   GLOBE + THEME
 // ==========================
 function normalizedDisplayName(props){
   const raw = (props.name || props.ADMIN || 'Unknown').trim();
@@ -322,122 +331,39 @@ function normalizedDisplayName(props){
   return raw;
 }
 
-// Globe instance
+function isLight(){ return document.documentElement.getAttribute('data-theme') === 'light'; }
+function themeCap(){ return isLight() ? 'rgba(216,163,0,0.22)' : 'rgba(216,163,0,0.30)'; }
+function themeSide(){ return isLight() ? 'rgba(216,163,0,0.12)' : 'rgba(216,163,0,0.10)'; }
+function themeStroke(){ return isLight() ? '#a07800' : '#d8a300'; }
+function getGlobeBaseColor(){ return isLight() ? 0xffffff : 0x000000; }
+
+
+// Globe instance (initialized lazily)
 let globe = null;
 let controls = null;
-
-
-// Simple hover tooltip (optional)
-function showGlobeHover(name, x, y){
-  const tip = document.getElementById('globeHover');
-  if(!tip) return;
-  tip.textContent = name || '';
-  tip.style.display = 'block';
-  const pad = 12;
-  // keep inside viewport
-  const maxX = window.innerWidth - 10;
-  const maxY = window.innerHeight - 10;
-  const left = Math.min(x + pad, maxX);
-  const top  = Math.min(y + pad, maxY);
-  tip.style.left = left + 'px';
-  tip.style.top  = top + 'px';
-}
-function hideGlobeHover(){
-  const tip = document.getElementById('globeHover');
-  if(!tip) return;
-  tip.style.display = 'none';
-}
-
-function applyThemeToGlobe(){
-  if(!globe) return;
-
-  globe
-    .atmosphereColor(isLight() ? '#f4c75a' : '#ffd58a')
-    .polygonCapColor(d =>
-      d === selectedFeature
-        ? 'rgba(139,0,0,0.65)'
-        : (d === hoverFeature ? 'rgba(216,163,0,0.65)' : themeCap())
-    )
-    .polygonSideColor(d =>
-      d === selectedFeature
-        ? 'rgba(139,0,0,0.25)'
-        : (d === hoverFeature ? 'rgba(216,163,0,0.40)' : themeSide())
-    )
-    .polygonStrokeColor(d =>
-      d === selectedFeature ? 'rgba(139,0,0,0.95)' : themeStroke()
-    );
-
-}
-
-if (themeCheckbox){
-  themeCheckbox.addEventListener('change', ()=>{
-    const next = themeCheckbox.checked ? 'light' : 'dark';
-
-    if (themeFade){
-      themeFade.style.background = next === 'light' ? '#f7f3e7' : '#000000';
-      themeFade.style.opacity = '1';
-    }
-
-    setTimeout(() => {
-      htmlEl.setAttribute('data-theme', next);
-      applyThemeToGlobe();
-      if (themeFade) requestAnimationFrame(()=> themeFade.style.opacity = '0');
-    }, 200);
-  });
-}
-
 function initGlobe(){
-  if (globe) return; // prevent double init
-
-  const mount = document.getElementById('webgl-root');
-  if (!mount || typeof Globe !== 'function') {
-    console.error('Globe.gl not loaded or #globeViz missing');
-    return;
-  }
-
-  globe = Globe()(mount)
+  globe = Globe()(document.getElementById('globeViz'))
     .backgroundColor('rgba(0,0,0,0)')
     .showAtmosphere(true)
     .atmosphereColor('#ffd58a')
     .atmosphereAltitude(0.22)
     .showGraticules(false)
     .polygonAltitude(0.01)
-    .polygonCapColor(() => themeCap())
-    .polygonSideColor(() => themeSide())
-    .polygonStrokeColor(() => themeStroke())
+    .polygonCapColor(d => themeCap())
+    .polygonSideColor(d => themeSide())
+    .polygonStrokeColor(d => themeStroke())
     .polygonLabel(({properties:p}) => normalizedDisplayName(p))
     .polygonsTransitionDuration(300);
-
-  // Restore the dark minimal texture so the globe keeps its "black" look
-  // regardless of theme changes.
-  globe.globeImageUrl('/assets/earth-minimal.jpg');
-  globe.bumpImageUrl('/assets/earth-minimal.jpg');
-
+  
   controls = globe.controls();
   controls.minDistance = 160;
   controls.maxDistance = 460;
   controls.minPolarAngle = 0.2;
   controls.maxPolarAngle = Math.PI - 0.2;
   controls.enablePan = false;
-  // Ensure user interaction works across browsers/devices
-  controls.enableRotate = true;
-  controls.enableZoom = true;
-  controls.enabled = true;
-  try { controls.update && controls.update(); } catch(e) {}
-  // On mobile, prevent the page from handling touch gestures instead of the globe
-  try {
-    const el = globe.renderer && globe.renderer().domElement;
-    if (el) {
-      el.style.pointerEvents = 'auto';
-      el.style.touchAction = 'none';
-      el.style.userSelect = 'none';
-      el.style.cursor = 'grab';
-    }
-  } catch(e) {}
-  if (typeof globe.enablePointerInteraction === 'function') {
-    globe.enablePointerInteraction(true);
-  }
-
+  
+  
+  // Keep globe sizing/pixel ratio correct (fixes issues when dragging window between monitors)
   function syncGlobeSize(){
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -449,171 +375,210 @@ function initGlobe(){
       if (r && typeof r.setSize === 'function') r.setSize(w, h);
     }catch(e){}
   }
-
+  
+  // Resize on normal resizes
   window.addEventListener('resize', syncGlobeSize);
-
-  // Watch DPR changes (moving window between monitors)
+  
+  // Also watch for devicePixelRatio changes (common when moving the window between monitors)
   (function watchDPR(){
-    const mk = () => window.matchMedia(`(resolution: ${(window.devicePixelRatio || 1)}dppx)`);
-    let mq = mk();
+    let mq = window.matchMedia(`(resolution: ${(window.devicePixelRatio || 1)}dppx)`);
     const handler = () => {
       syncGlobeSize();
-      resizeStars();
-      // re-arm for new DPR
-      try { mq.removeEventListener('change', handler); } catch(e){}
-      mq = mk();
-      try { mq.addEventListener('change', handler); } catch(e){}
+      resizeStars(); // starfield also depends on DPR
+      // re-arm watcher for the new dppx
+      mq.removeEventListener?.('change', handler);
+      mq = window.matchMedia(`(resolution: ${(window.devicePixelRatio || 1)}dppx)`);
+      mq.addEventListener?.('change', handler);
     };
-    try { mq.addEventListener('change', handler); } catch(e){}
+    mq.addEventListener?.('change', handler);
   })();
-
+  
+  // Initial
   syncGlobeSize();
-
+  
   globe.onPolygonHover(h => {
     if(h === hoverFeature) return;
     hoverFeature = h;
     globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
     applyThemeToGlobe();
   });
-
-  // Load country polygons (prefer local asset for performance/stability)
-  (async () => {
-    // Use an absolute path so it works regardless of the current page URL
-    // (e.g. /privacy.html, query strings, etc.) and on Vercel deployments.
-    const localUrl = '/assets/world.geojson';
-    const remoteUrl = 'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
-
-    async function fetchJson(url) {
-      const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
-
-      // Helpful guard: if a hosting rewrite/404 returns HTML, res.json() throws.
-      const ct = (res.headers.get('content-type') || '').toLowerCase();
-      if (ct.includes('text/html')) {
-        const preview = (await res.text()).slice(0, 200);
-        throw new Error(`Expected JSON but got HTML from ${url}. First bytes: ${preview}`);
-      }
-      return res.json();
-    }
-
-    let geo;
-    try {
-      geo = await fetchJson(localUrl);
-    } catch (err) {
-      console.warn('Local world.geojson failed, falling back to remote:', err);
-      geo = await fetchJson(remoteUrl);
-    }
-
-    worldFeatures = geo.features || [];
-    globe.polygonsData(worldFeatures);
-
-    globe.onPolygonClick(f => {
-      lastPolygonClickTime = Date.now();
-      selectedFeature = f;
-      const iso = f.properties.ISO_A2;
-      const name = f.properties.ADMIN;
-      lastCountryCode = iso;
-      lastCountryName = name;
-      if (!hasConsent()) return;
-      fetchFilmForCountry(iso, name);
-    });
-
-    globe.onPolygonHover(f => {
-      hoverFeature = f;
-      updateGlobePolygonColors();
-    });
-
-    // Hover tooltip + highlight
-    if (globe.renderer && globe.renderer().domElement) {
-      globe.renderer().domElement.addEventListener('mousemove', e => {
-        const now = Date.now();
-        if (now - lastPolygonClickTime < 350) return;
-        if (hoverFeature) {
-          const name = hoverFeature.properties.ADMIN;
-          showGlobeHover(name, e.clientX, e.clientY);
-        } else {
-          hideGlobeHover();
-        }
-      });
-
-      // Hide hover when leaving canvas
-      globe.renderer().domElement.addEventListener('mouseleave', () => {
-        hideGlobeHover();
-      });
-    }
-
-    // Now that we have polygons, apply theme once (ensures correct colors)
-    applyThemeToGlobe();
-  })().catch(e => {
-    console.error('Failed to load country shapes:', e);
-    alert('Failed to load country shapes. Open /assets/world.geojson in your browser to verify it exists.');
-  });
-}
-
-// ==========================
-//   GLOBE INTERACTION HELPERS
-// ==========================
-function getFeatureCenter(f){
-  try{
-    const g = f.geometry; if(!g) return null;
-    let pts=[];
-    if(g.type==='Polygon'){
-      g.coordinates.forEach(ring => ring.forEach(([lng,lat]) => pts.push([lng,lat])));
-    }
-    else if(g.type==='MultiPolygon'){
-      g.coordinates.forEach(poly => poly.forEach(ring => ring.forEach(([lng,lat]) => pts.push([lng,lat]))));
-    }
-    else return null;
-    if(!pts.length) return null;
-    const sum = pts.reduce((a,[lng,lat]) => {
-      a.lng+=lng; a.lat+=lat; return a;
-    }, {lng:0,lat:0});
-    return { lng: sum.lng/pts.length, lat: sum.lat/pts.length };
-  }catch(e){ return null; }
-}
-
-function spinGlobe(onDone){
-  if(!globe) return;
-  const duration = 900;
-  const startPOV = globe.pointOfView();
-  const startLng = startPOV.lng || 0;
-  const startLat = startPOV.lat || 0;
-  const startAlt = startPOV.altitude || startPOV.alt || 1.5;
-  const totalRot = 540;
-
-  const startTime = performance.now();
-  function step(now){
-    const t = Math.min(1, (now - startTime) / duration);
-    const eased = t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
-    const pov = {
-      lat: startLat,
-      lng: startLng + totalRot * eased,
-      altitude: startAlt + 0.4 * (1 - eased)
+  
+  let usingSolidGlobe = false;
+  let solidMat = null;
+  
+  function tryLoadGlobeTexture(){
+    const url = 'assets/earth-minimal.jpg';
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = ()=> {
+      globe.globeImageUrl(url);
+      usingSolidGlobe = false;
+      solidMat = null;
     };
-    globe.pointOfView(pov);
-    if(t < 1){
-      requestAnimationFrame(step);
-    } else if(onDone){
-      onDone();
+    img.onerror = ()=> {
+      usingSolidGlobe = true;
+      solidMat = new THREE.MeshPhongMaterial({
+        color: getGlobeBaseColor(),
+        emissive: 0x000000,
+        shininess: 8
+      });
+      globe.globeMaterial(solidMat);
+    };
+    img.src = url;
+  }
+  tryLoadGlobeTexture();
+  
+  function applyThemeToGlobe(){
+  if(!globe) return;
+    globe
+      .atmosphereColor(isLight() ? '#f4c75a' : '#ffd58a')
+      .polygonCapColor(d =>
+        d === selectedFeature
+          ? 'rgba(139,0,0,0.65)'
+          : (d === hoverFeature ? 'rgba(216,163,0,0.65)' : themeCap())
+      )
+      .polygonSideColor(d =>
+        d === selectedFeature
+          ? 'rgba(139,0,0,0.25)'
+          : (d === hoverFeature ? 'rgba(216,163,0,0.40)' : themeSide())
+      )
+      .polygonStrokeColor(d =>
+        d === selectedFeature ? 'rgba(139,0,0,0.95)' : themeStroke()
+      );
+  
+    if(usingSolidGlobe && solidMat){
+      solidMat.color.setHex(getGlobeBaseColor());
+      solidMat.needsUpdate = true;
     }
   }
-  requestAnimationFrame(step);
-}
-
-// Random country
-if (randomBtn){
+  
+  function getFeatureCenter(f){
+    try{
+      const g = f.geometry; if(!g) return null;
+      let pts=[];
+      if(g.type==='Polygon'){
+        g.coordinates.forEach(ring => ring.forEach(([lng,lat]) => pts.push([lng,lat])));
+      }
+      else if(g.type==='MultiPolygon'){
+        g.coordinates.forEach(poly => poly.forEach(ring => ring.forEach(([lng,lat]) => pts.push([lng,lat]))));
+      }
+      else return null;
+      if(!pts.length) return null;
+      const sum = pts.reduce((a,[lng,lat]) => {
+        a.lng+=lng; a.lat+=lat; return a;
+      }, {lng:0,lat:0});
+      return { lng: sum.lng/pts.length, lat: sum.lat/pts.length };
+    }catch(e){ return null; }
+  }
+  
+  // ==========================
+  //   GLOBE INTERACTION
+  // ==========================
+  function spinGlobe(onDone){
+    const duration = 900;
+    const startPOV = globe.pointOfView();
+    const startLng = startPOV.lng || 0;
+    const startLat = startPOV.lat || 0;
+    const startAlt = startPOV.altitude || startPOV.alt || 1.5;
+    const totalRot = 540;
+  
+    const startTime = performance.now();
+    function step(now){
+      const t = Math.min(1, (now - startTime) / duration);
+      const eased = t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
+      const pov = {
+        lat: startLat,
+        lng: startLng + totalRot * eased,
+        altitude: startAlt + 0.4 * (1 - eased)
+      };
+      globe.pointOfView(pov);
+      if(t < 1){
+        requestAnimationFrame(step);
+      } else if(onDone){
+        onDone();
+      }
+    }
+    requestAnimationFrame(step);
+  }
+  
+  fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
+    .then(r=>r.json())
+    .then(geo=>{
+      worldFeatures = geo.features || [];
+      globe.polygonsData(worldFeatures);
+  
+      globe.onPolygonClick(f=>{
+        lastPolygonClickTime = Date.now();
+        selectedFeature = f;
+        globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
+        applyThemeToGlobe();
+  
+        const origName = (f.properties.name || f.properties.ADMIN || 'Unknown').trim();
+        const displayName = normalizedDisplayName(f.properties);
+  
+        const rawA3 = f.id || f.properties.iso_a3 || f.properties.ISO_A3;
+        const rawA2 = f.properties.iso_a2 || f.properties.ISO_A2;
+  
+        const isWB = /^\s*west\s*bank\s*$/i.test(origName);
+        const isGZ = /^\s*gaza(\s*strip)?\s*$/i.test(origName);
+  
+        let code =
+            (isWB || isGZ) ? 'PS'
+          : (rawA2 && rawA2 !== '-99') ? rawA2.toUpperCase()
+          : rawA3 ? convertToTwoLetterCode(rawA3.toUpperCase())
+          : null;
+  
+        if(!code || code==='-99') return;
+  
+        lastCountryCode = code;
+        lastCountryName = displayName;
+  
+        const c = getFeatureCenter(f);
+        if (c) globe.pointOfView({ lat: c.lat, lng: c.lng, altitude: 1.25 }, 1200);
+  
+        const isAntarctica = code === 'AQ' || /antarctica/i.test(displayName);
+        const isArcticSnow = code === 'GL'
+          || /greenland/i.test(displayName)
+          || /svalbard|jan\s*mayen|arctic/i.test(displayName);
+  
+        if (isAntarctica) { showAntarcticaMessage(); startSnow(10000); return; }
+        if (isArcticSnow) { startSnow(10000); }
+  
+        fetchMovie(code, displayName);
+      });
+  
+      if(typeof globe.onGlobeClick === 'function'){
+        globe.onGlobeClick(() => {
+          const now = Date.now();
+          if(now - lastPolygonClickTime < 80) return;
+          selectedFeature = null;
+          lastCountryCode = null;
+          lastCountryName = null;
+          globe.polygonAltitude(() => 0.01);
+          applyThemeToGlobe();
+          hidePopup();
+        });
+      }
+    })
+    .catch(e=>{
+      console.error(e);
+      hideLoadingSoon(800);
+      alert('Failed to load country shapes');
+    });
+  
+  // Random country
   randomBtn.addEventListener('click', ()=>{
-    if(!globe || !worldFeatures || !worldFeatures.length) return;
-
+    if(!worldFeatures || !worldFeatures.length) return;
+  
     randomBtn.classList.add('is-rolling');
     setTimeout(() => {
       randomBtn.classList.remove('is-rolling');
     }, 650);
-
+  
     let pickedFeature = null;
     let code = null;
     let displayName = null;
-
+  
     for(let safety=0; safety<80 && !code; safety++){
       const f = worldFeatures[Math.floor(Math.random()*worldFeatures.length)];
       if(!f || !f.properties) continue;
@@ -621,26 +586,26 @@ if (randomBtn){
       const dispName = normalizedDisplayName(f.properties);
       const rawA3 = f.id || f.properties.iso_a3 || f.properties.ISO_A3;
       const rawA2 = f.properties.iso_a2 || f.properties.ISO_A2;
-
+  
       const isWB = /^\s*west\s*bank\s*$/i.test(origName);
       const isGZ = /^\s*gaza(\s*strip)?\s*$/i.test(origName);
-
+  
       let c =
           (isWB || isGZ) ? 'PS'
         : (rawA2 && rawA2 !== '-99') ? rawA2.toUpperCase()
         : rawA3 ? convertToTwoLetterCode(rawA3.toUpperCase())
         : null;
-
+  
       if(c && c !== '-99'){
         pickedFeature = f;
         code = c;
         displayName = dispName;
       }
     }
-
+  
     if(!code || !pickedFeature) return;
     const center = getFeatureCenter(pickedFeature) || {lat:0,lng:0};
-
+  
     spinGlobe(()=>{
       selectedFeature = pickedFeature;
       globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
@@ -651,6 +616,7 @@ if (randomBtn){
       fetchMovie(code, displayName);
     });
   });
+  
 }
 
 // ==========================
@@ -727,15 +693,15 @@ function showAntarcticaMessage(){
             : "We didn’t find any movies, but we found snow."
   };
   setCountryFlag('AQ', t.title);
-  if(countryNameEl) countryNameEl.innerText = t.title.toUpperCase();
+  countryNameEl.innerText = t.title.toUpperCase();
 
-  if(moviePosterEl) moviePosterEl.style.display = 'none';
+  moviePosterEl.style.display = 'none';
 
-  if(movieTitleOriginalEl) movieTitleOriginalEl.textContent = t.title;
-  if(movieTitleTranslatedEl) movieTitleTranslatedEl.textContent = '';
-  if(directorLineEl) directorLineEl.style.visibility = 'hidden';
-  if(overviewTextEl) overviewTextEl.textContent = t.text;
-  if(actionsRowEl) actionsRowEl.style.visibility = 'hidden';
+  movieTitleOriginalEl.textContent = t.title;
+  movieTitleTranslatedEl.textContent = '';
+  directorLineEl.style.visibility = 'hidden';
+  overviewTextEl.textContent = t.text;
+  actionsRowEl.style.visibility = 'hidden';
 
   showPopup();
 }
@@ -757,25 +723,21 @@ async function fetchMovie(twoLetterCode, countryName){
   };
 
   setCountryFlag(twoLetterCode, countryName);
-  if(countryNameEl) countryNameEl.innerText = countryName.toUpperCase();
+  countryNameEl.innerText = countryName.toUpperCase();
 
-  if(moviePosterEl){
-    moviePosterEl.style.display = 'none';
-    moviePosterEl.alt = '';
-  }
+  moviePosterEl.style.display = 'none';
+  moviePosterEl.alt = '';
 
-  if(movieTitleOriginalEl) movieTitleOriginalEl.textContent = '';
-  if(movieTitleTranslatedEl) movieTitleTranslatedEl.textContent = '';
-  if(directorLineEl) directorLineEl.style.visibility = 'hidden';
-  if(overviewTextEl){
-    overviewTextEl.textContent = t.loading;
-    overviewTextEl.classList.add('loading');
-  }
-  if(actionsRowEl) actionsRowEl.style.visibility = 'hidden';
+  movieTitleOriginalEl.textContent = '';
+  movieTitleTranslatedEl.textContent = '';
+  directorLineEl.style.visibility = 'hidden';
+  overviewTextEl.textContent = t.loading;
+  overviewTextEl.classList.add('loading');
+  actionsRowEl.style.visibility = 'hidden';
 
-  if(letterboxdBtn) letterboxdBtn.textContent = t.seeLetterboxd;
-  if(anotherBtn) anotherBtn.textContent = t.another;
-  if(directorLabelEl) directorLabelEl.textContent = t.directorLabel;
+  letterboxdBtn.textContent = t.seeLetterboxd;
+  anotherBtn.textContent = t.another;
+  directorLabelEl.textContent = t.directorLabel;
 
   showPopup();
 
@@ -786,7 +748,7 @@ async function fetchMovie(twoLetterCode, countryName){
   let idx = 0;
   const lotteryInterval = setInterval(() => {
     idx = (idx + 1) % lotteryPhrases.length;
-    if(overviewTextEl) overviewTextEl.textContent = lotteryPhrases[idx];
+    overviewTextEl.textContent = lotteryPhrases[idx];
   }, 160);
 
   let movie = await discoverMovie(twoLetterCode, true, 20);
@@ -796,16 +758,18 @@ async function fetchMovie(twoLetterCode, countryName){
   }
 
   clearInterval(lotteryInterval);
-  if(overviewTextEl) overviewTextEl.classList.remove('loading');
+  overviewTextEl.classList.remove('loading');
 
   if(!movie){
-    if(movieTitleOriginalEl) movieTitleOriginalEl.textContent = countryName;
-    if(movieTitleTranslatedEl) movieTitleTranslatedEl.textContent = '';
-    if (overviewTextEl){
-      overviewTextEl.textContent = (twoLetterCode === 'PS') ? 'FREE PALESTINE' : t.none;
+    movieTitleOriginalEl.textContent = countryName;
+    movieTitleTranslatedEl.textContent = '';
+    if (twoLetterCode === 'PS') {
+      overviewTextEl.textContent = 'FREE PALESTINE';
+    } else {
+      overviewTextEl.textContent = t.none;
     }
-    if(directorLineEl) directorLineEl.style.visibility = 'hidden';
-    if(actionsRowEl) actionsRowEl.style.visibility = 'hidden';
+    directorLineEl.style.visibility = 'hidden';
+    actionsRowEl.style.visibility = 'hidden';
     return;
   }
 
@@ -817,44 +781,42 @@ async function fetchMovie(twoLetterCode, countryName){
   const letterboxdQuery = encodeURIComponent((movie.title || '') + ' ' + (movieYear || ''));
   const letterboxdUrl = `https://letterboxd.com/search/${letterboxdQuery}/`;
 
-  if(moviePosterEl){
-    if(posterUrl){
-      moviePosterEl.src = posterUrl;
-      moviePosterEl.alt = movie.title || 'Movie poster';
-      moviePosterEl.style.display = 'block';
-    } else {
-      moviePosterEl.style.display = 'none';
-    }
+  if(posterUrl){
+    moviePosterEl.src = posterUrl;
+    moviePosterEl.alt = movie.title || 'Movie poster';
+    moviePosterEl.style.display = 'block';
+  } else {
+    moviePosterEl.style.display = 'none';
   }
 
   const originalTitle = movie.original_title || movie.title || '';
   const translatedTitle = movie.title || '';
 
-  if(movieTitleOriginalEl) movieTitleOriginalEl.textContent = originalTitle + (movieYear ? ` (${movieYear})` : '');
-  if(movieTitleTranslatedEl){
-    movieTitleTranslatedEl.textContent = (translatedTitle && translatedTitle !== originalTitle) ? translatedTitle : '';
+  movieTitleOriginalEl.textContent = originalTitle + (movieYear ? ` (${movieYear})` : '');
+  if(translatedTitle && translatedTitle !== originalTitle){
+    movieTitleTranslatedEl.textContent = translatedTitle;
+  } else {
+    movieTitleTranslatedEl.textContent = '';
   }
 
-  if(directorNameEl) directorNameEl.textContent = directorName || '—';
-  if(directorLineEl) directorLineEl.style.visibility = 'visible';
+  directorNameEl.textContent = directorName || '—';
+  directorLineEl.style.visibility = 'visible';
 
-  if(overviewTextEl) overviewTextEl.textContent = overview;
+  overviewTextEl.textContent = overview;
 
-  if(letterboxdBtn) letterboxdBtn.href = letterboxdUrl;
+  letterboxdBtn.href = letterboxdUrl;
 
-  if(actionsRowEl) actionsRowEl.style.visibility = 'visible';
+  actionsRowEl.style.visibility = 'visible';
 
   lastCountryCode = twoLetterCode;
   lastCountryName = countryName;
 }
 
-if (anotherBtn){
-  anotherBtn.addEventListener('click', ()=>{
-    if(lastCountryCode && lastCountryName){
-      fetchMovie(lastCountryCode,lastCountryName);
-    }
-  });
-}
+anotherBtn.addEventListener('click', ()=>{
+  if(lastCountryCode && lastCountryName){
+    fetchMovie(lastCountryCode,lastCountryName);
+  }
+});
 
 // ==========================
 //   UTILS: COUNTRY CODE + SNOW
@@ -867,7 +829,6 @@ function convertToTwoLetterCode(a3){
 /* Neve com fade-out suave */
 const snowCanvas = document.getElementById('snowOverlay');
 function startSnow(durationMs=10000){
-  if(!snowCanvas) return;
   const ctx = snowCanvas.getContext('2d');
   const DPR = window.devicePixelRatio || 1;
   const resize = ()=>{
@@ -930,9 +891,6 @@ function startSnow(durationMs=10000){
   requestAnimationFrame(step);
 }
 
-// ==========================
-//   SERVICE WORKER
-// ==========================
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js").catch(console.error);
