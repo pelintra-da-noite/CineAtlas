@@ -51,7 +51,7 @@ html,body{
   pointer-events:auto;
 }
 
-#globeViz{
+#webgl-root{
   position:fixed;
   inset:0;
   z-index:0;
@@ -59,7 +59,7 @@ html,body{
   animation:fadeIn 1s forwards .4s;
 }
 
-#globeViz canvas{
+#webgl-root canvas{
   width:100% !important;
   height:100% !important;
   display:block;
@@ -1312,7 +1312,7 @@ html[data-theme="light"]{
 
 
 /* Allow dragging/zooming the Globe canvas on touch devices */
-#globeViz canvas{ touch-action:none; }
+#webgl-root canvas{ touch-action:none; }
 
 #background {
   pointer-events: none;
@@ -1322,3 +1322,25 @@ canvas {
   pointer-events: auto;
 }
 
+
+
+/* Globe hover tooltip */
+#globeHover{
+  position:fixed;
+  z-index:2600;
+  display:none;
+  padding:8px 10px;
+  border-radius:10px;
+  font-size:14px;
+  line-height:1.2;
+  background:rgba(0,0,0,0.65);
+  color:#fff;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  pointer-events:none;
+  transform: translate3d(0,0,0);
+}
+html[data-theme="light"] #globeHover{
+  background:rgba(255,255,255,0.70);
+  color:#111;
+}
