@@ -354,24 +354,24 @@ controls.enablePan = false;
 
 // Keep globe sizing/pixel ratio correct (fixes issues when dragging window between monitors)
 function syncGlobeSize(){
-  const el = document.getElementById('globeViz');
-  if(!el) return;
+  const container = document.getElementById('globeViz');
+  if (!container || !globe) return;
 
-  const rect = el.getBoundingClientRect();
-  const w = Math.max(1, Math.round(rect.width));
-  const h = Math.max(1, Math.round(rect.height));
+  const { width, height } = container.getBoundingClientRect();
 
-  try{
-    if (typeof globe.width === 'function') globe.width(w);
-    if (typeof globe.height === 'function') globe.height(h);
-    const r = (typeof globe.renderer === 'function') ? globe.renderer() : null;
-    if (r && typeof r.setPixelRatio === 'function') r.setPixelRatio(window.devicePixelRatio || 1);
-    if (r && typeof r.setSize === 'function') r.setSize(w, h);
-  }catch(e){}
+  globe.width(Math.floor(width));
+  globe.height(Math.floor(height));
+
+  const r = globe.renderer && globe.renderer();
+  if (r){
+    r.setPixelRatio(window.devicePixelRatio || 1);
+    r.setSize(width, height, false);
+  }
 }
 
 // Resize on normal resizes
 window.addEventListener('resize', syncGlobeSize);
+window.addEventListener('orientationchange', syncGlobeSize);
 
 // Mobile browsers (incl. Android Edge) change the visual viewport on scroll/zoom
 if (window.visualViewport) {
