@@ -14,7 +14,10 @@ const CONSENT_KEY = 'ca-consent-v2';
 
 // Refs principais
 const donateBtn = document.getElementById('donateBtn');
-const taglineEl = document.getElementById('tagline');
+const taglineEl = docum
+// Start hiding splash as soon as this script runs (scripts are loaded with defer)
+hideLoadingSoon();
+ent.getElementById('tagline');
 const randomBtn = document.getElementById('randomBtn');
 
 // Loading screen (simple: disappears after a short time, never blocks)
