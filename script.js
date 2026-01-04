@@ -464,12 +464,22 @@ function initGlobe(){
 
   // Load country polygons (prefer local asset for performance/stability)
   (async () => {
-  const localUrl = new URL('./assets/world.geojson', window.location.href).toString();
+  // Use an absolute path so it works regardless of the current page URL
+  // (e.g. /privacy.html, query strings, etc.) and on Vercel deployments.
+  const localUrl = '/assets/world.geojson';
   const remoteUrl = 'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
 
   async function fetchJson(url){
-    const res = await fetch(url, { cache: 'force-cache' });
+    const res = await fetch(url, { cache: 'no-store' });
     if(!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+
+    // Helpful guard: if a hosting rewrite/404 returns HTML, res.json() throws.
+    const ct = (res.headers.get('content-type') || '').toLowerCase();
+    if (ct.includes('text/html')) {
+      const preview = (await res.text()).slice(0, 200);
+      throw new Error(`Expected JSON but got HTML from ${url}. First bytes: ${preview}`);
+    }
+
     return res.json();
   }
 
