@@ -9,8 +9,29 @@ let hoverFeature = null;
 let worldFeatures = [];
 let lastPolygonClickTime = 0;
 
-const controlsBar = document.getElementById('controlsBar');
-const donateBar   = document.getElementById('donateBar');
+
+// ==========================
+//   IN-APP BROWSER (Instagram) HARDENING
+// ==========================
+const IS_INSTAGRAM_INAPP = /Instagram/i.test(navigator.userAgent || '');
+if (IS_INSTAGRAM_INAPP){
+  document.documentElement.classList.add('in-instagram');
+  document.addEventListener('DOMContentLoaded', ()=>{
+    document.body.classList.add('in-instagram');
+
+    // small banner to suggest opening in a real browser
+    if (!document.getElementById('igInAppBanner')){
+      const b = document.createElement('div');
+      b.id = 'igInAppBanner';
+      b.innerHTML = `
+        <p><strong>Instagram</strong> (in-app browser) can glitch full-screen views. For best results, open in your browser.</p>
+        <button type="button" id="igBannerClose" aria-label="Close">OK</button>
+      `;
+      document.body.prepend(b);
+      b.querySelector('#igBannerClose')?.addEventListener('click', ()=> b.remove());
+    }
+  });
+}
 
 // Consent key p/ localStorage
 const CONSENT_KEY = 'ca-consent-v2';
@@ -288,14 +309,7 @@ document.querySelectorAll('.langBtn').forEach(btn=>{
 closePopupBtn.onclick = () => hidePopup();
 
 function showPopup(){
-  popupEl.style.display = 'block';
-
-  // 🔒 MOBILE: esconder UI flutuante
-  if (window.innerWidth <= 768){
-    controlsBar.style.display = 'none';
-    donateBar.style.display   = 'none';
-  }
-
+  popupEl.style.display='block';
   requestAnimationFrame(()=>{
     popupEl.classList.add('show');
     closePopupBtn.focus();
@@ -304,20 +318,10 @@ function showPopup(){
 
 function hidePopup(){
   popupEl.classList.remove('show');
-
   setTimeout(()=>{
-    if(!popupEl.classList.contains('show')){
-      popupEl.style.display = 'none';
-
-      // 🔓 MOBILE: repor UI flutuante
-      if (window.innerWidth <= 768){
-        controlsBar.style.display = '';
-        donateBar.style.display   = '';
-      }
-    }
-  }, 200);
+    if(!popupEl.classList.contains('show')) popupEl.style.display='none';
+  },200);
 }
-
 
 /* Fechar popup com ESC */
 document.addEventListener('keydown', (e)=>{
