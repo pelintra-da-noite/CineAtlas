@@ -1327,5 +1327,12 @@ html[data-theme="light"]{
     flex-direction: column;
     align-items: stretch;
   }
-}
 
+/* Quando um modal estiver aberto, os botões de baixo não devem sobrepor */
+body.modal-open #controlsBar,
+body.modal-open #donateBar{
+  opacity: 0;
+  pointer-events: none; /* não clicáveis */
+  transform: translateY(10px);
+  transition: opacity .15s ease, transform .15s ease;
+}
