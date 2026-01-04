@@ -1,4 +1,4 @@
-const CACHE = "cineatlas-v1";
+const CACHE = "cineatlas-v2";
 const APP_SHELL = [
   "/",
   "/index.html",
@@ -6,7 +6,6 @@ const APP_SHELL = [
   "/script.js",
   "/manifest.json",
   "/assets/favicon.png",
-  "/assets/earth-minimal.jpg",
   // Needed for the globe country polygons
   "/assets/world.geojson"
 ];
@@ -46,5 +45,3 @@ self.addEventListener("fetch", (e) => {
     caches.match(req).then((cached) => cached || fetch(req))
   );
 });
-
-
