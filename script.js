@@ -14,15 +14,15 @@ const CONSENT_KEY = 'ca-consent-v2';
 
 // Refs principais
 const donateBtn = document.getElementById('donateBtn');
-const taglineEl = docum
-// Start hiding splash as soon as this script runs (scripts are loaded with defer)
-hideLoadingSoon();
-ent.getElementById('tagline');
+const taglineEl = document.getElementById('tagline');
 const randomBtn = document.getElementById('randomBtn');
 
 // Loading screen (simple: disappears after a short time, never blocks)
 const loadingScreen = document.getElementById('loadingScreen');
 const LOADING_MS = 1400;// shorter splash
+
+// Start hiding splash as soon as this script runs (scripts are loaded with defer)
+hideLoadingSoon();
 
 
 function hideLoadingSoon(ms = LOADING_MS){
