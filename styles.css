@@ -1284,12 +1284,8 @@ html[data-theme="light"]{
     height: calc(100vh - 160px); /* espaço reservado para botões */
     max-height: 520px;           /* LIMITE FÍSICO */
     min-height: 360px;
-
-    margin: 0 auto;
+    margin: auto;
     overflow: hidden;
-
-    border-top: 1px solid rgba(255,255,255,0.08);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
   }
 
   canvas{
