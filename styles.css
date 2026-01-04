@@ -1305,3 +1305,22 @@ html[data-theme="light"]{
     margin: 0;
   }
 }
+
+/* FIX: impedir controls/donate de subirem para cima no mobile */
+#controlsBar,
+#donateBar{
+  position: fixed !important;
+  top: auto !important;
+  bottom: calc(20px + var(--safe-area-inset-bottom, 0px)) !important;
+  z-index: 1400;
+}
+
+/* no mobile (stack), mantém a tua lógica mas continua FIXED */
+@media (max-width: 640px){
+  #donateBar{
+    bottom: calc(110px + var(--safe-area-inset-bottom, 0px)) !important;
+  }
+  #controlsBar{
+    bottom: calc(20px + var(--safe-area-inset-bottom, 0px)) !important;
+  }
+}
