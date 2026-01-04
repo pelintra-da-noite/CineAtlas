@@ -34,8 +34,27 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css">
-</head>
 
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="preconnect" href="https://flagcdn.com" crossorigin>
+  <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
+  <link rel="preconnect" href="https://api.themoviedb.org" crossorigin>
+
+  <link rel="preload" as="image" href="/assets/earth-minimal.jpg">
+
+  <meta name="robots" content="index,follow">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "name":"CineAtlas",
+  "url":"https://cine-atlas.com/",
+  "description":"Discover a random film from every country on the globe."
+}
+</script>
+
+</head>
 <body>
   
   <!-- Loading Screen -->
@@ -166,6 +185,20 @@
       </button>
     </div>
   </div>
+
+  <img id="moviePoster"
+     src=""
+     alt=""
+     width="420"
+     height="630"
+     loading="lazy"
+     decoding="async" />
+
+<img id="countryFlagImg"
+     alt="Country flag"
+     width="28"
+     height="18"
+     decoding="async" />
 
   <!-- Scripts -->
   <script src="https://unpkg.com/three@0.152.2/build/three.min.js" defer></script>
