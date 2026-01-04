@@ -1307,20 +1307,25 @@ html[data-theme="light"]{
 }
 
 /* FIX: impedir controls/donate de subirem para cima no mobile */
-#controlsBar,
-#donateBar{
-  position: fixed !important;
-  top: auto !important;
-  bottom: calc(20px + var(--safe-area-inset-bottom, 0px)) !important;
-  z-index: 1400;
+#controlsBar{
+  position: fixed;
+  right: calc(20px + var(--safe-area-inset-right));
+  bottom: calc(20px + var(--safe-area-inset-bottom));
+  z-index: 2000;
 }
 
-/* no mobile (stack), mantém a tua lógica mas continua FIXED */
-@media (max-width: 640px){
+#donateBar{
+  position: fixed;
+  left: calc(20px + var(--safe-area-inset-left));
+  bottom: calc(20px + var(--safe-area-inset-bottom));
+  z-index: 2000;
+}
+
+@media (max-width: 720px){
   #donateBar{
-    bottom: calc(110px + var(--safe-area-inset-bottom, 0px)) !important;
-  }
-  #controlsBar{
-    bottom: calc(20px + var(--safe-area-inset-bottom, 0px)) !important;
+    bottom: calc(110px + var(--safe-area-inset-bottom));
+    flex-direction: column;
+    align-items: stretch;
   }
 }
+
