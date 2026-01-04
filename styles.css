@@ -150,6 +150,25 @@ html[data-theme="light"] #starsCanvas{ opacity:0; }
 }
 @keyframes fadeIn{to{opacity:1;}}
 
+/* Reserva espaço para as barras no mobile (evita botões por cima do globo) */
+@media (max-width: 600px){
+  :root{
+    --mobile-ui-reserve: 92px; /* ajusta se quiseres: 80–110px */
+  }
+
+  #globeViz{
+    /* em vez de ocupar o ecrã todo, deixamos "folga" em baixo */
+    bottom: calc(var(--mobile-ui-reserve) + var(--safe-area-inset-bottom));
+  }
+
+  /* opcional: encolher um bocadinho as barras para ocupar menos */
+  #controlsBar, #donateBar{
+    transform: scale(0.92);
+    transform-origin: bottom;
+  }
+}
+
+
 /* Fade + slide-in genérico (header, tagline, barras) */
 @keyframes fadeSlideIn {
   from {
