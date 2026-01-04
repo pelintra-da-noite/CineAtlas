@@ -337,6 +337,31 @@ function themeSide(){ return isLight() ? 'rgba(216,163,0,0.12)' : 'rgba(216,163,
 function themeStroke(){ return isLight() ? '#a07800' : '#d8a300'; }
 function getGlobeBaseColor(){ return isLight() ? 0xffffff : 0x000000; }
 
+function applyThemeToGlobe(){
+  if(!globe) return;
+  globe
+    .atmosphereColor(isLight() ? '#f4c75a' : '#ffd58a')
+    .polygonCapColor(d =>
+      d === selectedFeature
+        ? 'rgba(139,0,0,0.65)'
+        : (d === hoverFeature ? 'rgba(216,163,0,0.65)' : themeCap())
+    )
+    .polygonSideColor(d =>
+      d === selectedFeature
+        ? 'rgba(139,0,0,0.25)'
+        : (d === hoverFeature ? 'rgba(216,163,0,0.40)' : themeSide())
+    )
+    .polygonStrokeColor(d =>
+      d === selectedFeature ? 'rgba(139,0,0,0.95)' : themeStroke()
+    );
+
+  if(usingSolidGlobe && solidMat){
+    solidMat.color.setHex(getGlobeBaseColor());
+    solidMat.needsUpdate = true;
+  }
+}
+
+
 
 // Globe instance (initialized lazily)
 let globe = null;
@@ -402,10 +427,6 @@ function initGlobe(){
     globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
     applyThemeToGlobe();
   });
-  
-  let usingSolidGlobe = false;
-  let solidMat = null;
-  
   function tryLoadGlobeTexture(){
     const url = 'assets/earth-minimal.jpg';
     const img = new Image();
@@ -427,29 +448,6 @@ function initGlobe(){
     img.src = url;
   }
   tryLoadGlobeTexture();
-  
-  function applyThemeToGlobe(){
-  if(!globe) return;
-    globe
-      .atmosphereColor(isLight() ? '#f4c75a' : '#ffd58a')
-      .polygonCapColor(d =>
-        d === selectedFeature
-          ? 'rgba(139,0,0,0.65)'
-          : (d === hoverFeature ? 'rgba(216,163,0,0.65)' : themeCap())
-      )
-      .polygonSideColor(d =>
-        d === selectedFeature
-          ? 'rgba(139,0,0,0.25)'
-          : (d === hoverFeature ? 'rgba(216,163,0,0.40)' : themeSide())
-      )
-      .polygonStrokeColor(d =>
-        d === selectedFeature ? 'rgba(139,0,0,0.95)' : themeStroke()
-      );
-  
-    if(usingSolidGlobe && solidMat){
-      solidMat.color.setHex(getGlobeBaseColor());
-      solidMat.needsUpdate = true;
-    }
   }
   
   function getFeatureCenter(f){
