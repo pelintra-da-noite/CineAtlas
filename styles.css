@@ -623,6 +623,8 @@ html[data-theme="light"] #donateBar{
 #moviePoster{
   width:100%;
   max-width:210px;
+  height:auto;
+  object-fit:cover;
   border-radius:12px;
   box-shadow:none;
   border:2px solid rgba(216,163,0,.85);   /* sempre amarelo */
@@ -1263,4 +1265,3 @@ html[data-theme="light"]{
   *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
   #starsCanvas{ display:none; }
 }
-
