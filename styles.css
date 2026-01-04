@@ -942,12 +942,20 @@ body::before{
     justify-content:center;
   }
 
-
-  /* Mobile: reserve vertical space so the globe doesn't sit behind the bottom UI */
+  /* Mobile: make the globe truly full-screen (prevents side clipping on Android Edge) */
   #globeViz{
-    bottom: calc(160px + var(--safe-area-inset-bottom));
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100svh;
+    overflow: hidden;
   }
-  #donateBar{
+  #globeViz canvas{
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+  }
+#donateBar{
     bottom:calc(110px + var(--safe-area-inset-bottom));
     flex-direction:column;
     align-items:stretch;
@@ -1269,64 +1277,9 @@ html[data-theme="light"]{
   #starsCanvas{ display:none; }
 }
 
-/* ===============================
-   MOBILE: CAIXA FIXA PARA O GLOBO
-   =============================== */
-@media (max-width: 640px){
-
-  body{
-    overflow: hidden; /* impede zoom de rebentar layout */
-  }
-
- #globeViz{
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100dvh; /* usa 100svh se preferires estabilidade com barras do browser */
-  }
-}
-
-  canvas{
-    position: absolute !important;
-    inset: 0;
-  }
-
-  /* barras SEM sobreposição */
-  #controlsBar,
-  #donateBar{
-    position: relative;
-    inset: auto;
-    margin: 0;
-  }
-}
-
-/* FIX: impedir controls/donate de subirem para cima no mobile */
-#controlsBar{
-  position: fixed;
-  right: calc(20px + var(--safe-area-inset-right));
-  bottom: calc(20px + var(--safe-area-inset-bottom));
-  z-index: 2000;
-}
-
-#donateBar{
-  position: fixed;
-  left: calc(20px + var(--safe-area-inset-left));
-  bottom: calc(20px + var(--safe-area-inset-bottom));
-  z-index: 2000;
-}
-
-@media (max-width: 720px){
-  #donateBar{
-    bottom: calc(110px + var(--safe-area-inset-bottom));
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-/* Quando um modal estiver aberto, os botões de baixo não devem sobrepor */
+/* Optional safety: if you ever toggle this class, ensure bars don't overlap modals */
 body.modal-open #controlsBar,
 body.modal-open #donateBar{
   opacity: 0;
-  pointer-events: none; /* não clicáveis */
-  transform: translateY(10px);
-  transition: opacity .15s ease, transform .15s ease;
+  pointer-events: none;
 }
