@@ -329,6 +329,28 @@ let controls = null;
 let usingSolidGlobe = false;
 let solidMat = null;
 
+
+// Simple hover tooltip (optional)
+function showGlobeHover(name, x, y){
+  const tip = document.getElementById('globeHover');
+  if(!tip) return;
+  tip.textContent = name || '';
+  tip.style.display = 'block';
+  const pad = 12;
+  // keep inside viewport
+  const maxX = window.innerWidth - 10;
+  const maxY = window.innerHeight - 10;
+  const left = Math.min(x + pad, maxX);
+  const top  = Math.min(y + pad, maxY);
+  tip.style.left = left + 'px';
+  tip.style.top  = top + 'px';
+}
+function hideGlobeHover(){
+  const tip = document.getElementById('globeHover');
+  if(!tip) return;
+  tip.style.display = 'none';
+}
+
 function applyThemeToGlobe(){
   if(!globe) return;
 
@@ -374,7 +396,7 @@ if (themeCheckbox){
 function initGlobe(){
   if (globe) return; // prevent double init
 
-  const mount = document.getElementById('globeViz');
+  const mount = document.getElementById('webgl-root');
   if (!mount || typeof Globe !== 'function') {
     console.error('Globe.gl not loaded or #globeViz missing');
     return;
