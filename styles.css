@@ -1567,3 +1567,15 @@ html.inapp #popup.show{
   max-height: none !important;
   transform: none !important;
 }
+html.inapp body::before{
+  content: "IN-APP MODE";
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 999999;
+  padding: 6px 10px;
+  font: 12px/1 sans-serif;
+  background: rgba(0,0,0,.6);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 10px;
+}
