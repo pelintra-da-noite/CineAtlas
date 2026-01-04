@@ -184,79 +184,6 @@ html[data-theme="light"] #starsCanvas{ opacity:0; }
   z-index: 2500;
 }
 
-/* ========================= */
-/*       LOADING SCREEN      */
-/* ========================= */
-#loadingScreen{
-  position:fixed;
-  inset:0;
-  z-index:4000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--bg-deep);
-  transition: opacity .45s ease, visibility .45s ease;
-}
-#loadingScreen.is-hidden{
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-}
-.loading-inner{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:.55rem;
-  padding:1.2rem 1.4rem;
-  text-align:center;
-}
-.loading-logo{
-  font-family:'Playfair Display',serif;
-  font-style:italic;
-  font-weight:600;
-  font-size:3rem;
-  line-height:1;
-  color:var(--brand-red);
-  text-shadow: 0 0 10px rgba(0,0,0,.9), 0 3px 18px rgba(0,0,0,1);
-}
-html[data-theme="light"] .loading-logo{
-  color:#b02323;
-  text-shadow: 0 0 7px rgba(255,255,255,.8), 0 2px 13px rgba(0,0,0,.25);
-}
-.loading-sub{
-  font-size:.85rem;
-  font-weight:600;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:var(--text-dim);
-}
-.loading-dots{
-  display:flex;
-  gap:.35rem;
-  align-items:center;
-  justify-content:center;
-  margin-top:.1rem;
-}
-.loading-dots span{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:var(--accent);
-  opacity:.35;
-  animation: loadingPulse 1.05s ease-in-out infinite;
-}
-.loading-dots span:nth-child(2){ animation-delay:.15s; }
-.loading-dots span:nth-child(3){ animation-delay:.30s; }
-@keyframes loadingPulse{
-  0%,100%{ transform:translateY(0); opacity:.25; }
-  50%{ transform:translateY(-4px); opacity:.9; }
-}
-
-@media (max-width: 480px){
-  .loading-logo{ font-size:2.35rem; }
-}
-
 /* GRUPO base de botões com gloss translucido (igual ao popup) */
 #themeSwitch,
 #controlsBar,
@@ -1043,36 +970,18 @@ body::before{
   }
 }
 
-/* Em mobile muito pequeno, o banner vira “bloco” em vez de pílula longa */
-@media (max-width: 480px){
-  #cookieBanner{
-    bottom:calc(70px + var(--safe-area-inset-bottom));
-    max-width:90vw;
-    border-radius:18px;
-    flex-direction:column;
-    align-items:flex-start;
-  }
-  .cookie-actions{
-    align-self:flex-end;
-  }
-}
-
-/* COOKIE POPUP – pill gloss translúcido em baixo */
+/* COOKIE BANNER – pill gloss translucido */
 #cookieBanner{
   position:fixed;
   left:50%;
-  transform:translateX(-50%) translateY(10px);
-  bottom:calc(22px + var(--safe-area-inset-bottom));
+  transform:translateX(-50%);
+  bottom:calc(18px + var(--safe-area-inset-bottom));
   z-index:2100;
-
   display:flex;
-  flex-direction:column;
-  align-items:center;          /* centra conteúdo horizontalmente */
-  justify-content:center;
-  gap:.7rem;
-
-  max-width:560px;
-  padding:1rem 1.4rem 1rem;    /* mais respiro */
+  align-items:center;
+  gap:.6rem;
+  max-width:520px;
+  padding:.6rem .9rem;
   border-radius:999px;
   border:1px solid rgba(192,22,36,.9);
   box-shadow:0 14px 30px rgba(0,0,0,.85), 0 0 0 1px rgba(216,163,0,.25);
@@ -1080,9 +989,8 @@ body::before{
   backdrop-filter:blur(18px) saturate(130%);
   -webkit-backdrop-filter:blur(18px) saturate(130%);
   color:var(--text-main);
-  font-size:.85rem;
-  line-height:1.5;
-
+  font-size:.8rem;
+  line-height:1.4;
   opacity:0;
   pointer-events:none;
   transition:opacity .35s ease, transform .35s ease;
@@ -1098,73 +1006,23 @@ html[data-theme="light"] #cookieBanner{
   transform:translateX(-50%) translateY(0);
 }
 
-/* texto em cima, centrado, com respiro */
 .cookie-text{
-  margin:0;
-  text-align:center;
+  flex:1;
   color:var(--text-dim);
-  padding:0 .6rem;
 }
 
-.cookie-main{
-  width:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:.35rem;
-}
-.cookie-more{
-  font-size:.72rem;
-  color:var(--text-dim);
-  text-decoration:none;
-  opacity:.9;
-}
-.cookie-more:hover{
-  text-decoration:underline;
-  opacity:1;
-}
-
-/* link dentro do texto */
-.cookie-text a{
-  color:var(--accent);
-  text-decoration:underline;
-  font-weight:500;
-}
-.cookie-text a:hover{
-  text-decoration:none;
-}
-
-.cookie-link-wrap {
-  display:block;
-  margin-top:.4rem;            /* espaçamento entre texto e link */
-}
-
-.cookie-link-wrap a {
-  color:var(--accent);
-  text-decoration:underline;
-  font-weight:500;
-  font-size:.8rem;
-}
-
-.cookie-link-wrap a:hover {
-  text-decoration:none;
-}
-
-/* botões centrados horizontalmente */
 .cookie-actions{
   display:flex;
-  justify-content:center;
   align-items:center;
-  gap:.6rem;
-  flex-wrap:wrap;
+  gap:.4rem;
 }
 
 .cookieBtn{
   appearance:none;
   border-radius:999px;
   border:1px solid var(--lang-border);
-  padding:.4rem 1rem;
-  font-size:.8rem;
+  padding:.35rem .8rem;
+  font-size:.75rem;
   font-weight:600;
   letter-spacing:.06em;
   text-transform:uppercase;
@@ -1172,8 +1030,6 @@ html[data-theme="light"] #cookieBanner{
   color:var(--text-dim);
   cursor:pointer;
   white-space:nowrap;
-  box-shadow:none;
-  transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
 .cookieBtn.primary{
   background:var(--accent);
@@ -1190,20 +1046,164 @@ html[data-theme="light"] #cookieBanner{
   color:var(--text-main);
 }
 
+/* botão banner focus */
 .cookieBtn:focus-visible{
   outline:2px solid var(--accent);
   outline-offset:2px;
 }
 
-/* mobile: cartão, largura total */
+/* Em mobile muito pequeno, o banner vira “bloco” em vez de pílula longa */
 @media (max-width: 480px){
   #cookieBanner{
     bottom:calc(70px + var(--safe-area-inset-bottom));
-    max-width:92vw;
+    max-width:90vw;
     border-radius:18px;
-    padding:1rem;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .cookie-actions{
+    align-self:flex-end;
   }
 }
 
+/* =========================
+   LOADING SCREEN (2–3s)
+========================= */
+#loadingScreen{
+  position:fixed;
+  inset:0;
+  z-index:5000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--bg-deep);
+  transition: opacity .45s ease, visibility .45s ease;
+}
+#loadingScreen.hide{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+.loadingLogo{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-weight:600;
+  font-size:clamp(2.4rem, 6vw, 3.8rem);
+  color:var(--brand-red);
+  text-shadow:
+    0 0 10px rgba(0,0,0,.9),
+    0 3px 18px rgba(0,0,0,1);
+}
 
+/* =========================
+   GLASS / GLOSS BUTTONS
+========================= */
+:root{
+  --glass-bg: linear-gradient(135deg, rgba(255,255,255,.10), rgba(0,0,0,.28));
+  --glass-border: rgba(216,163,0,.35);
+  --glass-shadow: 0 10px 22px rgba(0,0,0,.55);
+}
+html[data-theme="light"]{
+  --glass-bg: linear-gradient(135deg, rgba(255,255,255,.78), rgba(252,244,220,.90));
+  --glass-border: rgba(216,163,0,.40);
+  --glass-shadow: 0 10px 22px rgba(0,0,0,.18);
+}
 
+/* aplica “vidro” aos botões principais */
+.langBtn,
+.iconBtn,
+.donateBtn,
+.cookieBtn,
+.actionBtn,
+#closePopup{
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+}
+
+/* texto/cores por tipo */
+.langBtn{
+  color: var(--text-main);
+}
+.langBtn.active{
+  background: linear-gradient(135deg, rgba(216,163,0,.85), rgba(216,163,0,.65)) !important;
+  color:#000;
+  border-color: rgba(216,163,0,.75) !important;
+}
+
+.donateBtn{
+  color: var(--text-main);
+  text-decoration:none;
+}
+.donateBtn:hover{
+  background: linear-gradient(135deg, rgba(216,163,0,.90), rgba(216,163,0,.65)) !important;
+  color:#000;
+  border-color: rgba(216,163,0,.75) !important;
+}
+
+.iconBtn{
+  color: var(--accent);
+}
+.iconBtn:hover{
+  background: linear-gradient(135deg, rgba(216,163,0,.26), rgba(0,0,0,.25)) !important;
+  border-color: rgba(216,163,0,.55) !important;
+}
+
+/* slider também em vidro */
+.slider{
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+}
+
+/* botões do popup */
+.actionBtn{
+  color: var(--text-main);
+  text-transform:uppercase;
+}
+#letterboxdBtn{
+  background: linear-gradient(135deg, rgba(0,0,0,.55), rgba(0,0,0,.25)) !important;
+  color: var(--accent);
+  border-color: rgba(216,163,0,.55) !important;
+}
+#letterboxdBtn:hover{
+  background: linear-gradient(135deg, rgba(216,163,0,.90), rgba(216,163,0,.65)) !important;
+  color:#000;
+}
+#anotherBtn{
+  background: linear-gradient(135deg, rgba(192,22,36,.40), rgba(0,0,0,.25)) !important;
+  color: #ffd7d7;
+  border-color: rgba(192,22,36,.75) !important;
+}
+#anotherBtn:hover{
+  background: linear-gradient(135deg, rgba(192,22,36,.85), rgba(192,22,36,.55)) !important;
+  color:#000;
+}
+
+/* cookie buttons */
+.cookieBtn.primary{
+  background: linear-gradient(135deg, rgba(216,163,0,.90), rgba(216,163,0,.65)) !important;
+  color:#000;
+  border-color: rgba(216,163,0,.75) !important;
+}
+.cookieBtn:not(.primary){
+  color: var(--text-main);
+}
+
+/* reduz custo do blur se o user preferir menos motion */
+@media (prefers-reduced-motion: reduce){
+  .langBtn,
+  .iconBtn,
+  .donateBtn,
+  .cookieBtn,
+  .actionBtn,
+  #closePopup,
+  .slider{
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+  }
+}
