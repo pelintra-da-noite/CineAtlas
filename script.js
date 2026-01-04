@@ -617,8 +617,6 @@ function initGlobe(){
       fetchMovie(code, displayName);
     });
   });
-  
-}
 
 // ==========================
 //   TMDB FETCH
