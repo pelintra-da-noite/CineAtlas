@@ -464,99 +464,76 @@ function initGlobe(){
 
   // Load country polygons (prefer local asset for performance/stability)
   (async () => {
-  // Use an absolute path so it works regardless of the current page URL
-  // (e.g. /privacy.html, query strings, etc.) and on Vercel deployments.
-  const localUrl = '/assets/world.geojson';
-  const remoteUrl = 'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
+    // Use an absolute path so it works regardless of the current page URL
+    // (e.g. /privacy.html, query strings, etc.) and on Vercel deployments.
+    const localUrl = '/assets/world.geojson';
+    const remoteUrl = 'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
 
-  async function fetchJson(url){
-    const res = await fetch(url, { cache: 'no-store' });
-    if(!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+    async function fetchJson(url) {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
 
-    // Helpful guard: if a hosting rewrite/404 returns HTML, res.json() throws.
-    const ct = (res.headers.get('content-type') || '').toLowerCase();
-    if (ct.includes('text/html')) {
-      const preview = (await res.text()).slice(0, 200);
-      throw new Error(`Expected JSON but got HTML from ${url}. First bytes: ${preview}`);
+      // Helpful guard: if a hosting rewrite/404 returns HTML, res.json() throws.
+      const ct = (res.headers.get('content-type') || '').toLowerCase();
+      if (ct.includes('text/html')) {
+        const preview = (await res.text()).slice(0, 200);
+        throw new Error(`Expected JSON but got HTML from ${url}. First bytes: ${preview}`);
+      }
+      return res.json();
     }
 
-    return res.json();
-  }
+    let geo;
+    try {
+      geo = await fetchJson(localUrl);
+    } catch (err) {
+      console.warn('Local world.geojson failed, falling back to remote:', err);
+      geo = await fetchJson(remoteUrl);
+    }
 
-  let geo = null;
-  try{
-    geo = await fetchJson(localUrl);
-  }catch(err){
-    console.warn('Local world.geojson failed, falling back to remote:', err);
-    geo = await fetchJson(remoteUrl);
-  }
+    worldFeatures = geo.features || [];
+    globe.polygonsData(worldFeatures);
 
-  // --- original handler body starts here ---
-  (function(geo){
-      worldFeatures = geo.features || [];
-      globe.polygonsData(worldFeatures);
+    globe.onPolygonClick(f => {
+      lastPolygonClickTime = Date.now();
+      selectedFeature = f;
+      const iso = f.properties.ISO_A2;
+      const name = f.properties.ADMIN;
+      lastCountryCode = iso;
+      lastCountryName = name;
+      if (!hasConsent()) return;
+      fetchFilmForCountry(iso, name);
+    });
 
-      globe.onPolygonClick(f=>{
-        lastPolygonClickTime = Date.now();
-        selectedFeature = f;
-        globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
-        applyThemeToGlobe();
+    globe.onPolygonHover(f => {
+      hoverFeature = f;
+      updateGlobePolygonColors();
+    });
 
-        const origName = (f.properties.name || f.properties.ADMIN || 'Unknown').trim();
-        const displayName = normalizedDisplayName(f.properties);
-
-        const rawA3 = f.id || f.properties.iso_a3 || f.properties.ISO_A3;
-        const rawA2 = f.properties.iso_a2 || f.properties.ISO_A2;
-
-        const isWB = /^\s*west\s*bank\s*$/i.test(origName);
-        const isGZ = /^\s*gaza(\s*strip)?\s*$/i.test(origName);
-
-        let code =
-            (isWB || isGZ) ? 'PS'
-          : (rawA2 && rawA2 !== '-99') ? rawA2.toUpperCase()
-          : rawA3 ? convertToTwoLetterCode(rawA3.toUpperCase())
-          : null;
-
-        if(!code || code==='-99') return;
-
-        lastCountryCode = code;
-        lastCountryName = displayName;
-
-        const c = getFeatureCenter(f);
-        if (c) globe.pointOfView({ lat: c.lat, lng: c.lng, altitude: 1.25 }, 1200);
-
-        const isAntarctica = code === 'AQ' || /antarctica/i.test(displayName);
-        const isArcticSnow = code === 'GL'
-          || /greenland/i.test(displayName)
-          || /svalbard|jan\s*mayen|arctic/i.test(displayName);
-
-        if (isAntarctica) { showAntarcticaMessage(); startSnow(10000); return; }
-        if (isArcticSnow) { startSnow(10000); }
-
-        fetchMovie(code, displayName);
+    // Hover tooltip + highlight
+    if (globe.renderer && globe.renderer().domElement) {
+      globe.renderer().domElement.addEventListener('mousemove', e => {
+        const now = Date.now();
+        if (now - lastPolygonClickTime < 350) return;
+        if (hoverFeature) {
+          const name = hoverFeature.properties.ADMIN;
+          showGlobeHover(name, e.clientX, e.clientY);
+        } else {
+          hideGlobeHover();
+        }
       });
 
-      if(typeof globe.onGlobeClick === 'function'){
-        globe.onGlobeClick(() => {
-          const now = Date.now();
-          if(now - lastPolygonClickTime < 80) return;
-          selectedFeature = null;
-          lastCountryCode = null;
-          lastCountryName = null;
-          globe.polygonAltitude(() => 0.01);
-          applyThemeToGlobe();
-          hidePopup();
-        });
-      }
+      // Hide hover when leaving canvas
+      globe.renderer().domElement.addEventListener('mouseleave', () => {
+        hideGlobeHover();
+      });
+    }
 
-      // Now that we have polygons, apply theme once (ensures correct colors)
-      applyThemeToGlobe();
-    })
-  })(geo);
-})().catch(e=>{
-  console.error('Failed to load country shapes:', e);
-  alert('Failed to load country shapes. Open /assets/world.geojson in your browser to verify it exists.');
-});
+    // Now that we have polygons, apply theme once (ensures correct colors)
+    applyThemeToGlobe();
+  })().catch(e => {
+    console.error('Failed to load country shapes:', e);
+    alert('Failed to load country shapes. Open /assets/world.geojson in your browser to verify it exists.');
+  });
 }
 
 // ==========================
@@ -947,4 +924,3 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/sw.js").catch(console.error);
   });
 }
-
