@@ -1266,3 +1266,7 @@ html[data-theme="light"]{
   #starsCanvas{ display:none; }
 }
 
+
+
+/* Allow dragging/zooming the Globe canvas on touch devices */
+#globeViz canvas{ touch-action:none; }
