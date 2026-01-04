@@ -40,56 +40,6 @@ html,body{
   transition: background-color .35s ease;
 }
 
-
-/* =========================
-   LAYERS: WebGL / FX / UI
-========================= */
-#webgl-root{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:auto;
-}
-
-#webgl-root{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  opacity:0;
-  animation:fadeIn 1s forwards .4s;
-}
-
-#webgl-root canvas{
-  width:100% !important;
-  height:100% !important;
-  display:block;
-  pointer-events:auto;
-  touch-action:none;
-}
-
-#fx-root{
-  position:fixed;
-  inset:0;
-  z-index:1;
-  pointer-events:none;
-}
-
-#ui-root{
-  position:fixed;
-  inset:0;
-  z-index:2;
-  pointer-events:none;
-}
-
-/* Only interactive UI elements should receive pointer events */
-#ui-root button,
-#ui-root a,
-#ui-root input,
-#ui-root label{
-  pointer-events:auto;
-}
-
-
 /* Transições em elementos interativos / painéis */
 button,
 a,
@@ -191,6 +141,13 @@ html[data-theme="light"] #tagline{
 }
 html[data-theme="light"] #starsCanvas{ opacity:0; }
 
+#globeViz{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  opacity:0;
+  animation:fadeIn 1s forwards .4s;
+}
 @keyframes fadeIn{to{opacity:1;}}
 
 /* Fade + slide-in genérico (header, tagline, barras) */
@@ -666,8 +623,6 @@ html[data-theme="light"] #donateBar{
 #moviePoster{
   width:100%;
   max-width:210px;
-  height:auto;
-  object-fit:cover;
   border-radius:12px;
   box-shadow:none;
   border:2px solid rgba(216,163,0,.85);   /* sempre amarelo */
@@ -1309,38 +1264,3 @@ html[data-theme="light"]{
   #starsCanvas{ display:none; }
 }
 
-
-
-/* Allow dragging/zooming the Globe canvas on touch devices */
-#webgl-root canvas{ touch-action:none; }
-
-#background {
-  pointer-events: none;
-}
-
-canvas {
-  pointer-events: auto;
-}
-
-
-
-/* Globe hover tooltip */
-#globeHover{
-  position:fixed;
-  z-index:2600;
-  display:none;
-  padding:8px 10px;
-  border-radius:10px;
-  font-size:14px;
-  line-height:1.2;
-  background:rgba(0,0,0,0.65);
-  color:#fff;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  pointer-events:none;
-  transform: translate3d(0,0,0);
-}
-html[data-theme="light"] #globeHover{
-  background:rgba(255,255,255,0.70);
-  color:#111;
-}
