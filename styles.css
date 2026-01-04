@@ -1464,3 +1464,37 @@ body.modal-open #donateBar{
     margin-right: auto;
   }
 }
+/* Mobile: globo ocupa o ecrã TODO (por trás dos botões) */
+@media (max-width: 720px){
+  html, body{
+    height: 100%;
+  }
+
+  #globeViz{
+    position: fixed !important;
+    inset: 0 !important;          /* top/right/bottom/left = 0 */
+    width: 100vw !important;
+    height: 100svh !important;    /* mais estável que 100vh em mobile */
+    bottom: 0 !important;         /* anula qualquer "reserva" para botões */
+    overflow: hidden !important;
+  }
+
+  #globeViz canvas{
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+  }
+}
+/* Mobile: tagline centrada pelo ecrã (ignora padding/offset do header) */
+@media (max-width: 720px){
+  #tagline{
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+
+    width: max-content;
+    max-width: calc(100vw - 24px);
+    text-align: center !important;
+    margin: 0 auto !important;
+  }
+}
