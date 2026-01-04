@@ -5,81 +5,171 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
   <title>CineAtlas</title>
-  <meta name="description" content="Discover a random film from every country on the globe."/>
+  <meta name="description" content="Discover a random film from every country on the globe. CineAtlas connects world cinema lovers through an interactive experience."/>
   <meta name="theme-color" content="#000000">
 
+  <!-- Favicon / Icons -->
   <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/favicon.png" />
   <link rel="manifest" href="manifest.json" />
+
+  <!-- Canonical URL -->
   <link rel="canonical" href="https://cine-atlas.com/" />
+
+  <!-- Open Graph (social media preview) -->
+  <meta property="og:title" content="CineAtlas – Explore World Cinema">
+  <meta property="og:description" content="Click a country on the globe and discover a random film from that place.">
+  <meta property="og:image" content="https://cine-atlas.com/assets/cineatlas-cover.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://cine-atlas.com/">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CineAtlas – Explore World Cinema">
+  <meta name="twitter:description" content="Click a country on the globe and discover a random film from that place.">
+  <meta name="twitter:image" content="https://cine-atlas.com/assets/cineatlas-cover.jpg">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
+  <!-- Styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-
-  <!-- LOADING SCREEN -->
+  
+  <!-- Loading Screen -->
   <div id="loadingScreen" aria-hidden="true">
     <div class="loadingLogo">CineAtlas</div>
   </div>
-
-  <!-- Header -->
+<!-- Header / Title -->
   <header>
     <h1 id="siteTitle">CineAtlas</h1>
   </header>
   <div id="tagline">Click a country for a random film</div>
 
+  <!-- Fades -->
   <div id="fadeOverlay"></div>
   <div id="themeFade"></div>
 
+  <!-- Starfield -->
   <canvas id="starsCanvas"></canvas>
-  <div id="globeViz"></div>
 
-  <!-- THEME + RANDOM -->
-  <div id="themeSwitch">
-    <label class="switch">
+  <!-- Theme + Randomizer -->
+  <div id="themeSwitch" aria-label="Theme switch">
+    <span id="themeLabel" aria-hidden="true">
+      <!-- sol -->
+      <svg class="icon-sun-min theme-icon" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="6"></circle>
+      </svg>
+      <!-- lua -->
+      <svg class="icon-moon-min theme-icon" viewBox="0 0 24 24">
+        <path d="M18 13.5A6.5 6.5 0 0 1 10.5 6 5.5 5.5 0 1 0 18 13.5Z"></path>
+      </svg>
+    </span>
+    <label class="switch" aria-label="Toggle theme">
       <input id="themeCheckbox" type="checkbox" />
       <span class="slider"></span>
     </label>
-    <button id="randomBtn" class="iconBtn" type="button">🎲</button>
+    <button
+      id="randomBtn"
+      class="iconBtn"
+      title="Random country"
+      aria-label="Random country"
+      type="button">
+      <svg class="icon-die" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="4" y="4" width="16" height="16"></rect>
+        <circle cx="8" cy="8" r="1.4"></circle>
+        <circle cx="12" cy="12" r="1.4"></circle>
+        <circle cx="16" cy="16" r="1.4"></circle>
+      </svg>
+    </button>
   </div>
 
-  <!-- LANGUAGE -->
-  <div id="controlsBar">
-    <button class="langBtn active" data-lang="en-US">English</button>
-    <button class="langBtn" data-lang="pt-PT">Português</button>
+  <!-- Language -->
+  <div id="controlsBar" role="toolbar" aria-label="Language controls">
+    <button class="langBtn active" data-lang="en-US" aria-pressed="true">English</button>
+    <button class="langBtn" data-lang="pt-PT" aria-pressed="false">Português</button>
   </div>
 
-  <!-- DONATE -->
+  <!-- Donate -->
   <div id="donateBar">
-    <a id="donateBtn" class="donateBtn"
-       href="https://www.buymeacoffee.com/alexandresd"
-       target="_blank" rel="noopener">
-      Support us
-    </a>
+    <a id="donateBtn" class="donateBtn" href="https://www.buymeacoffee.com/alexandresd" target="_blank" rel="noopener">Support us</a>
+    <span id="creditText">
+      <a href="https://github.com/pelintra-da-noite/CineAtlas" target="_blank" rel="noopener noreferrer">
+        SaramagaBytes © 2025
+      </a>
+    </span>
   </div>
 
   <!-- POPUP -->
-  <div id="popup" role="dialog" aria-modal="true">
-    <button id="closePopup">×</button>
-    <h4 id="movieTitleOriginal"></h4>
-    <p id="overviewText"></p>
-  </div>
+  <div id="popup" role="dialog" aria-modal="true" aria-labelledby="movieTitleOriginal">
+    <div id="popupHeader">
+      <div id="countryBlock">
+        <img id="countryFlagImg" alt="Country flag" />
+        <div id="countryName">Country</div>
+      </div>
+      <button id="closePopup" type="button"><span>×</span></button>
+    </div>
 
-  <!-- COOKIE BANNER (ÚNICO) -->
-  <div id="cookieBanner">
-    <div id="cookieText"></div>
-    <div class="cookie-actions">
-      <button id="cookieAccept">Accept</button>
-      <button id="cookieReject">Essential</button>
+    <div id="popupBody">
+      <div class="posterCol">
+        <img id="moviePoster" src="" alt="" />
+      </div>
+
+      <div class="infoCol">
+        <div id="titleBlock">
+          <h4 id="movieTitleOriginal"></h4>
+          <h5 id="movieTitleTranslated"></h5>
+        </div>
+        <div class="directorLine" id="directorLine">
+          <strong id="directorLabel">Director:</strong>
+          <span id="directorName"></span>
+        </div>
+        <p id="overviewText"></p>
+
+        <div class="actionsRow" id="actionsRow">
+          <a class="actionBtn" id="letterboxdBtn" href="#" target="_blank" rel="noopener">See on Letterboxd</a>
+          <button class="actionBtn" id="anotherBtn" type="button">Another one</button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- SCRIPTS -->
+  <!-- Snow -->
+  <canvas id="snowOverlay"></canvas>
+
+  <!-- Globe -->
+  <div id="globeViz"></div>
+
+  <!-- Cookie Banner -->
+
+  <div id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie notice">
+    <div class="cookie-main">
+      <div id="cookieText" class="cookie-text">
+        <!-- texto é preenchido via JS consoante o idioma -->
+      </div>
+      <a href="/privacy.html"
+         class="cookie-more"
+         target="_blank"
+         rel="noopener">
+        Privacy &amp; Cookies policy
+      </a>
+    </div>
+    <div class="cookie-actions">
+      <button id="cookieAccept" class="cookieBtn primary" type="button">
+        Accept analytics
+      </button>
+      <button id="cookieReject" class="cookieBtn" type="button">
+        Only essential
+      </button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
   <script src="https://unpkg.com/three@0.152.2/build/three.min.js" defer></script>
   <script src="https://unpkg.com/globe.gl" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>
+
