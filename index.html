@@ -37,6 +37,17 @@
 </head>
 
 <body>
+  <!-- Loading Screen -->
+  <div id="loadingScreen" role="status" aria-live="polite" aria-label="Loading">
+    <div class="loading-inner">
+      <div class="loading-logo" aria-hidden="true">CineAtlas</div>
+      <div class="loading-sub" id="loadingSub">Loading…</div>
+      <div class="loading-dots" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
   <!-- Header / Title -->
   <header>
     <h1 id="siteTitle">CineAtlas</h1>
@@ -136,19 +147,13 @@
 
   <!-- Globe -->
   <div id="globeViz"></div>
-
-  <!-- Cookie Banner -->
-  <div id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie notice">
-    <div id="cookieText" class="cookie-text">
-      <!-- texto preenchido via JS conforme idioma -->
-    </div>
     <div class="cookie-actions">
       <button id="cookieAccept" class="cookieBtn primary" type="button">Accept analytics</button>
       <button id="cookieReject" class="cookieBtn" type="button">Only essential</button>
     </div>
   </div>
 
-    <!-- Cookie Popup (consent) -->
+    <!-- Cookie Banner -->
   <div id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie notice">
     <div class="cookie-main">
       <div id="cookieText" class="cookie-text">
@@ -172,9 +177,9 @@
   </div>
 
   <!-- Scripts -->
-  <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
-  <script src="https://unpkg.com/globe.gl"></script>
-  <script src="script.js"></script>
+  <script src="https://unpkg.com/three@0.152.2/build/three.min.js" defer></script>
+  <script src="https://unpkg.com/globe.gl" defer></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
 
