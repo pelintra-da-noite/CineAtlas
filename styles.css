@@ -1390,4 +1390,62 @@ body.modal-open #donateBar{
     padding-right: 74px;
   }
 }
+/* ========= Bottom dock: barras centradas e mais juntas (mobile) ========= */
+@media (max-width: 720px){
+  :root{
+    --bottomDockGap: 10px;   /* espaço entre donateBar e controlsBar */
+    --bottomDockPad: 14px;   /* distância ao fundo */
+  }
+
+  /* mesma altura/linha, centradas no ecrã */
+  #donateBar, #controlsBar{
+    bottom: calc(var(--bottomDockPad) + var(--safe-area-inset-bottom, 0px)) !important;
+    top: auto !important;
+  }
+
+  /* donateBar encosta a direita no centro */
+  #donateBar{
+    left: auto !important;
+    right: 50% !important;
+    transform: translateX(calc(-1 * var(--bottomDockGap))) !important;
+
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: .5rem !important;
+  }
+
+  /* controlsBar encosta a esquerda no centro */
+  #controlsBar{
+    right: auto !important;
+    left: 50% !important;
+    transform: translateX(var(--bottomDockGap)) !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: .5rem !important;
+  }
+}
+/* ========= Popup sempre dentro do ecrã (mobile) ========= */
+@media (max-width: 720px){
+  #popup{
+    top: calc(10px + var(--safe-area-inset-top, 0px)) !important;
+    left: calc(10px + var(--safe-area-inset-left, 0px)) !important;
+    right: calc(10px + var(--safe-area-inset-right, 0px)) !important;
+    bottom: calc(10px + var(--safe-area-inset-bottom, 0px)) !important;
+
+    width: auto !important;
+    max-height: none !important;
+
+    transform: none !important; /* <- chave para não sair fora */
+    overflow: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* opcional: se o body do popup estiver a "apertar" */
+  #popupBody{
+    flex-direction: column;
+  }
+}
 
