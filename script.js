@@ -1,4 +1,22 @@
 // ==========================
+//   LOADING SCREEN (SAFE)
+// ==========================
+const loadingScreen = document.getElementById('loadingScreen');
+
+// desaparece SEMPRE ao fim de 2.5s
+function hideLoadingSoon(ms = 2500){
+  if(!loadingScreen) return;
+  setTimeout(() => {
+    loadingScreen.classList.add('hide');
+  }, ms);
+}
+
+// backup extra (caso algo estranho aconteça)
+window.addEventListener('load', () => {
+  hideLoadingSoon(2500);
+});
+
+// ==========================
 //   CONFIG & GLOBAL STATE
 // ==========================
 let currentLanguage = 'en-US';
