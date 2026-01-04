@@ -1489,9 +1489,8 @@ body.modal-open #donateBar{
 @media (max-width: 720px){
   #tagline{
     position: relative !important;
-    left: 50% !important;
+    left: 42% !important;
     transform: translateX(-50%) !important;
-
     width: max-content;
     max-width: calc(100vw - 24px);
     text-align: center !important;
