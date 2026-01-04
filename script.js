@@ -9,30 +9,6 @@ let hoverFeature = null;
 let worldFeatures = [];
 let lastPolygonClickTime = 0;
 
-
-// ==========================
-//   IN-APP BROWSER (Instagram) HARDENING
-// ==========================
-const IS_INSTAGRAM_INAPP = /Instagram/i.test(navigator.userAgent || '');
-if (IS_INSTAGRAM_INAPP){
-  document.documentElement.classList.add('in-instagram');
-  document.addEventListener('DOMContentLoaded', ()=>{
-    document.body.classList.add('in-instagram');
-
-    // small banner to suggest opening in a real browser
-    if (!document.getElementById('igInAppBanner')){
-      const b = document.createElement('div');
-      b.id = 'igInAppBanner';
-      b.innerHTML = `
-        <p><strong>Instagram</strong> (in-app browser) can glitch full-screen views. For best results, open in your browser.</p>
-        <button type="button" id="igBannerClose" aria-label="Close">OK</button>
-      `;
-      document.body.prepend(b);
-      b.querySelector('#igBannerClose')?.addEventListener('click', ()=> b.remove());
-    }
-  });
-}
-
 // Consent key p/ localStorage
 const CONSENT_KEY = 'ca-consent-v2';
 
@@ -44,6 +20,18 @@ const randomBtn = document.getElementById('randomBtn');
 // Loading screen (simple: disappears after a short time, never blocks)
 const loadingScreen = document.getElementById('loadingScreen');
 const LOADING_MS = 1400;// shorter splash
+
+// ==========================
+//   IN-APP BROWSER (Instagram/Facebook) SAFETY MODE
+// ==========================
+// Instagram's in-app browser (and some FB WebViews) can mis-handle 100vh/fixed positioning,
+// which can "break" fullscreen WebGL layouts. We switch to a simpler layout only there.
+const UA = navigator.userAgent || '';
+const isInAppBrowser = /Instagram|FBAN|FBAV/i.test(UA);
+if (isInAppBrowser){
+  document.documentElement.classList.add('inapp');
+  document.body.classList.add('inapp');
+}
 
 
 function hideLoadingSoon(ms = LOADING_MS){
