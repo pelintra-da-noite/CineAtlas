@@ -9,6 +9,9 @@ let hoverFeature = null;
 let worldFeatures = [];
 let lastPolygonClickTime = 0;
 
+const controlsBar = document.getElementById('controlsBar');
+const donateBar   = document.getElementById('donateBar');
+
 // Consent key p/ localStorage
 const CONSENT_KEY = 'ca-consent-v2';
 
@@ -285,7 +288,14 @@ document.querySelectorAll('.langBtn').forEach(btn=>{
 closePopupBtn.onclick = () => hidePopup();
 
 function showPopup(){
-  popupEl.style.display='block';
+  popupEl.style.display = 'block';
+
+  // 🔒 MOBILE: esconder UI flutuante
+  if (window.innerWidth <= 768){
+    controlsBar.style.display = 'none';
+    donateBar.style.display   = 'none';
+  }
+
   requestAnimationFrame(()=>{
     popupEl.classList.add('show');
     closePopupBtn.focus();
@@ -294,10 +304,20 @@ function showPopup(){
 
 function hidePopup(){
   popupEl.classList.remove('show');
+
   setTimeout(()=>{
-    if(!popupEl.classList.contains('show')) popupEl.style.display='none';
-  },200);
+    if(!popupEl.classList.contains('show')){
+      popupEl.style.display = 'none';
+
+      // 🔓 MOBILE: repor UI flutuante
+      if (window.innerWidth <= 768){
+        controlsBar.style.display = '';
+        donateBar.style.display   = '';
+      }
+    }
+  }, 200);
 }
+
 
 /* Fechar popup com ESC */
 document.addEventListener('keydown', (e)=>{
