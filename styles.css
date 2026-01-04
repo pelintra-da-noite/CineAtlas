@@ -40,6 +40,56 @@ html,body{
   transition: background-color .35s ease;
 }
 
+
+/* =========================
+   LAYERS: WebGL / FX / UI
+========================= */
+#webgl-root{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:auto;
+}
+
+#globeViz{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  opacity:0;
+  animation:fadeIn 1s forwards .4s;
+}
+
+#globeViz canvas{
+  width:100% !important;
+  height:100% !important;
+  display:block;
+  pointer-events:auto;
+  touch-action:none;
+}
+
+#fx-root{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+}
+
+#ui-root{
+  position:fixed;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+}
+
+/* Only interactive UI elements should receive pointer events */
+#ui-root button,
+#ui-root a,
+#ui-root input,
+#ui-root label{
+  pointer-events:auto;
+}
+
+
 /* Transições em elementos interativos / painéis */
 button,
 a,
@@ -141,13 +191,6 @@ html[data-theme="light"] #tagline{
 }
 html[data-theme="light"] #starsCanvas{ opacity:0; }
 
-#globeViz{
-  position:absolute;
-  inset:0;
-  z-index:1;
-  opacity:0;
-  animation:fadeIn 1s forwards .4s;
-}
 @keyframes fadeIn{to{opacity:1;}}
 
 /* Fade + slide-in genérico (header, tagline, barras) */
