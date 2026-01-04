@@ -6,7 +6,9 @@ const APP_SHELL = [
   "/script.js",
   "/manifest.json",
   "/assets/favicon.png",
-  "/assets/earth-minimal.jpg"
+  "/assets/earth-minimal.jpg",
+  // Needed for the globe country polygons
+  "/assets/world.geojson"
 ];
 
 self.addEventListener("install", (e) => {
