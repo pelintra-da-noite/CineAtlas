@@ -1,22 +1,4 @@
 // ==========================
-//   LOADING SCREEN (SAFE)
-// ==========================
-const loadingScreen = document.getElementById('loadingScreen');
-
-// desaparece SEMPRE ao fim de 2.5s
-function hideLoadingSoon(ms = 2500){
-  if(!loadingScreen) return;
-  setTimeout(() => {
-    loadingScreen.classList.add('hide');
-  }, ms);
-}
-
-// backup extra (caso algo estranho aconteça)
-window.addEventListener('load', () => {
-  hideLoadingSoon(2500);
-});
-
-// ==========================
 //   CONFIG & GLOBAL STATE
 // ==========================
 let currentLanguage = 'en-US';
@@ -35,16 +17,13 @@ const donateBtn = document.getElementById('donateBtn');
 const taglineEl = document.getElementById('tagline');
 const randomBtn = document.getElementById('randomBtn');
 
-// Loading screen
+// Loading screen (simple: disappears after a short time, never blocks)
 const loadingScreen = document.getElementById('loadingScreen');
-const loadingSub = document.getElementById('loadingSub');
-let loadingStart = performance.now();
-function setLoadingText(txt){ if(loadingSub) loadingSub.textContent = txt; }
-function hideLoadingScreen(minMs=700){
+const LOADING_MS = 2500;
+
+function hideLoadingSoon(ms = LOADING_MS){
   if(!loadingScreen) return;
-  const elapsed = performance.now() - loadingStart;
-  const wait = Math.max(0, minMs - elapsed);
-  setTimeout(()=> loadingScreen.classList.add('is-hidden'), wait);
+  setTimeout(() => loadingScreen.classList.add('hide'), ms);
 }
 
 
@@ -77,7 +56,7 @@ let starsCtx = starsCanvas.getContext('2d');
 let stars = [];
 let starsWidth = 0;
 let starsHeight = 0;
-let starsRunning = true;
+let starsPaused = false;
 
 // ==========================
 //   STARFIELD
@@ -112,6 +91,10 @@ function resizeStars(){
 
 function renderStars(time){
   if(!starsCtx) return;
+  if(starsPaused){
+    requestAnimationFrame(renderStars);
+    return;
+  }
   starsCtx.clearRect(0,0,starsWidth, starsHeight);
   starsCtx.globalCompositeOperation = 'lighter';
 
@@ -125,13 +108,17 @@ function renderStars(time){
   }
   starsCtx.globalAlpha = 1;
 
-  if(starsRunning) requestAnimationFrame(renderStars);
+  requestAnimationFrame(renderStars);
 }
 
 function initStarfield(){
   resizeStars();
   window.addEventListener('resize', resizeStars);
-  if(starsRunning) requestAnimationFrame(renderStars);
+  document.addEventListener('visibilitychange', ()=>{
+    starsPaused = document.hidden;
+  });
+  starsPaused = document.hidden;
+  requestAnimationFrame(renderStars);
 }
 
 // ==========================
@@ -247,16 +234,10 @@ applyLanguageTexts();
 // ==========================
 const fadeOverlay = document.getElementById('fadeOverlay');
 window.addEventListener('load', ()=>{
+  hideLoadingSoon();
   initStarfield();
   requestAnimationFrame(()=> fadeOverlay.style.opacity='0');
   applyStoredConsent();
-
-  const start = () => initGlobe();
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(start, { timeout: 1500 });
-  } else {
-    setTimeout(start, 700);
-  }
 });
 
 const htmlEl = document.documentElement;
@@ -353,37 +334,25 @@ function themeSide(){ return isLight() ? 'rgba(216,163,0,0.12)' : 'rgba(216,163,
 function themeStroke(){ return isLight() ? '#a07800' : '#d8a300'; }
 function getGlobeBaseColor(){ return isLight() ? 0xffffff : 0x000000; }
 
-let globe = null;
-let controls = null;
+const globe = Globe()(document.getElementById('globeViz'))
+  .backgroundColor('rgba(0,0,0,0)')
+  .showAtmosphere(true)
+  .atmosphereColor('#ffd58a')
+  .atmosphereAltitude(0.22)
+  .showGraticules(false)
+  .polygonAltitude(0.01)
+  .polygonCapColor(d => themeCap())
+  .polygonSideColor(d => themeSide())
+  .polygonStrokeColor(d => themeStroke())
+  .polygonLabel(({properties:p}) => normalizedDisplayName(p))
+  .polygonsTransitionDuration(300);
 
-function createGlobe(){
-  globe = Globe()(document.getElementById('globeViz'))
-    .backgroundColor('rgba(0,0,0,0)')
-    .showAtmosphere(true)
-    .atmosphereColor('#ffd58a')
-    .atmosphereAltitude(0.22)
-    .showGraticules(false)
-    .polygonAltitude(0.01)
-    .polygonCapColor(() => themeCap())
-    .polygonSideColor(() => themeSide())
-    .polygonStrokeColor(() => themeStroke())
-    .polygonLabel(({properties:p}) => normalizedDisplayName(p))
-    .polygonsTransitionDuration(300);
-
-  controls = globe.controls();
-  controls.minDistance = 160;
-  controls.maxDistance = 460;
-  controls.minPolarAngle = 0.2;
-  controls.maxPolarAngle = Math.PI - 0.2;
-  controls.enablePan = false;
-
-  globe.onPolygonHover(h => {
-    if(h === hoverFeature) return;
-    hoverFeature = h;
-    globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
-    applyThemeToGlobe();
-  });
-}
+const controls = globe.controls();
+controls.minDistance = 160;
+controls.maxDistance = 460;
+controls.minPolarAngle = 0.2;
+controls.maxPolarAngle = Math.PI - 0.2;
+controls.enablePan = false;
 
 globe.onPolygonHover(h => {
   if(h === hoverFeature) return;
@@ -396,7 +365,6 @@ let usingSolidGlobe = false;
 let solidMat = null;
 
 function tryLoadGlobeTexture(){
-  if(!globe) return;
   const url = 'assets/earth-minimal.jpg';
   const img = new Image();
   img.crossOrigin = 'anonymous';
@@ -416,10 +384,9 @@ function tryLoadGlobeTexture(){
   };
   img.src = url;
 }
-/* tryLoadGlobeTexture called during initGlobe */
+tryLoadGlobeTexture();
 
 function applyThemeToGlobe(){
-  if(!globe) return;
   globe
     .atmosphereColor(isLight() ? '#f4c75a' : '#ffd58a')
     .polygonCapColor(d =>
@@ -491,35 +458,9 @@ function spinGlobe(onDone){
   requestAnimationFrame(step);
 }
 
-async function loadWorldGeoJSON(){
-  const REMOTE = 'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
-  const LOCAL = 'assets/world.geojson'; // optional fallback (add this file to your repo for reliability)
-  try{
-    const r = await fetch(REMOTE, { cache: 'force-cache' });
-    if(!r.ok) throw new Error('remote geojson failed');
-    return await r.json();
-  }catch(e){
-    const r2 = await fetch(LOCAL);
-    if(!r2.ok) throw e;
-    return await r2.json();
-  }
-}
-
-function initGlobe(){
-  if(globe) return;
-  setLoadingText(currentLanguage === 'pt-PT' ? 'A iniciar…' : 'Starting…');
-  createGlobe();
-  tryLoadGlobeTexture();
-  applyThemeToGlobe();
-  loadAndBindWorld();
-}
-
-async function loadAndBindWorld(){
-  if(!globe) return;
-  setLoadingText(currentLanguage === 'pt-PT' ? 'A carregar o globo…' : 'Loading globe…');
-
-  try{
-    const geo = await loadWorldGeoJSON();
+fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
+  .then(r=>r.json())
+  .then(geo=>{
     worldFeatures = geo.features || [];
     globe.polygonsData(worldFeatures);
 
@@ -575,13 +516,10 @@ async function loadAndBindWorld(){
         hidePopup();
       });
     }
-    hideLoadingScreen(850);
-  }catch(e){
+  })
+  .catch(e=>{
     console.error(e);
-    hideLoadingScreen(850);
-    alert('Failed to load country shapes');
-  }
-}
+    hideLoadingSoon(800);
     alert('Failed to load country shapes');
   });
 
