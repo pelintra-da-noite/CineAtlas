@@ -300,7 +300,8 @@ html[data-theme="light"] .slider{
   height:18px;
   width:18px;
   left:3px;
-  top:3px;
+  top:50%;
+  transform: translate(0, -50%);
   background:#ffffff;
   border-radius:50%;
   transition:.2s;
@@ -310,7 +311,7 @@ input:checked + .slider {
   background:rgba(216,163,0,.35);
 }
 input:checked + .slider:before {
-  transform: translateX(22px);
+  transform: translate(22px, -50%);
 }
 
 /* Randomizer button minimal */
@@ -1125,7 +1126,7 @@ html[data-theme="light"] #cookieBanner{
   align-items:center;
   justify-content:center;
   background:var(--bg-deep);
-  transition: opacity .45s ease, visibility .45s ease;
+  transition: opacity .30s ease, visibility .30s ease;
 }
 #loadingScreen.hide{
   opacity:0;
