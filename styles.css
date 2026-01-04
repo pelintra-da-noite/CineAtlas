@@ -49,6 +49,14 @@ a,
 .actionBtn,
 #popup,
 #themeSwitch,
+#controlsBar,
+#donateBar {
+  transition: color .25s ease,
+              background-color .25s ease,
+              border-color .25s ease,
+              box-shadow .25s ease;
+}
+
 /* Focus visível – genérico */
 button:focus-visible,
 a:focus-visible{
@@ -133,6 +141,13 @@ html[data-theme="light"] #tagline{
 }
 html[data-theme="light"] #starsCanvas{ opacity:0; }
 
+#globeViz{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  opacity:0;
+  animation:fadeIn 1s forwards .4s;
+}
 @keyframes fadeIn{to{opacity:1;}}
 
 /* Fade + slide-in genérico (header, tagline, barras) */
@@ -171,8 +186,17 @@ html[data-theme="light"] #starsCanvas{ opacity:0; }
 
 /* GRUPO base de botões com gloss translucido (igual ao popup) */
 #themeSwitch,
+#controlsBar,
+#donateBar{
+  background:linear-gradient(135deg, rgba(0,0,0,0.36), rgba(20,12,0,0.72));
+  backdrop-filter:blur(18px) saturate(130%);
+  -webkit-backdrop-filter:blur(18px) saturate(130%);
+}
 html[data-theme="light"] #themeSwitch,
-html[data-theme="light"] 
+html[data-theme="light"] #controlsBar,
+html[data-theme="light"] #donateBar{
+  background:linear-gradient(135deg, rgba(255,255,255,0.70), rgba(252,244,220,0.86));
+}
 
 /* THEME SWITCH + RANDOM (top-right) – grupo em pílula */
 #themeSwitch{
@@ -348,6 +372,22 @@ html[data-theme="light"] .iconBtn{
 }
 
 /* Language (bottom-right) – grupo em pílula */
+#controlsBar{
+  position:absolute;
+  right:calc(20px + var(--safe-area-inset-right));
+  bottom:calc(20px + var(--safe-area-inset-bottom));
+  z-index:1300;
+  display:flex;
+  gap:.5rem;
+  align-items:center;
+  border:1px solid #c01624;
+  border-radius:999px;
+  padding:.4rem .5rem;
+  box-shadow:0 0 12px var(--panel-glow);
+  opacity:0;
+  animation: fadeSlideIn 1s ease forwards .6s;
+}
+
 .langBtn{
   appearance:none;
   background:transparent;
@@ -375,7 +415,29 @@ html[data-theme="light"] .langBtn{ color:#6b5b2a; }
 html[data-theme="light"] .langBtn.active{ color:#000; }
 
 /* Donate (bottom-left) – igual ao grupo de línguas */
-html[data-theme="light"] 
+#donateBar{
+  position:absolute;
+  left:calc(20px + var(--safe-area-inset-left));
+  bottom:calc(20px + var(--safe-area-inset-bottom));
+  z-index:1300;
+  display:flex;
+  align-items:center;
+  gap:.5rem;                        /* igual ao controlsBar */
+  border:1px solid #c01624;
+  border-radius:999px;
+  padding:.4rem .5rem;              /* igual ao controlsBar */
+  box-shadow:0 0 12px var(--panel-glow);
+  opacity:0;
+  animation: fadeSlideIn 1s ease forwards .6s;
+
+  /* mesmo “gloss” translúcido que os outros grupos */
+  background:linear-gradient(135deg, rgba(0,0,0,0.36), rgba(20,12,0,0.72));
+  backdrop-filter:blur(18px) saturate(130%);
+  -webkit-backdrop-filter:blur(18px) saturate(130%);
+}
+html[data-theme="light"] #donateBar{
+  background:linear-gradient(135deg, rgba(255,255,255,0.70), rgba(252,244,220,0.86));
+}
 
 /* Botão Support us – coerente com .langBtn mas em amarelo */
 .donateBtn{
@@ -747,7 +809,8 @@ body::before{
 /* max 900px */
 @media (max-width: 900px){
   #themeSwitch{ top:calc(12px + var(--safe-area-inset-top)); right:calc(12px + var(--safe-area-inset-right)); transform:scale(.9); }
-#tagline{
+  #controlsBar,#donateBar{ bottom:calc(14px + var(--safe-area-inset-bottom)); }
+  #tagline{
     top:100px;
     font-size:.8rem;
     padding:0 .75rem;
@@ -775,7 +838,11 @@ body::before{
     transform:scale(.9);
   }
 
-.langBtn{
+  #controlsBar, #donateBar{
+    padding:.35rem .4rem;
+    gap:.35rem;
+  }
+  .langBtn{
     padding:.35rem .7rem;
     min-width:auto;
     font-size:.78rem;
@@ -829,7 +896,22 @@ body::before{
   }
 
   /* barras de baixo compactas, não full width */
-.langBtn{
+  #donateBar{
+    left:10px;
+    right:auto;
+    bottom:calc(18px + var(--safe-area-inset-bottom));
+    transform:none;
+  }
+
+  #controlsBar{
+    right:10px;
+    left:auto;
+    bottom:calc(18px + var(--safe-area-inset-bottom));
+    transform:none;
+    justify-content:center;
+  }
+
+  .langBtn{
     padding:.32rem .6rem;
     font-size:.75rem;
   }
@@ -850,14 +932,49 @@ body::before{
 
 /* stack mobile controls/donate em ecrãs estreitos */
 @media (max-width: 640px){
+  #donateBar,
+  #controlsBar{
+    left:50%;
+    right:auto;
+    transform:translateX(-50%);
+    width:calc(100vw - 40px - var(--safe-area-inset-left) - var(--safe-area-inset-right));
+    max-width:420px;
+    justify-content:center;
+  }
 
-#creditText{
+
+  /* Mobile: reserve vertical space so the globe doesn't sit behind the bottom UI */
+  #globeViz{
+    bottom: calc(160px + var(--safe-area-inset-bottom));
+  }
+  #donateBar{
+    bottom:calc(110px + var(--safe-area-inset-bottom));
+    flex-direction:column;
+    align-items:stretch;
+    gap:.45rem;
+    text-align:center;
+  }
+
+  #donateBar .donateBtn{
+    width:100%;
+    max-width:100%;
+  }
+
+  #creditText{
     display:block;
     width:100%;
     font-size:.72rem;
   }
 
-.langBtn{
+  #controlsBar{
+    bottom:calc(20px + var(--safe-area-inset-bottom));
+    flex-wrap:wrap;
+    align-items:stretch;
+    padding:.5rem .6rem;
+    gap:.4rem;
+  }
+
+  .langBtn{
     flex:1 1 45%;
     min-width:120px;
     max-width:calc(50% - .4rem);
@@ -1033,6 +1150,7 @@ html[data-theme="light"] #cookieBanner{
   100%{ opacity:1; transform: translateY(0); }
 }
 
+
 /* =========================
    GLASS / GLOSS BUTTONS
 ========================= */
@@ -1160,89 +1278,116 @@ html[data-theme="light"]{
     overflow: hidden; /* impede zoom de rebentar layout */
   }
 
-canvas{
+  #globeViz{
+    position: relative;
+    width: 100vw;
+    height: calc(100vh - 160px); /* espaço reservado para botões */
+    max-height: 520px;           /* LIMITE FÍSICO */
+    min-height: 360px;
+
+    margin: 0 auto;
+    overflow: hidden;
+
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  canvas{
     position: absolute !important;
     inset: 0;
   }
 
   /* barras SEM sobreposição */
+  #controlsBar,
+  #donateBar{
+    position: relative;
+    inset: auto;
+    margin: 0;
+  }
 }
 
 /* FIX: impedir controls/donate de subirem para cima no mobile */
+#controlsBar{
+  position: fixed;
+  right: calc(20px + var(--safe-area-inset-right));
+  bottom: calc(20px + var(--safe-area-inset-bottom));
+  z-index: 2000;
+}
+
+#donateBar{
+  position: fixed;
+  left: calc(20px + var(--safe-area-inset-left));
+  bottom: calc(20px + var(--safe-area-inset-bottom));
+  z-index: 2000;
+}
+
 @media (max-width: 720px){
-/* Quando um modal estiver aberto, os botões de baixo não devem sobrepor */
-body.modal-open
+  #donateBar{
+    bottom: calc(110px + var(--safe-area-inset-bottom));
+    flex-direction: column;
+    align-items: stretch;
+  }
 
 }
 
+/* Quando um modal estiver aberto, os botões de baixo não devem sobrepor */
+body.modal-open #controlsBar,
+body.modal-open #donateBar{
+  opacity: 0;
+  pointer-events: none; /* não clicáveis */
+  transform: translateY(10px);
+  transition: opacity .15s ease, transform .15s ease;
+}
 
 /* =========================================================
-   CLEAN LAYOUT (single source of truth)
-   - Fullscreen globe container
-   - Bottom bars positioning (desktop + mobile)
-   - Header safe padding on mobile (avoid theme switch overlap)
+   MOBILE POLISH OVERRIDES (layout only — keep button design)
    ========================================================= */
-
-/* Fullscreen globe container (desktop + mobile) */
-#globeViz{
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100svh;
-  overflow: hidden;
-  z-index: 0;
-}
-
-/* Ensure the WebGL canvas fills the container */
-#globeViz canvas{
-  position: absolute;
-  inset: 0;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* Bottom bars */
-#controlsBar,
-#donateBar{
-  position: fixed;
-  bottom: calc(20px + var(--safe-area-inset-bottom, 0px));
-  z-index: 1400;
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-}
-
-/* Desktop placement */
-#controlsBar{
-  right: calc(20px + var(--safe-area-inset-right, 0px));
-}
-#donateBar{
-  left: calc(20px + var(--safe-area-inset-left, 0px));
-}
-
-/* Mobile: center donateBar, keep controls in top-right */
 @media (max-width: 720px){
-  /* Keep the site title visually centered (avoid top-right switch overlap) */
+
+  /* Prevent tiny horizontal overflow that can "cut" the globe */
+  html, body{
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* True fullscreen globe container on mobile */
+  #globeViz{
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100svh !important; /* stable mobile viewport height */
+    overflow: hidden !important;
+  }
+
+  #globeViz canvas{
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+  }
+
+  /* Keep header visually centered (avoid overlap with theme switch) */
   header{
     box-sizing: border-box;
     padding-left: 84px;
     padding-right: 84px;
   }
 
+  /* Make Support/GitHub match desktop layout (row + centered) */
   #donateBar{
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    flex-direction: row;
-    justify-content: center;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 }
 
-/* Smaller phones */
 @media (max-width: 480px){
   header{
     padding-left: 74px;
     padding-right: 74px;
   }
 }
+
