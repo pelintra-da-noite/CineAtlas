@@ -1278,19 +1278,13 @@ html[data-theme="light"]{
     overflow: hidden; /* impede zoom de rebentar layout */
   }
 
-  #globeViz{
-    position: relative;
+ #globeViz{
+    position: fixed;
+    inset: 0;
     width: 100vw;
-    height: calc(100vh - 160px); /* espaço reservado para botões */
-    max-height: 520px;           /* LIMITE FÍSICO */
-    min-height: 360px;
-
-    margin: 0 auto;
-    overflow: hidden;
-
-    border-top: 1px solid rgba(255,255,255,0.08);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    height: 100dvh; /* usa 100svh se preferires estabilidade com barras do browser */
   }
+}
 
   canvas{
     position: absolute !important;
