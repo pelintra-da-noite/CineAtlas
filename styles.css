@@ -47,14 +47,14 @@ html,body{
 #webgl-root{
   position:fixed;
   inset:0;
-  z-index:0;
+  z-index:1;
   pointer-events:auto;
 }
 
 #webgl-root{
   position:fixed;
   inset:0;
-  z-index:0;
+  z-index:1;
   opacity:0;
   animation:fadeIn 1s forwards .4s;
 }
@@ -63,8 +63,10 @@ html,body{
   width:100% !important;
   height:100% !important;
   display:block;
-  pointer-events:auto;
+  pointer-events:auto !important;
   touch-action:none;
+  user-select:none;
+  cursor:grab;
 }
 
 #fx-root{
