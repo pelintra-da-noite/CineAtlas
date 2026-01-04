@@ -1,6 +1,6 @@
 # CineAtlas
 
-CineAtlas is an interactive website that lets you discover a random movie from any country in the world by clicking on a 3D globe.
+CineAtlas is an interactive website that lets you discover a random film from any country in the world by clicking on a 3D globe.
 Perfect for exploring world cinema without having to spend hours choosing.
 
 **Live:** https://cine-atlas.com  
@@ -11,7 +11,7 @@ Perfect for exploring world cinema without having to spend hours choosing.
 
 - **Interactive 3D Globe** using [Globe.gl] and [Three.js]
 - **Country Randomizer** (dice button next to the theme switch)
-- **Movie Suggestions** by country via TMDB API (through serverless functions in Vercel)
+- **Film Suggestions** by country via TMDB API (through serverless functions in Vercel)
 - **Dark/Light Mode** with toggle + minimalist icons (moon/sun)
 - **Multi-language support:**
   - **Portuguese (pt-PT)** interface
