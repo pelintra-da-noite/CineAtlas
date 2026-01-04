@@ -323,29 +323,6 @@ function normalizedDisplayName(props){
   return raw;
 }
 
-// Fetch JSON with timeout + graceful errors
-async function fetchJson(url, { timeoutMs = 12000 } = {}) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), timeoutMs);
-  try {
-    const res = await fetch(url, { signal: ctrl.signal, cache: 'no-store' });
-    if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
-    return await res.json();
-  } finally {
-    clearTimeout(t);
-  }
-}
-
-// Load world.geojson: prefer local (best for Lighthouse), fallback to remote if missing
-async function loadWorldGeoJSON(){
-  try {
-    return await fetchJson('/assets/world.geojson', { timeoutMs: 8000 });
-  } catch (e) {
-    // fallback: remote source (may be blocked in some networks)
-    return await fetchJson('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson', { timeoutMs: 15000 });
-  }
-}
-
 // Globe instance
 let globe = null;
 let controls = null;
@@ -486,8 +463,26 @@ function initGlobe(){
   tryLoadGlobeTexture();
 
   // Load country polygons (prefer local asset for performance/stability)
-  loadWorldGeoJSON()
-    .then(geo=>{
+  (async () => {
+  const localUrl = new URL('./assets/world.geojson', window.location.href).toString();
+  const remoteUrl = 'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
+
+  async function fetchJson(url){
+    const res = await fetch(url, { cache: 'force-cache' });
+    if(!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+    return res.json();
+  }
+
+  let geo = null;
+  try{
+    geo = await fetchJson(localUrl);
+  }catch(err){
+    console.warn('Local world.geojson failed, falling back to remote:', err);
+    geo = await fetchJson(remoteUrl);
+  }
+
+  // --- original handler body starts here ---
+  (function(geo){
       worldFeatures = geo.features || [];
       globe.polygonsData(worldFeatures);
 
@@ -544,12 +539,14 @@ function initGlobe(){
         });
       }
 
+      // Now that we have polygons, apply theme once (ensures correct colors)
       applyThemeToGlobe();
     })
-    .catch(e=>{
-      console.error(e);
-      alert('Failed to load country shapes. Add /assets/world.geojson (recommended) or ensure the fallback URL is reachable.');
-    });
+  })(geo);
+})().catch(e=>{
+  console.error('Failed to load country shapes:', e);
+  alert('Failed to load country shapes. Open /assets/world.geojson in your browser to verify it exists.');
+});
 }
 
 // ==========================
