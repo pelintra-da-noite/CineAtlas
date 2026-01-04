@@ -399,6 +399,22 @@ function initGlobe(){
   controls.minPolarAngle = 0.2;
   controls.maxPolarAngle = Math.PI - 0.2;
   controls.enablePan = false;
+  // Ensure user interaction works across browsers/devices
+  controls.enableRotate = true;
+  controls.enableZoom = true;
+  controls.enabled = true;
+  try { controls.update && controls.update(); } catch(e) {}
+  // On mobile, prevent the page from handling touch gestures instead of the globe
+  try {
+    const el = globe.renderer && globe.renderer().domElement;
+    if (el) {
+      el.style.pointerEvents = 'auto';
+      el.style.touchAction = 'none';
+    }
+  } catch(e) {}
+  if (typeof globe.enablePointerInteraction === 'function') {
+    globe.enablePointerInteraction(true);
+  }
 
   function syncGlobeSize(){
     const w = window.innerWidth;
