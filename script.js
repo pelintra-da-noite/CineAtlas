@@ -354,6 +354,40 @@ controls.minPolarAngle = 0.2;
 controls.maxPolarAngle = Math.PI - 0.2;
 controls.enablePan = false;
 
+
+// Keep globe sizing/pixel ratio correct (fixes issues when dragging window between monitors)
+function syncGlobeSize(){
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  try{
+    if (typeof globe.width === 'function') globe.width(w);
+    if (typeof globe.height === 'function') globe.height(h);
+    const r = (typeof globe.renderer === 'function') ? globe.renderer() : null;
+    if (r && typeof r.setPixelRatio === 'function') r.setPixelRatio(window.devicePixelRatio || 1);
+    if (r && typeof r.setSize === 'function') r.setSize(w, h);
+  }catch(e){}
+}
+
+// Resize on normal resizes
+window.addEventListener('resize', syncGlobeSize);
+
+// Also watch for devicePixelRatio changes (common when moving the window between monitors)
+(function watchDPR(){
+  let mq = window.matchMedia(`(resolution: ${(window.devicePixelRatio || 1)}dppx)`);
+  const handler = () => {
+    syncGlobeSize();
+    resizeStars(); // starfield also depends on DPR
+    // re-arm watcher for the new dppx
+    mq.removeEventListener?.('change', handler);
+    mq = window.matchMedia(`(resolution: ${(window.devicePixelRatio || 1)}dppx)`);
+    mq.addEventListener?.('change', handler);
+  };
+  mq.addEventListener?.('change', handler);
+})();
+
+// Initial
+syncGlobeSize();
+
 globe.onPolygonHover(h => {
   if(h === hoverFeature) return;
   hoverFeature = h;
