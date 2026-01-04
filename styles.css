@@ -930,58 +930,6 @@ body::before{
   }
 }
 
-/* stack mobile controls/donate em ecrãs estreitos */
-@media (max-width: 640px){
-  #donateBar,
-  #controlsBar{
-    left:50%;
-    right:auto;
-    transform:translateX(-50%);
-    width:calc(100vw - 40px - var(--safe-area-inset-left) - var(--safe-area-inset-right));
-    max-width:420px;
-    justify-content:center;
-  }
-
-
-  /* Mobile: reserve vertical space so the globe doesn't sit behind the bottom UI */
-  #globeViz{
-    bottom: calc(160px + var(--safe-area-inset-bottom));
-  }
-  #donateBar{
-    bottom:calc(110px + var(--safe-area-inset-bottom));
-    flex-direction:column;
-    align-items:stretch;
-    gap:.45rem;
-    text-align:center;
-  }
-
-  #donateBar .donateBtn{
-    width:100%;
-    max-width:100%;
-  }
-
-  #creditText{
-    display:block;
-    width:100%;
-    font-size:.72rem;
-  }
-
-  #controlsBar{
-    bottom:calc(20px + var(--safe-area-inset-bottom));
-    flex-wrap:wrap;
-    align-items:stretch;
-    padding:.5rem .6rem;
-    gap:.4rem;
-  }
-
-  .langBtn{
-    flex:1 1 45%;
-    min-width:120px;
-    max-width:calc(50% - .4rem);
-    justify-content:center;
-  }
-}
-
 /* COOKIE BANNER – glass (stacked) */
 #cookieBanner{
   position:fixed;
@@ -1269,127 +1217,6 @@ html[data-theme="light"]{
   #starsCanvas{ display:none; }
 }
 
-/* ===============================
-   MOBILE: CAIXA FIXA PARA O GLOBO
-   =============================== */
-@media (max-width: 640px){
-
-  body{
-    overflow: hidden; /* impede zoom de rebentar layout */
-  }
-
-  #globeViz{
-    position: relative;
-    width: 100vw;
-    height: calc(100vh - 160px); /* espaço reservado para botões */
-    max-height: 520px;           /* LIMITE FÍSICO */
-    min-height: 360px;
-
-    margin: 0 auto;
-    overflow: hidden;
-
-    border-top: 1px solid rgba(255,255,255,0.08);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-
-  canvas{
-    position: absolute !important;
-    inset: 0;
-  }
-
-  /* barras SEM sobreposição */
-  #controlsBar,
-  #donateBar{
-    position: relative;
-    inset: auto;
-    margin: 0;
-  }
-}
-
-/* FIX: impedir controls/donate de subirem para cima no mobile */
-#controlsBar{
-  position: fixed;
-  right: calc(20px + var(--safe-area-inset-right));
-  bottom: calc(20px + var(--safe-area-inset-bottom));
-  z-index: 2000;
-}
-
-#donateBar{
-  position: fixed;
-  left: calc(20px + var(--safe-area-inset-left));
-  bottom: calc(20px + var(--safe-area-inset-bottom));
-  z-index: 2000;
-}
-
-@media (max-width: 720px){
-  #donateBar{
-    bottom: calc(110px + var(--safe-area-inset-bottom));
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-}
-
-/* Quando um modal estiver aberto, os botões de baixo não devem sobrepor */
-body.modal-open #controlsBar,
-body.modal-open #donateBar{
-  opacity: 0;
-  pointer-events: none; /* não clicáveis */
-  transform: translateY(10px);
-  transition: opacity .15s ease, transform .15s ease;
-}
-
-/* =========================================================
-   MOBILE POLISH OVERRIDES (layout only — keep button design)
-   ========================================================= */
-@media (max-width: 720px){
-
-  /* Prevent tiny horizontal overflow that can "cut" the globe */
-  html, body{
-    width: 100%;
-    overflow-x: hidden;
-  }
-
-  /* True fullscreen globe container on mobile */
-  #globeViz{
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100vw !important;
-    height: 100svh !important; /* stable mobile viewport height */
-    overflow: hidden !important;
-  }
-
-  #globeViz canvas{
-    width: 100% !important;
-    height: 100% !important;
-    display: block;
-  }
-
-  /* Keep header visually centered (avoid overlap with theme switch) */
-  header{
-    box-sizing: border-box;
-    padding-left: 84px;
-    padding-right: 84px;
-  }
-
-  /* Make Support/GitHub match desktop layout (row + centered) */
-  #donateBar{
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-}
-
-@media (max-width: 480px){
-  header{
-    padding-left: 74px;
-    padding-right: 74px;
-  }
-}
 /* ===== Mobile: barras em coluna (como antes) mas mais próximas ===== */
 @media (max-width: 720px){
   :root{
@@ -1454,15 +1281,6 @@ body.modal-open #donateBar{
   }
 }
 
-/* Mobile: centrar perfeitamente o texto por baixo do título */
-@media (max-width: 720px){
-  #tagline{
-    display: block;
-    width: 100%;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-  }
 }
 /* Mobile: globo ocupa o ecrã TODO (por trás dos botões) */
 @media (max-width: 720px){
@@ -1485,16 +1303,39 @@ body.modal-open #donateBar{
     display: block !important;
   }
 }
-/* Mobile: tagline centrada pelo ecrã (ignora padding/offset do header) */
+}
+/* =========================================================
+   FINAL MOBILE FIXES (clean + deterministic)
+   ========================================================= */
 @media (max-width: 720px){
-  #tagline{
-    position: relative !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
+  /* Keep title/tagline visually centered, avoiding the top-right themeSwitch */
+  header{
+    box-sizing: border-box;
+    padding-left: 84px;
+    padding-right: 84px;
+  }
 
-    width: max-content;
-    max-width: calc(100vw - 24px);
+  /* Tagline: force true centering in the viewport */
+  #tagline{
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
     text-align: center !important;
+    transform: none !important;
     margin: 0 auto !important;
+    box-sizing: border-box;
+    padding-left: 84px;
+    padding-right: 84px;
+  }
+}
+
+@media (max-width: 480px){
+  header{
+    padding-left: 74px;
+    padding-right: 74px;
+  }
+  #tagline{
+    padding-left: 74px;
+    padding-right: 74px;
   }
 }
