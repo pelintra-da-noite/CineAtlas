@@ -1,39 +1,49 @@
 <!DOCTYPE html>
-
-<html data-theme="dark" lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>CineAtlas</title>
-<meta content="Discover a random film from every country on the globe. CineAtlas connects world cinema lovers through an interactive experience." name="description"/>
-<meta content="#000000" name="theme-color"/>
-<!-- Favicon / Icons -->
-<link href="assets/favicon.png" rel="icon" type="image/png"/>
-<link href="assets/favicon.png" rel="apple-touch-icon"/>
-<link href="manifest.json" rel="manifest"/>
-<!-- Canonical URL -->
-<link href="https://cine-atlas.com/" rel="canonical"/>
-<!-- Open Graph (social media preview) -->
-<meta content="CineAtlas – Explore World Cinema" property="og:title"/>
-<meta content="Click a country on the globe and discover a random film from that place." property="og:description"/>
-<meta content="https://cine-atlas.com/assets/cineatlas-cover.jpg" property="og:image"/>
-<meta content="website" property="og:type"/>
-<meta content="https://cine-atlas.com/" property="og:url"/>
-<!-- Twitter Card -->
-<meta content="summary_large_image" name="twitter:card"/>
-<meta content="CineAtlas – Explore World Cinema" name="twitter:title"/>
-<meta content="Click a country on the globe and discover a random film from that place." name="twitter:description"/>
-<meta content="https://cine-atlas.com/assets/cineatlas-cover.jpg" name="twitter:image"/>
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<!-- Styles -->
-<link href="styles.css" rel="stylesheet"/>
-<link crossorigin="" href="https://unpkg.com" rel="preconnect"/>
-<link crossorigin="" href="https://flagcdn.com" rel="preconnect"/>
-<link crossorigin="" href="https://image.tmdb.org" rel="preconnect"/>
-<link crossorigin="" href="https://api.themoviedb.org" rel="preconnect"/>
-<link as="image" href="/assets/earth-minimal.jpg" rel="preload"/>
-<meta content="index,follow" name="robots"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>CineAtlas</title>
+  <meta name="description" content="Discover a random film from every country on the globe. CineAtlas connects world cinema lovers through an interactive experience."/>
+  <meta name="theme-color" content="#000000">
+
+  <!-- Favicon / Icons -->
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/favicon.png" />
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://cine-atlas.com/" />
+
+  <!-- Open Graph (social media preview) -->
+  <meta property="og:title" content="CineAtlas – Explore World Cinema">
+  <meta property="og:description" content="Click a country on the globe and discover a random film from that place.">
+  <meta property="og:image" content="https://cine-atlas.com/assets/cineatlas-cover.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://cine-atlas.com/">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CineAtlas – Explore World Cinema">
+  <meta name="twitter:description" content="Click a country on the globe and discover a random film from that place.">
+  <meta name="twitter:image" content="https://cine-atlas.com/assets/cineatlas-cover.jpg">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="preconnect" href="https://flagcdn.com" crossorigin>
+  <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
+  <link rel="preconnect" href="https://api.themoviedb.org" crossorigin>
+
+  <link rel="preload" as="image" href="/assets/earth-minimal.jpg">
+
+  <meta name="robots" content="index,follow">
+
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -43,117 +53,157 @@
   "description":"Discover a random film from every country on the globe."
 }
 </script>
-<link crossorigin="True" href="https://raw.githubusercontent.com" rel="preconnect"/></head>
+
+</head>
 <body>
-<!-- Loading Screen -->
-<div aria-hidden="true" id="loadingScreen">
-<div class="loadingLogo">CineAtlas</div>
-</div>
+  
+  <!-- Loading Screen -->
+  <div id="loadingScreen" aria-hidden="true">
+    <div class="loadingLogo">CineAtlas</div>
+  </div>
 <!-- Header / Title -->
-<header>
-<h1 id="siteTitle">CineAtlas</h1>
-</header>
-<div id="tagline">Click a country for a random film</div>
-<!-- Fades -->
-<div id="fadeOverlay"></div>
-<div id="themeFade"></div>
-<!-- Starfield -->
-<canvas id="starsCanvas"></canvas>
-<!-- Theme + Randomizer -->
-<div aria-label="Theme switch" id="themeSwitch">
-<span aria-hidden="true" id="themeLabel">
-<!-- sol -->
-<svg class="icon-sun-min theme-icon" viewbox="0 0 24 24">
-<circle cx="12" cy="12" r="6"></circle>
-</svg>
-<!-- lua -->
-<svg class="icon-moon-min theme-icon" viewbox="0 0 24 24">
-<path d="M18 13.5A6.5 6.5 0 0 1 10.5 6 5.5 5.5 0 1 0 18 13.5Z"></path>
-</svg>
-</span>
-<label aria-label="Toggle theme" class="switch">
-<input id="themeCheckbox" type="checkbox"/>
-<span class="slider"></span>
-</label>
-<button aria-label="Random country" class="iconBtn" id="randomBtn" title="Random country" type="button">
-<svg aria-hidden="true" class="icon-die" viewbox="0 0 24 24">
-<rect height="16" width="16" x="4" y="4"></rect>
-<circle cx="8" cy="8" r="1.4"></circle>
-<circle cx="12" cy="12" r="1.4"></circle>
-<circle cx="16" cy="16" r="1.4"></circle>
-</svg>
-</button>
-</div>
-<!-- Language -->
-<div aria-label="Language controls" id="controlsBar" role="toolbar">
-<button aria-pressed="true" class="langBtn active" data-lang="en-US">English</button>
-<button aria-pressed="false" class="langBtn" data-lang="pt-PT">Português</button>
-</div>
-<!-- Donate -->
-<div id="donateBar">
-<a class="donateBtn" href="https://www.buymeacoffee.com/alexandresd" id="donateBtn" rel="noopener" target="_blank">Support us</a>
-<a class="donateBtn githubBtn" href="https://github.com/pelintra-da-noite/CineAtlas" rel="noopener noreferrer" target="_blank">
+  <header>
+    <h1 id="siteTitle">CineAtlas</h1>
+  </header>
+  <div id="tagline">Click a country for a random film</div>
+
+  <!-- Fades -->
+  <div id="fadeOverlay"></div>
+  <div id="themeFade"></div>
+
+  <!-- Starfield -->
+  <canvas id="starsCanvas"></canvas>
+
+  <!-- Theme + Randomizer -->
+  <div id="themeSwitch" aria-label="Theme switch">
+    <span id="themeLabel" aria-hidden="true">
+      <!-- sol -->
+      <svg class="icon-sun-min theme-icon" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="6"></circle>
+      </svg>
+      <!-- lua -->
+      <svg class="icon-moon-min theme-icon" viewBox="0 0 24 24">
+        <path d="M18 13.5A6.5 6.5 0 0 1 10.5 6 5.5 5.5 0 1 0 18 13.5Z"></path>
+      </svg>
+    </span>
+    <label class="switch" aria-label="Toggle theme">
+      <input id="themeCheckbox" type="checkbox" />
+      <span class="slider"></span>
+    </label>
+    <button
+      id="randomBtn"
+      class="iconBtn"
+      title="Random country"
+      aria-label="Random country"
+      type="button">
+      <svg class="icon-die" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="4" y="4" width="16" height="16"></rect>
+        <circle cx="8" cy="8" r="1.4"></circle>
+        <circle cx="12" cy="12" r="1.4"></circle>
+        <circle cx="16" cy="16" r="1.4"></circle>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Language -->
+  <div id="controlsBar" role="toolbar" aria-label="Language controls">
+    <button class="langBtn active" data-lang="en-US" aria-pressed="true">English</button>
+    <button class="langBtn" data-lang="pt-PT" aria-pressed="false">Português</button>
+  </div>
+
+  <!-- Donate -->
+  <div id="donateBar">
+    <a id="donateBtn" class="donateBtn" href="https://www.buymeacoffee.com/alexandresd" target="_blank" rel="noopener">Support us</a>
+ <a href="https://github.com/pelintra-da-noite/CineAtlas"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="donateBtn githubBtn">
   GitHub
 </a>
-</div>
-<!-- POPUP -->
-<div aria-labelledby="movieTitleOriginal" aria-modal="true" id="popup" role="dialog">
-<div id="popupHeader">
-<div id="countryBlock">
-<img alt="Country flag" decoding="async" height="18" id="countryFlagImg" width="28"/>
-<div id="countryName">Country</div>
-</div>
-<button id="closePopup" type="button"><span>×</span></button>
-</div>
-<div id="popupBody">
-<div class="posterCol">
-<img alt="" decoding="async" id="moviePoster" loading="lazy" src=""/>
-</div>
-<div class="infoCol">
-<div id="titleBlock">
-<h4 id="movieTitleOriginal"></h4>
-<h5 id="movieTitleTranslated"></h5>
-</div>
-<div class="directorLine" id="directorLine">
-<strong id="directorLabel">Director:</strong>
-<span id="directorName"></span>
-</div>
-<p id="overviewText"></p>
-<div class="actionsRow" id="actionsRow">
-<a class="actionBtn" href="#" id="letterboxdBtn" rel="noopener" target="_blank">See on Letterboxd</a>
-<button class="actionBtn" id="anotherBtn" type="button">Another one</button>
-</div>
-</div>
-</div>
-</div>
-<!-- Snow -->
-<canvas id="snowOverlay"></canvas>
-<!-- Globe -->
-<div id="globeViz"></div>
-<!-- Cookie Banner -->
-<div aria-label="Cookie notice" aria-live="polite" id="cookieBanner" role="dialog">
-<div class="cookie-main">
-<div class="cookie-text" id="cookieText">
-<!-- texto é preenchido via JS consoante o idioma -->
-</div>
-<a class="cookie-more" href="/privacy.html" rel="noopener" target="_blank">
+  </div>
+
+  <!-- POPUP -->
+  <div id="popup" role="dialog" aria-modal="true" aria-labelledby="movieTitleOriginal">
+    <div id="popupHeader">
+      <div id="countryBlock">
+        <img id="countryFlagImg" alt="Country flag" />
+        <div id="countryName">Country</div>
+      </div>
+      <button id="closePopup" type="button"><span>×</span></button>
+    </div>
+
+    <div id="popupBody">
+      <div class="posterCol">
+        <img id="moviePoster" src="" alt="" />
+      </div>
+
+      <div class="infoCol">
+        <div id="titleBlock">
+          <h4 id="movieTitleOriginal"></h4>
+          <h5 id="movieTitleTranslated"></h5>
+        </div>
+        <div class="directorLine" id="directorLine">
+          <strong id="directorLabel">Director:</strong>
+          <span id="directorName"></span>
+        </div>
+        <p id="overviewText"></p>
+
+        <div class="actionsRow" id="actionsRow">
+          <a class="actionBtn" id="letterboxdBtn" href="#" target="_blank" rel="noopener">See on Letterboxd</a>
+          <button class="actionBtn" id="anotherBtn" type="button">Another one</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Snow -->
+  <canvas id="snowOverlay"></canvas>
+
+  <!-- Globe -->
+  <div id="globeViz"></div>
+
+  <!-- Cookie Banner -->
+
+  <div id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie notice">
+    <div class="cookie-main">
+      <div id="cookieText" class="cookie-text">
+        <!-- texto é preenchido via JS consoante o idioma -->
+      </div>
+      <a href="/privacy.html"
+         class="cookie-more"
+         target="_blank"
+         rel="noopener">
         Privacy &amp; Cookies policy
       </a>
-</div>
-<div class="cookie-actions">
-<button class="cookieBtn primary" id="cookieAccept" type="button">
+    </div>
+    <div class="cookie-actions">
+      <button id="cookieAccept" class="cookieBtn primary" type="button">
         Accept analytics
       </button>
-<button class="cookieBtn" id="cookieReject" type="button">
+      <button id="cookieReject" class="cookieBtn" type="button">
         Only essential
       </button>
-</div>
-</div>
-<img alt="" decoding="async" id="moviePoster" loading="lazy" src=""/>
-<img alt="Country flag" decoding="async" height="18" id="countryFlagImg" width="28"/>
-<!-- Scripts -->
-<script defer="True" src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
-<script defer="True" src="https://unpkg.com/globe.gl"></script>
-<script defer="True" src="script.js"></script>
+    </div>
+  </div>
+
+  <img id="moviePoster"
+     src=""
+     alt=""
+     width="420"
+     height="630"
+     loading="lazy"
+     decoding="async" />
+
+<img id="countryFlagImg"
+     alt="Country flag"
+     width="28"
+     height="18"
+     decoding="async" />
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/three@0.152.2/build/three.min.js" defer></script>
+  <script src="https://unpkg.com/globe.gl" defer></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
+
