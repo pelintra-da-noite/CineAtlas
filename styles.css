@@ -941,7 +941,13 @@ body::before{
     max-width:420px;
     justify-content:center;
   }
-#donateBar{
+
+
+  /* Mobile: reserve vertical space so the globe doesn't sit behind the bottom UI */
+  #globeViz{
+    bottom: calc(160px + var(--safe-area-inset-bottom));
+  }
+  #donateBar{
     bottom:calc(110px + var(--safe-area-inset-bottom));
     flex-direction:column;
     align-items:stretch;
@@ -1263,6 +1269,42 @@ html[data-theme="light"]{
   #starsCanvas{ display:none; }
 }
 
+/* ===============================
+   MOBILE: CAIXA FIXA PARA O GLOBO
+   =============================== */
+@media (max-width: 640px){
+
+  body{
+    overflow: hidden; /* impede zoom de rebentar layout */
+  }
+
+  #globeViz{
+    position: relative;
+    width: 100vw;
+    height: calc(100vh - 160px); /* espaço reservado para botões */
+    max-height: 520px;           /* LIMITE FÍSICO */
+    min-height: 360px;
+
+    margin: 0 auto;
+    overflow: hidden;
+
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  canvas{
+    position: absolute !important;
+    inset: 0;
+  }
+
+  /* barras SEM sobreposição */
+  #controlsBar,
+  #donateBar{
+    position: relative;
+    inset: auto;
+    margin: 0;
+  }
+}
 
 /* FIX: impedir controls/donate de subirem para cima no mobile */
 #controlsBar{
@@ -1443,54 +1485,116 @@ body.modal-open #donateBar{
     display: block !important;
   }
 }
-
-
-/* =========================================================
-   FINAL MOBILE FIXES (Chrome/Edge Android)
-   - Globe truly fullscreen (no reserved bottom space)
-   - Tagline centered even when header has side padding
-   ========================================================= */
+/* Mobile: tagline centrada pelo ecrã (ignora padding/offset do header) */
 @media (max-width: 720px){
-  /* Ensure globe fills the whole viewport vertically */
-  #globeViz{
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100vw !important;
-    height: 100svh !important;
-    bottom: 0 !important;
-    overflow: hidden !important;
-  }
-  #globeViz canvas{
-    width: 100% !important;
-    height: 100% !important;
-    display: block !important;
-  }
-
-  /* Keep header visually centered (avoid overlap with theme switch) */
-  header{
-    box-sizing: border-box;
-    padding-left: 84px;
-    padding-right: 84px;
-  }
-
-  /* Center tagline relative to the viewport, not the padded header */
   #tagline{
-    display: block;
-    width: calc(100% + 168px);   /* compensate header padding */
-    margin-left: -84px;
-    margin-right: -84px;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+
+    width: max-content;
+    max-width: calc(100vw - 24px);
     text-align: center !important;
+    margin: 0 auto !important;
   }
 }
 
-@media (max-width: 480px){
-  header{
-    padding-left: 74px;
-    padding-right: 74px;
-  }
-  #tagline{
-    width: calc(100% + 148px);
-    margin-left: -74px;
-    margin-right: -74px;
-  }
+/* =========================================================
+   Instagram in-app browser: simplified, stable layout
+   (avoids fixed/fullscreen quirks in IG WebView)
+   ========================================================= */
+html.in-instagram, body.in-instagram{
+  height: auto !important;
+  overflow: auto !important;
+  overscroll-behavior: auto;
+}
+
+/* Put a small banner on top (injected by JS) */
+#igInAppBanner{
+  position: sticky;
+  top: 0;
+  z-index: 5000;
+  padding: 10px 12px;
+  background: rgba(0,0,0,0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+#igInAppBanner p{
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.25;
+  opacity: .95;
+}
+#igInAppBanner button{
+  margin-left: auto;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: inherit;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* Core: remove true fullscreen in IG; use a stable viewport box instead */
+html.in-instagram #globeViz, body.in-instagram #globeViz{
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: min(62svh, 560px) !important;
+  overflow: hidden !important;
+}
+
+/* Ensure the canvas always fills its container */
+html.in-instagram #globeViz canvas, body.in-instagram #globeViz canvas{
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+/* Put bottom controls in the normal flow (no fixed) */
+html.in-instagram #donateBar,
+html.in-instagram #controlsBar,
+body.in-instagram #donateBar,
+body.in-instagram #controlsBar{
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  margin: 10px auto 0 !important;
+  z-index: 10 !important;
+}
+
+/* Keep the "stacked" mobile look but tighter */
+html.in-instagram #donateBar,
+body.in-instagram #donateBar{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+html.in-instagram #controlsBar,
+body.in-instagram #controlsBar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 14px !important;
+}
+
+/* Popup: always inside the screen in IG */
+html.in-instagram #popup.show,
+body.in-instagram #popup.show{
+  position: fixed !important;
+  inset: 12px !important;
+  width: auto !important;
+  height: auto !important;
+  max-height: none !important;
+  transform: none !important;
+  overflow: auto !important;
 }
