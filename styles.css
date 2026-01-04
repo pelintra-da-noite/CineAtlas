@@ -19,20 +19,25 @@
 
 /* FULL LIGHT THEME */
 html[data-theme="light"]{
+  --accent:#8b0000;
+  --brand-red:#8b0000;
+
   --text-main:#1c1a14;
   --text-dim:#3b3729;
   --bg-deep:#f7f3e7;
-  --panel-bg:rgba(255,255,255,.92);
-  --panel-border:rgba(216,163,0,.55);
-  --panel-glow:rgba(216,163,0,.22);
-  --lang-border:rgba(216,163,0,.45);
+
+  --panel-bg:rgba(255,255,255,.95);
+  --panel-border:rgba(139,0,0,.35);
+  --panel-glow:rgba(139,0,0,.15);
+  --lang-border:rgba(139,0,0,.35);
 }
+
 
 html,body{
   margin:0;
   padding:0;
   height:100%;
-  overflow:hidden;
+  overflow-x:hidden;
   background:var(--bg-deep);
   font-family:'Inter',system-ui,-apple-system,Roboto,sans-serif;
   color:var(--text-main);
@@ -576,6 +581,11 @@ html[data-theme="light"] #donateBar{
   border-radius:3px;
   box-shadow:none;
 }
+#countryFlagImg:not([src]),
+#countryFlagImg[src=""]{
+  display:none;
+}
+
 #countryName{ font-size:.92rem; }
 
 #closePopup{
@@ -623,12 +633,16 @@ html[data-theme="light"] #donateBar{
 #moviePoster{
   width:100%;
   max-width:210px;
+  height:auto;
+  aspect-ratio:2 / 3;
+  object-fit:cover; /* troca para 'contain' se preferires não cortar */
   border-radius:12px;
   box-shadow:none;
-  border:2px solid rgba(216,163,0,.85);   /* sempre amarelo */
+  border:2px solid var(--accent);
   box-sizing:border-box;
   display:block;
 }
+
 
 .infoCol{
   flex:1;
