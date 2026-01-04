@@ -235,6 +235,12 @@ window.addEventListener('load', ()=>{
   initStarfield();
   requestAnimationFrame(()=> fadeOverlay.style.opacity='0');
   applyStoredConsent();
+  const startGlobe = () => { try { initGlobe(); } catch(e){ console.error('initGlobe error', e); } };
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(startGlobe, { timeout: 1200 });
+  } else {
+    setTimeout(startGlobe, 700);
+  }
 });
 
 const htmlEl = document.documentElement;
@@ -331,279 +337,287 @@ function themeSide(){ return isLight() ? 'rgba(216,163,0,0.12)' : 'rgba(216,163,
 function themeStroke(){ return isLight() ? '#a07800' : '#d8a300'; }
 function getGlobeBaseColor(){ return isLight() ? 0xffffff : 0x000000; }
 
-const globe = Globe()(document.getElementById('globeViz'))
-  .backgroundColor('rgba(0,0,0,0)')
-  .showAtmosphere(true)
-  .atmosphereColor('#ffd58a')
-  .atmosphereAltitude(0.22)
-  .showGraticules(false)
-  .polygonAltitude(0.01)
-  .polygonCapColor(d => themeCap())
-  .polygonSideColor(d => themeSide())
-  .polygonStrokeColor(d => themeStroke())
-  .polygonLabel(({properties:p}) => normalizedDisplayName(p))
-  .polygonsTransitionDuration(300);
 
-const controls = globe.controls();
-controls.minDistance = 160;
-controls.maxDistance = 460;
-controls.minPolarAngle = 0.2;
-controls.maxPolarAngle = Math.PI - 0.2;
-controls.enablePan = false;
-
-
-// Keep globe sizing/pixel ratio correct (fixes issues when dragging window between monitors)
-function syncGlobeSize(){
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-  try{
-    if (typeof globe.width === 'function') globe.width(w);
-    if (typeof globe.height === 'function') globe.height(h);
-    const r = (typeof globe.renderer === 'function') ? globe.renderer() : null;
-    if (r && typeof r.setPixelRatio === 'function') r.setPixelRatio(window.devicePixelRatio || 1);
-    if (r && typeof r.setSize === 'function') r.setSize(w, h);
-  }catch(e){}
-}
-
-// Resize on normal resizes
-window.addEventListener('resize', syncGlobeSize);
-
-// Also watch for devicePixelRatio changes (common when moving the window between monitors)
-(function watchDPR(){
-  let mq = window.matchMedia(`(resolution: ${(window.devicePixelRatio || 1)}dppx)`);
-  const handler = () => {
-    syncGlobeSize();
-    resizeStars(); // starfield also depends on DPR
-    // re-arm watcher for the new dppx
-    mq.removeEventListener?.('change', handler);
-    mq = window.matchMedia(`(resolution: ${(window.devicePixelRatio || 1)}dppx)`);
-    mq.addEventListener?.('change', handler);
-  };
-  mq.addEventListener?.('change', handler);
-})();
-
-// Initial
-syncGlobeSize();
-
-globe.onPolygonHover(h => {
-  if(h === hoverFeature) return;
-  hoverFeature = h;
-  globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
-  applyThemeToGlobe();
-});
-
-let usingSolidGlobe = false;
-let solidMat = null;
-
-function tryLoadGlobeTexture(){
-  const url = 'assets/earth-minimal.jpg';
-  const img = new Image();
-  img.crossOrigin = 'anonymous';
-  img.onload = ()=> {
-    globe.globeImageUrl(url);
-    usingSolidGlobe = false;
-    solidMat = null;
-  };
-  img.onerror = ()=> {
-    usingSolidGlobe = true;
-    solidMat = new THREE.MeshPhongMaterial({
-      color: getGlobeBaseColor(),
-      emissive: 0x000000,
-      shininess: 8
-    });
-    globe.globeMaterial(solidMat);
-  };
-  img.src = url;
-}
-tryLoadGlobeTexture();
-
-function applyThemeToGlobe(){
-  globe
-    .atmosphereColor(isLight() ? '#f4c75a' : '#ffd58a')
-    .polygonCapColor(d =>
-      d === selectedFeature
-        ? 'rgba(139,0,0,0.65)'
-        : (d === hoverFeature ? 'rgba(216,163,0,0.65)' : themeCap())
-    )
-    .polygonSideColor(d =>
-      d === selectedFeature
-        ? 'rgba(139,0,0,0.25)'
-        : (d === hoverFeature ? 'rgba(216,163,0,0.40)' : themeSide())
-    )
-    .polygonStrokeColor(d =>
-      d === selectedFeature ? 'rgba(139,0,0,0.95)' : themeStroke()
-    );
-
-  if(usingSolidGlobe && solidMat){
-    solidMat.color.setHex(getGlobeBaseColor());
-    solidMat.needsUpdate = true;
+// Globe instance (initialized lazily)
+let globe = null;
+let controls = null;
+function initGlobe(){
+  globe = Globe()(document.getElementById('globeViz'))
+    .backgroundColor('rgba(0,0,0,0)')
+    .showAtmosphere(true)
+    .atmosphereColor('#ffd58a')
+    .atmosphereAltitude(0.22)
+    .showGraticules(false)
+    .polygonAltitude(0.01)
+    .polygonCapColor(d => themeCap())
+    .polygonSideColor(d => themeSide())
+    .polygonStrokeColor(d => themeStroke())
+    .polygonLabel(({properties:p}) => normalizedDisplayName(p))
+    .polygonsTransitionDuration(300);
+  
+  controls = globe.controls();
+  controls.minDistance = 160;
+  controls.maxDistance = 460;
+  controls.minPolarAngle = 0.2;
+  controls.maxPolarAngle = Math.PI - 0.2;
+  controls.enablePan = false;
+  
+  
+  // Keep globe sizing/pixel ratio correct (fixes issues when dragging window between monitors)
+  function syncGlobeSize(){
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    try{
+      if (typeof globe.width === 'function') globe.width(w);
+      if (typeof globe.height === 'function') globe.height(h);
+      const r = (typeof globe.renderer === 'function') ? globe.renderer() : null;
+      if (r && typeof r.setPixelRatio === 'function') r.setPixelRatio(window.devicePixelRatio || 1);
+      if (r && typeof r.setSize === 'function') r.setSize(w, h);
+    }catch(e){}
   }
-}
-
-function getFeatureCenter(f){
-  try{
-    const g = f.geometry; if(!g) return null;
-    let pts=[];
-    if(g.type==='Polygon'){
-      g.coordinates.forEach(ring => ring.forEach(([lng,lat]) => pts.push([lng,lat])));
-    }
-    else if(g.type==='MultiPolygon'){
-      g.coordinates.forEach(poly => poly.forEach(ring => ring.forEach(([lng,lat]) => pts.push([lng,lat]))));
-    }
-    else return null;
-    if(!pts.length) return null;
-    const sum = pts.reduce((a,[lng,lat]) => {
-      a.lng+=lng; a.lat+=lat; return a;
-    }, {lng:0,lat:0});
-    return { lng: sum.lng/pts.length, lat: sum.lat/pts.length };
-  }catch(e){ return null; }
-}
-
-// ==========================
-//   GLOBE INTERACTION
-// ==========================
-function spinGlobe(onDone){
-  const duration = 900;
-  const startPOV = globe.pointOfView();
-  const startLng = startPOV.lng || 0;
-  const startLat = startPOV.lat || 0;
-  const startAlt = startPOV.altitude || startPOV.alt || 1.5;
-  const totalRot = 540;
-
-  const startTime = performance.now();
-  function step(now){
-    const t = Math.min(1, (now - startTime) / duration);
-    const eased = t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
-    const pov = {
-      lat: startLat,
-      lng: startLng + totalRot * eased,
-      altitude: startAlt + 0.4 * (1 - eased)
+  
+  // Resize on normal resizes
+  window.addEventListener('resize', syncGlobeSize);
+  
+  // Also watch for devicePixelRatio changes (common when moving the window between monitors)
+  (function watchDPR(){
+    let mq = window.matchMedia(`(resolution: ${(window.devicePixelRatio || 1)}dppx)`);
+    const handler = () => {
+      syncGlobeSize();
+      resizeStars(); // starfield also depends on DPR
+      // re-arm watcher for the new dppx
+      mq.removeEventListener?.('change', handler);
+      mq = window.matchMedia(`(resolution: ${(window.devicePixelRatio || 1)}dppx)`);
+      mq.addEventListener?.('change', handler);
     };
-    globe.pointOfView(pov);
-    if(t < 1){
-      requestAnimationFrame(step);
-    } else if(onDone){
-      onDone();
+    mq.addEventListener?.('change', handler);
+  })();
+  
+  // Initial
+  syncGlobeSize();
+  
+  globe.onPolygonHover(h => {
+    if(h === hoverFeature) return;
+    hoverFeature = h;
+    globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
+    applyThemeToGlobe();
+  });
+  
+  let usingSolidGlobe = false;
+  let solidMat = null;
+  
+  function tryLoadGlobeTexture(){
+    const url = 'assets/earth-minimal.jpg';
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = ()=> {
+      globe.globeImageUrl(url);
+      usingSolidGlobe = false;
+      solidMat = null;
+    };
+    img.onerror = ()=> {
+      usingSolidGlobe = true;
+      solidMat = new THREE.MeshPhongMaterial({
+        color: getGlobeBaseColor(),
+        emissive: 0x000000,
+        shininess: 8
+      });
+      globe.globeMaterial(solidMat);
+    };
+    img.src = url;
+  }
+  tryLoadGlobeTexture();
+  
+  function applyThemeToGlobe(){
+  if(!globe) return;
+    globe
+      .atmosphereColor(isLight() ? '#f4c75a' : '#ffd58a')
+      .polygonCapColor(d =>
+        d === selectedFeature
+          ? 'rgba(139,0,0,0.65)'
+          : (d === hoverFeature ? 'rgba(216,163,0,0.65)' : themeCap())
+      )
+      .polygonSideColor(d =>
+        d === selectedFeature
+          ? 'rgba(139,0,0,0.25)'
+          : (d === hoverFeature ? 'rgba(216,163,0,0.40)' : themeSide())
+      )
+      .polygonStrokeColor(d =>
+        d === selectedFeature ? 'rgba(139,0,0,0.95)' : themeStroke()
+      );
+  
+    if(usingSolidGlobe && solidMat){
+      solidMat.color.setHex(getGlobeBaseColor());
+      solidMat.needsUpdate = true;
     }
   }
-  requestAnimationFrame(step);
-}
-
-fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
-  .then(r=>r.json())
-  .then(geo=>{
-    worldFeatures = geo.features || [];
-    globe.polygonsData(worldFeatures);
-
-    globe.onPolygonClick(f=>{
-      lastPolygonClickTime = Date.now();
-      selectedFeature = f;
-      globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
-      applyThemeToGlobe();
-
+  
+  function getFeatureCenter(f){
+    try{
+      const g = f.geometry; if(!g) return null;
+      let pts=[];
+      if(g.type==='Polygon'){
+        g.coordinates.forEach(ring => ring.forEach(([lng,lat]) => pts.push([lng,lat])));
+      }
+      else if(g.type==='MultiPolygon'){
+        g.coordinates.forEach(poly => poly.forEach(ring => ring.forEach(([lng,lat]) => pts.push([lng,lat]))));
+      }
+      else return null;
+      if(!pts.length) return null;
+      const sum = pts.reduce((a,[lng,lat]) => {
+        a.lng+=lng; a.lat+=lat; return a;
+      }, {lng:0,lat:0});
+      return { lng: sum.lng/pts.length, lat: sum.lat/pts.length };
+    }catch(e){ return null; }
+  }
+  
+  // ==========================
+  //   GLOBE INTERACTION
+  // ==========================
+  function spinGlobe(onDone){
+    const duration = 900;
+    const startPOV = globe.pointOfView();
+    const startLng = startPOV.lng || 0;
+    const startLat = startPOV.lat || 0;
+    const startAlt = startPOV.altitude || startPOV.alt || 1.5;
+    const totalRot = 540;
+  
+    const startTime = performance.now();
+    function step(now){
+      const t = Math.min(1, (now - startTime) / duration);
+      const eased = t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
+      const pov = {
+        lat: startLat,
+        lng: startLng + totalRot * eased,
+        altitude: startAlt + 0.4 * (1 - eased)
+      };
+      globe.pointOfView(pov);
+      if(t < 1){
+        requestAnimationFrame(step);
+      } else if(onDone){
+        onDone();
+      }
+    }
+    requestAnimationFrame(step);
+  }
+  
+  fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
+    .then(r=>r.json())
+    .then(geo=>{
+      worldFeatures = geo.features || [];
+      globe.polygonsData(worldFeatures);
+  
+      globe.onPolygonClick(f=>{
+        lastPolygonClickTime = Date.now();
+        selectedFeature = f;
+        globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
+        applyThemeToGlobe();
+  
+        const origName = (f.properties.name || f.properties.ADMIN || 'Unknown').trim();
+        const displayName = normalizedDisplayName(f.properties);
+  
+        const rawA3 = f.id || f.properties.iso_a3 || f.properties.ISO_A3;
+        const rawA2 = f.properties.iso_a2 || f.properties.ISO_A2;
+  
+        const isWB = /^\s*west\s*bank\s*$/i.test(origName);
+        const isGZ = /^\s*gaza(\s*strip)?\s*$/i.test(origName);
+  
+        let code =
+            (isWB || isGZ) ? 'PS'
+          : (rawA2 && rawA2 !== '-99') ? rawA2.toUpperCase()
+          : rawA3 ? convertToTwoLetterCode(rawA3.toUpperCase())
+          : null;
+  
+        if(!code || code==='-99') return;
+  
+        lastCountryCode = code;
+        lastCountryName = displayName;
+  
+        const c = getFeatureCenter(f);
+        if (c) globe.pointOfView({ lat: c.lat, lng: c.lng, altitude: 1.25 }, 1200);
+  
+        const isAntarctica = code === 'AQ' || /antarctica/i.test(displayName);
+        const isArcticSnow = code === 'GL'
+          || /greenland/i.test(displayName)
+          || /svalbard|jan\s*mayen|arctic/i.test(displayName);
+  
+        if (isAntarctica) { showAntarcticaMessage(); startSnow(10000); return; }
+        if (isArcticSnow) { startSnow(10000); }
+  
+        fetchMovie(code, displayName);
+      });
+  
+      if(typeof globe.onGlobeClick === 'function'){
+        globe.onGlobeClick(() => {
+          const now = Date.now();
+          if(now - lastPolygonClickTime < 80) return;
+          selectedFeature = null;
+          lastCountryCode = null;
+          lastCountryName = null;
+          globe.polygonAltitude(() => 0.01);
+          applyThemeToGlobe();
+          hidePopup();
+        });
+      }
+    })
+    .catch(e=>{
+      console.error(e);
+      hideLoadingSoon(800);
+      alert('Failed to load country shapes');
+    });
+  
+  // Random country
+  randomBtn.addEventListener('click', ()=>{
+    if(!worldFeatures || !worldFeatures.length) return;
+  
+    randomBtn.classList.add('is-rolling');
+    setTimeout(() => {
+      randomBtn.classList.remove('is-rolling');
+    }, 650);
+  
+    let pickedFeature = null;
+    let code = null;
+    let displayName = null;
+  
+    for(let safety=0; safety<80 && !code; safety++){
+      const f = worldFeatures[Math.floor(Math.random()*worldFeatures.length)];
+      if(!f || !f.properties) continue;
       const origName = (f.properties.name || f.properties.ADMIN || 'Unknown').trim();
-      const displayName = normalizedDisplayName(f.properties);
-
+      const dispName = normalizedDisplayName(f.properties);
       const rawA3 = f.id || f.properties.iso_a3 || f.properties.ISO_A3;
       const rawA2 = f.properties.iso_a2 || f.properties.ISO_A2;
-
+  
       const isWB = /^\s*west\s*bank\s*$/i.test(origName);
       const isGZ = /^\s*gaza(\s*strip)?\s*$/i.test(origName);
-
-      let code =
+  
+      let c =
           (isWB || isGZ) ? 'PS'
         : (rawA2 && rawA2 !== '-99') ? rawA2.toUpperCase()
         : rawA3 ? convertToTwoLetterCode(rawA3.toUpperCase())
         : null;
-
-      if(!code || code==='-99') return;
-
+  
+      if(c && c !== '-99'){
+        pickedFeature = f;
+        code = c;
+        displayName = dispName;
+      }
+    }
+  
+    if(!code || !pickedFeature) return;
+    const center = getFeatureCenter(pickedFeature) || {lat:0,lng:0};
+  
+    spinGlobe(()=>{
+      selectedFeature = pickedFeature;
+      globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
+      applyThemeToGlobe();
+      globe.pointOfView({ lat:center.lat, lng:center.lng, altitude:1.25 }, 900);
       lastCountryCode = code;
       lastCountryName = displayName;
-
-      const c = getFeatureCenter(f);
-      if (c) globe.pointOfView({ lat: c.lat, lng: c.lng, altitude: 1.25 }, 1200);
-
-      const isAntarctica = code === 'AQ' || /antarctica/i.test(displayName);
-      const isArcticSnow = code === 'GL'
-        || /greenland/i.test(displayName)
-        || /svalbard|jan\s*mayen|arctic/i.test(displayName);
-
-      if (isAntarctica) { showAntarcticaMessage(); startSnow(10000); return; }
-      if (isArcticSnow) { startSnow(10000); }
-
       fetchMovie(code, displayName);
     });
-
-    if(typeof globe.onGlobeClick === 'function'){
-      globe.onGlobeClick(() => {
-        const now = Date.now();
-        if(now - lastPolygonClickTime < 80) return;
-        selectedFeature = null;
-        lastCountryCode = null;
-        lastCountryName = null;
-        globe.polygonAltitude(() => 0.01);
-        applyThemeToGlobe();
-        hidePopup();
-      });
-    }
-  })
-  .catch(e=>{
-    console.error(e);
-    hideLoadingSoon(800);
-    alert('Failed to load country shapes');
   });
-
-// Random country
-randomBtn.addEventListener('click', ()=>{
-  if(!worldFeatures || !worldFeatures.length) return;
-
-  randomBtn.classList.add('is-rolling');
-  setTimeout(() => {
-    randomBtn.classList.remove('is-rolling');
-  }, 650);
-
-  let pickedFeature = null;
-  let code = null;
-  let displayName = null;
-
-  for(let safety=0; safety<80 && !code; safety++){
-    const f = worldFeatures[Math.floor(Math.random()*worldFeatures.length)];
-    if(!f || !f.properties) continue;
-    const origName = (f.properties.name || f.properties.ADMIN || 'Unknown').trim();
-    const dispName = normalizedDisplayName(f.properties);
-    const rawA3 = f.id || f.properties.iso_a3 || f.properties.ISO_A3;
-    const rawA2 = f.properties.iso_a2 || f.properties.ISO_A2;
-
-    const isWB = /^\s*west\s*bank\s*$/i.test(origName);
-    const isGZ = /^\s*gaza(\s*strip)?\s*$/i.test(origName);
-
-    let c =
-        (isWB || isGZ) ? 'PS'
-      : (rawA2 && rawA2 !== '-99') ? rawA2.toUpperCase()
-      : rawA3 ? convertToTwoLetterCode(rawA3.toUpperCase())
-      : null;
-
-    if(c && c !== '-99'){
-      pickedFeature = f;
-      code = c;
-      displayName = dispName;
-    }
-  }
-
-  if(!code || !pickedFeature) return;
-  const center = getFeatureCenter(pickedFeature) || {lat:0,lng:0};
-
-  spinGlobe(()=>{
-    selectedFeature = pickedFeature;
-    globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
-    applyThemeToGlobe();
-    globe.pointOfView({ lat:center.lat, lng:center.lng, altitude:1.25 }, 900);
-    lastCountryCode = code;
-    lastCountryName = displayName;
-    fetchMovie(code, displayName);
-  });
-});
+  
+}
 
 // ==========================
 //   TMDB FETCH
