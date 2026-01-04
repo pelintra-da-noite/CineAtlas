@@ -1092,15 +1092,6 @@ html[data-theme="light"] #cookieBanner{
   color:#000;
   border-color:var(--accent);
 }
-.cookieBtn.primary:hover{
-  background:#000;
-  color:var(--accent);
-  border-color:var(--accent);
-}
-.cookieBtn:not(.primary):hover{
-  background:rgba(216,163,0,.15);
-  color:var(--text-main);
-}
 
 /* botão banner focus */
 .cookieBtn:focus-visible{
