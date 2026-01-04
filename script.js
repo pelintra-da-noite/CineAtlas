@@ -19,7 +19,8 @@ const randomBtn = document.getElementById('randomBtn');
 
 // Loading screen (simple: disappears after a short time, never blocks)
 const loadingScreen = document.getElementById('loadingScreen');
-const LOADING_MS = 2500;
+const LOADING_MS = 1400;// shorter splash
+
 
 function hideLoadingSoon(ms = LOADING_MS){
   if(!loadingScreen) return;
