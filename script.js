@@ -355,7 +355,7 @@ controls.enablePan = false;
 // Keep globe sizing/pixel ratio correct (fixes issues when dragging window between monitors)
 function syncGlobeSize(){
   const el = document.getElementById('globeViz');
-  if (!el) return;
+  if(!el) return;
 
   const rect = el.getBoundingClientRect();
   const w = Math.max(1, Math.round(rect.width));
@@ -364,7 +364,6 @@ function syncGlobeSize(){
   try{
     if (typeof globe.width === 'function') globe.width(w);
     if (typeof globe.height === 'function') globe.height(h);
-
     const r = (typeof globe.renderer === 'function') ? globe.renderer() : null;
     if (r && typeof r.setPixelRatio === 'function') r.setPixelRatio(window.devicePixelRatio || 1);
     if (r && typeof r.setSize === 'function') r.setSize(w, h);
@@ -374,10 +373,12 @@ function syncGlobeSize(){
 // Resize on normal resizes
 window.addEventListener('resize', syncGlobeSize);
 
+// Mobile browsers (incl. Android Edge) change the visual viewport on scroll/zoom
 if (window.visualViewport) {
   window.visualViewport.addEventListener('resize', syncGlobeSize);
   window.visualViewport.addEventListener('scroll', syncGlobeSize);
 }
+
 
 // Also watch for devicePixelRatio changes (common when moving the window between monitors)
 (function watchDPR(){
