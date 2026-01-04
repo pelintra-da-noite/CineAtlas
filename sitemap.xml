@@ -6,3 +6,12 @@
     <priority>1.0</priority>
   </url>
 </urlset>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://TEU-DOMINIO-AQUI/</loc>
+  </url>
+  <url>
+    <loc>https://TEU-DOMINIO-AQUI/privacy.html</loc>
+  </url>
+</urlset>
