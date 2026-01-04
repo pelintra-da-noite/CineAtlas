@@ -49,17 +49,7 @@
 <div aria-hidden="true" id="loadingScreen">
 <div class="loadingLogo">CineAtlas</div>
 </div>
-  <script>
-  // Failsafe: remove o loading aconteça o que acontecer
-  setTimeout(() => {
-    const el = document.getElementById('loadingScreen');
-    if (el) el.classList.add('hide');
-  }, 1400);
-</script>
-
 <!-- Header / Title -->
-<div id="ui-root">
-
 <header>
 <h1 id="siteTitle">CineAtlas</h1>
 </header>
@@ -136,15 +126,10 @@
 </div>
 </div>
 </div>
-
-<!-- Globe Hover Tooltip -->
-<div id="globeHover" aria-hidden="true"></div>
-
-</div>
 <!-- Snow -->
 <canvas id="snowOverlay"></canvas>
 <!-- Globe -->
-<div id="webgl-root"></div>
+<div id="globeViz"></div>
 <!-- Cookie Banner -->
 <div aria-label="Cookie notice" aria-live="polite" id="cookieBanner" role="dialog">
 <div class="cookie-main">
@@ -164,10 +149,11 @@
       </button>
 </div>
 </div>
+<img alt="" decoding="async" height="630" id="moviePoster" loading="lazy" src="" width="420"/>
+<img alt="Country flag" decoding="async" height="18" id="countryFlagImg" width="28"/>
 <!-- Scripts -->
 <script defer="True" src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
 <script defer="True" src="https://unpkg.com/globe.gl"></script>
 <script defer="True" src="script.js"></script>
 </body>
 </html>
-
