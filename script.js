@@ -17,6 +17,19 @@ const donateBtn = document.getElementById('donateBtn');
 const taglineEl = document.getElementById('tagline');
 const randomBtn = document.getElementById('randomBtn');
 
+// Loading screen
+const loadingScreen = document.getElementById('loadingScreen');
+const loadingSub = document.getElementById('loadingSub');
+let loadingStart = performance.now();
+function setLoadingText(txt){ if(loadingSub) loadingSub.textContent = txt; }
+function hideLoadingScreen(minMs=700){
+  if(!loadingScreen) return;
+  const elapsed = performance.now() - loadingStart;
+  const wait = Math.max(0, minMs - elapsed);
+  setTimeout(()=> loadingScreen.classList.add('is-hidden'), wait);
+}
+
+
 // popup refs
 const popupEl = document.getElementById('popup');
 const countryFlagImg = document.getElementById('countryFlagImg');
@@ -46,6 +59,7 @@ let starsCtx = starsCanvas.getContext('2d');
 let stars = [];
 let starsWidth = 0;
 let starsHeight = 0;
+let starsRunning = true;
 
 // ==========================
 //   STARFIELD
@@ -93,13 +107,13 @@ function renderStars(time){
   }
   starsCtx.globalAlpha = 1;
 
-  requestAnimationFrame(renderStars);
+  if(starsRunning) requestAnimationFrame(renderStars);
 }
 
 function initStarfield(){
   resizeStars();
   window.addEventListener('resize', resizeStars);
-  requestAnimationFrame(renderStars);
+  if(starsRunning) requestAnimationFrame(renderStars);
 }
 
 // ==========================
@@ -218,6 +232,13 @@ window.addEventListener('load', ()=>{
   initStarfield();
   requestAnimationFrame(()=> fadeOverlay.style.opacity='0');
   applyStoredConsent();
+
+  const start = () => initGlobe();
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(start, { timeout: 1500 });
+  } else {
+    setTimeout(start, 700);
+  }
 });
 
 const htmlEl = document.documentElement;
@@ -314,25 +335,37 @@ function themeSide(){ return isLight() ? 'rgba(216,163,0,0.12)' : 'rgba(216,163,
 function themeStroke(){ return isLight() ? '#a07800' : '#d8a300'; }
 function getGlobeBaseColor(){ return isLight() ? 0xffffff : 0x000000; }
 
-const globe = Globe()(document.getElementById('globeViz'))
-  .backgroundColor('rgba(0,0,0,0)')
-  .showAtmosphere(true)
-  .atmosphereColor('#ffd58a')
-  .atmosphereAltitude(0.22)
-  .showGraticules(false)
-  .polygonAltitude(0.01)
-  .polygonCapColor(d => themeCap())
-  .polygonSideColor(d => themeSide())
-  .polygonStrokeColor(d => themeStroke())
-  .polygonLabel(({properties:p}) => normalizedDisplayName(p))
-  .polygonsTransitionDuration(300);
+let globe = null;
+let controls = null;
 
-const controls = globe.controls();
-controls.minDistance = 160;
-controls.maxDistance = 460;
-controls.minPolarAngle = 0.2;
-controls.maxPolarAngle = Math.PI - 0.2;
-controls.enablePan = false;
+function createGlobe(){
+  globe = Globe()(document.getElementById('globeViz'))
+    .backgroundColor('rgba(0,0,0,0)')
+    .showAtmosphere(true)
+    .atmosphereColor('#ffd58a')
+    .atmosphereAltitude(0.22)
+    .showGraticules(false)
+    .polygonAltitude(0.01)
+    .polygonCapColor(() => themeCap())
+    .polygonSideColor(() => themeSide())
+    .polygonStrokeColor(() => themeStroke())
+    .polygonLabel(({properties:p}) => normalizedDisplayName(p))
+    .polygonsTransitionDuration(300);
+
+  controls = globe.controls();
+  controls.minDistance = 160;
+  controls.maxDistance = 460;
+  controls.minPolarAngle = 0.2;
+  controls.maxPolarAngle = Math.PI - 0.2;
+  controls.enablePan = false;
+
+  globe.onPolygonHover(h => {
+    if(h === hoverFeature) return;
+    hoverFeature = h;
+    globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
+    applyThemeToGlobe();
+  });
+}
 
 globe.onPolygonHover(h => {
   if(h === hoverFeature) return;
@@ -345,6 +378,7 @@ let usingSolidGlobe = false;
 let solidMat = null;
 
 function tryLoadGlobeTexture(){
+  if(!globe) return;
   const url = 'assets/earth-minimal.jpg';
   const img = new Image();
   img.crossOrigin = 'anonymous';
@@ -364,9 +398,10 @@ function tryLoadGlobeTexture(){
   };
   img.src = url;
 }
-tryLoadGlobeTexture();
+/* tryLoadGlobeTexture called during initGlobe */
 
 function applyThemeToGlobe(){
+  if(!globe) return;
   globe
     .atmosphereColor(isLight() ? '#f4c75a' : '#ffd58a')
     .polygonCapColor(d =>
@@ -438,9 +473,35 @@ function spinGlobe(onDone){
   requestAnimationFrame(step);
 }
 
-fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
-  .then(r=>r.json())
-  .then(geo=>{
+async function loadWorldGeoJSON(){
+  const REMOTE = 'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
+  const LOCAL = 'assets/world.geojson'; // optional fallback (add this file to your repo for reliability)
+  try{
+    const r = await fetch(REMOTE, { cache: 'force-cache' });
+    if(!r.ok) throw new Error('remote geojson failed');
+    return await r.json();
+  }catch(e){
+    const r2 = await fetch(LOCAL);
+    if(!r2.ok) throw e;
+    return await r2.json();
+  }
+}
+
+function initGlobe(){
+  if(globe) return;
+  setLoadingText(currentLanguage === 'pt-PT' ? 'A iniciar…' : 'Starting…');
+  createGlobe();
+  tryLoadGlobeTexture();
+  applyThemeToGlobe();
+  loadAndBindWorld();
+}
+
+async function loadAndBindWorld(){
+  if(!globe) return;
+  setLoadingText(currentLanguage === 'pt-PT' ? 'A carregar o globo…' : 'Loading globe…');
+
+  try{
+    const geo = await loadWorldGeoJSON();
     worldFeatures = geo.features || [];
     globe.polygonsData(worldFeatures);
 
@@ -496,9 +557,13 @@ fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/wor
         hidePopup();
       });
     }
-  })
-  .catch(e=>{
+    hideLoadingScreen(850);
+  }catch(e){
     console.error(e);
+    hideLoadingScreen(850);
+    alert('Failed to load country shapes');
+  }
+}
     alert('Failed to load country shapes');
   });
 
