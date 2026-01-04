@@ -1,20 +1,3 @@
-// ===== In-app browser detection (Instagram / Facebook webview) =====
-(function(){
-  const ua = navigator.userAgent || "";
-  const qs = new URLSearchParams(location.search);
-
-  const isInApp =
-    qs.get("inapp") === "1" ||                    // força manual: ?inapp=1
-    /Instagram/i.test(ua) ||
-    /FBAN|FBAV|FB_IAB|FB4A|FB5A/i.test(ua) ||     // Facebook/Meta webviews
-    /; wv\)/i.test(ua);                           // Android WebView típico
-
-  if (isInApp){
-    document.documentElement.classList.add("inapp");
-    document.body?.classList.add("inapp");
-  }
-})();
-
 // ==========================
 //   CONFIG & GLOBAL STATE
 // ==========================
@@ -37,18 +20,6 @@ const randomBtn = document.getElementById('randomBtn');
 // Loading screen (simple: disappears after a short time, never blocks)
 const loadingScreen = document.getElementById('loadingScreen');
 const LOADING_MS = 1400;// shorter splash
-
-// ==========================
-//   IN-APP BROWSER (Instagram/Facebook) SAFETY MODE
-// ==========================
-// Instagram's in-app browser (and some FB WebViews) can mis-handle 100vh/fixed positioning,
-// which can "break" fullscreen WebGL layouts. We switch to a simpler layout only there.
-const UA = navigator.userAgent || '';
-const isInAppBrowser = /Instagram|FBAN|FBAV/i.test(UA);
-if (isInAppBrowser){
-  document.documentElement.classList.add('inapp');
-  document.body.classList.add('inapp');
-}
 
 
 function hideLoadingSoon(ms = LOADING_MS){
@@ -375,10 +346,40 @@ const globe = Globe()(document.getElementById('globeViz'))
 
 const controls = globe.controls();
 controls.minDistance = 160;
+// Slightly limit zoom-in on mobile to avoid globe clipping
+if (window.innerWidth <= 768) {
+  controls.minDistance = 220; // tweak 200–240 if needed
+}
+
 controls.maxDistance = 460;
 controls.minPolarAngle = 0.2;
 controls.maxPolarAngle = Math.PI - 0.2;
 controls.enablePan = false;
+
+// --- Mobile: keep globe perfectly centered in the viewport (0,0) and reduce clipping ---
+(function setupMobileGlobeCentering(){
+  if (window.innerWidth > 768) return;
+
+  // Center orbit target exactly at globe origin
+  try{
+    controls.target.set(0, 0, 0);
+    controls.update();
+  }catch(e){}
+
+  // Use a stable FOV for mobile and widen the frustum to avoid edge clipping on zoom
+  try{
+    const cam = globe.camera();
+    cam.fov = 45;
+    cam.near = 0.1;
+    cam.far = 3000;
+    cam.updateProjectionMatrix();
+  }catch(e){}
+
+  // Start centered on (lat 0, lng 0)
+  try{
+    globe.pointOfView({ lat: 0, lng: 0, altitude: 1.35 }, 0);
+  }catch(e){}
+})();
 
 
 // Keep globe sizing/pixel ratio correct (fixes issues when dragging window between monitors)
