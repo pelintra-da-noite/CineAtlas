@@ -1,3 +1,20 @@
+// ===== In-app browser detection (Instagram / Facebook webview) =====
+(function(){
+  const ua = navigator.userAgent || "";
+  const qs = new URLSearchParams(location.search);
+
+  const isInApp =
+    qs.get("inapp") === "1" ||                    // força manual: ?inapp=1
+    /Instagram/i.test(ua) ||
+    /FBAN|FBAV|FB_IAB|FB4A|FB5A/i.test(ua) ||     // Facebook/Meta webviews
+    /; wv\)/i.test(ua);                           // Android WebView típico
+
+  if (isInApp){
+    document.documentElement.classList.add("inapp");
+    document.body?.classList.add("inapp");
+  }
+})();
+
 // ==========================
 //   CONFIG & GLOBAL STATE
 // ==========================
