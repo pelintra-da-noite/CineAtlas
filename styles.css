@@ -184,6 +184,79 @@ html[data-theme="light"] #starsCanvas{ opacity:0; }
   z-index: 2500;
 }
 
+/* ========================= */
+/*       LOADING SCREEN      */
+/* ========================= */
+#loadingScreen{
+  position:fixed;
+  inset:0;
+  z-index:4000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--bg-deep);
+  transition: opacity .45s ease, visibility .45s ease;
+}
+#loadingScreen.is-hidden{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+.loading-inner{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:.55rem;
+  padding:1.2rem 1.4rem;
+  text-align:center;
+}
+.loading-logo{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-weight:600;
+  font-size:3rem;
+  line-height:1;
+  color:var(--brand-red);
+  text-shadow: 0 0 10px rgba(0,0,0,.9), 0 3px 18px rgba(0,0,0,1);
+}
+html[data-theme="light"] .loading-logo{
+  color:#b02323;
+  text-shadow: 0 0 7px rgba(255,255,255,.8), 0 2px 13px rgba(0,0,0,.25);
+}
+.loading-sub{
+  font-size:.85rem;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+}
+.loading-dots{
+  display:flex;
+  gap:.35rem;
+  align-items:center;
+  justify-content:center;
+  margin-top:.1rem;
+}
+.loading-dots span{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--accent);
+  opacity:.35;
+  animation: loadingPulse 1.05s ease-in-out infinite;
+}
+.loading-dots span:nth-child(2){ animation-delay:.15s; }
+.loading-dots span:nth-child(3){ animation-delay:.30s; }
+@keyframes loadingPulse{
+  0%,100%{ transform:translateY(0); opacity:.25; }
+  50%{ transform:translateY(-4px); opacity:.9; }
+}
+
+@media (max-width: 480px){
+  .loading-logo{ font-size:2.35rem; }
+}
+
 /* GRUPO base de botões com gloss translucido (igual ao popup) */
 #themeSwitch,
 #controlsBar,
@@ -970,88 +1043,6 @@ body::before{
   }
 }
 
-/* COOKIE BANNER – pill gloss translucido */
-#cookieBanner{
-  position:fixed;
-  left:50%;
-  transform:translateX(-50%);
-  bottom:calc(18px + var(--safe-area-inset-bottom));
-  z-index:2100;
-  display:flex;
-  align-items:center;
-  gap:.6rem;
-  max-width:520px;
-  padding:.6rem .9rem;
-  border-radius:999px;
-  border:1px solid rgba(192,22,36,.9);
-  box-shadow:0 14px 30px rgba(0,0,0,.85), 0 0 0 1px rgba(216,163,0,.25);
-  background:linear-gradient(135deg, rgba(0,0,0,0.40), rgba(20,12,0,0.80));
-  backdrop-filter:blur(18px) saturate(130%);
-  -webkit-backdrop-filter:blur(18px) saturate(130%);
-  color:var(--text-main);
-  font-size:.8rem;
-  line-height:1.4;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .35s ease, transform .35s ease;
-}
-html[data-theme="light"] #cookieBanner{
-  background:linear-gradient(135deg, rgba(255,255,255,0.90), rgba(252,244,220,0.96));
-  box-shadow:0 14px 30px rgba(0,0,0,.25), 0 0 0 1px rgba(216,163,0,.35);
-}
-
-#cookieBanner.show{
-  opacity:1;
-  pointer-events:auto;
-  transform:translateX(-50%) translateY(0);
-}
-
-.cookie-text{
-  flex:1;
-  color:var(--text-dim);
-}
-
-.cookie-actions{
-  display:flex;
-  align-items:center;
-  gap:.4rem;
-}
-
-.cookieBtn{
-  appearance:none;
-  border-radius:999px;
-  border:1px solid var(--lang-border);
-  padding:.35rem .8rem;
-  font-size:.75rem;
-  font-weight:600;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  background:transparent;
-  color:var(--text-dim);
-  cursor:pointer;
-  white-space:nowrap;
-}
-.cookieBtn.primary{
-  background:var(--accent);
-  color:#000;
-  border-color:var(--accent);
-}
-.cookieBtn.primary:hover{
-  background:#000;
-  color:var(--accent);
-  border-color:var(--accent);
-}
-.cookieBtn:not(.primary):hover{
-  background:rgba(216,163,0,.15);
-  color:var(--text-main);
-}
-
-/* botão banner focus */
-.cookieBtn:focus-visible{
-  outline:2px solid var(--accent);
-  outline-offset:2px;
-}
-
 /* Em mobile muito pequeno, o banner vira “bloco” em vez de pílula longa */
 @media (max-width: 480px){
   #cookieBanner{
@@ -1113,6 +1104,24 @@ html[data-theme="light"] #cookieBanner{
   text-align:center;
   color:var(--text-dim);
   padding:0 .6rem;
+}
+
+.cookie-main{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.35rem;
+}
+.cookie-more{
+  font-size:.72rem;
+  color:var(--text-dim);
+  text-decoration:none;
+  opacity:.9;
+}
+.cookie-more:hover{
+  text-decoration:underline;
+  opacity:1;
 }
 
 /* link dentro do texto */
