@@ -251,7 +251,6 @@ function isLight(){ return document.documentElement.getAttribute('data-theme') =
 function themeCap(){ return isLight() ? 'rgba(216,163,0,0.22)' : 'rgba(216,163,0,0.30)'; }
 function themeSide(){ return isLight() ? 'rgba(216,163,0,0.12)' : 'rgba(216,163,0,0.10)'; }
 function themeStroke(){ return isLight() ? '#a07800' : '#d8a300'; }
-function getGlobeBaseColor(){ return isLight() ? 0xffffff : 0x000000; }
 
 // ==========================
 //   LANGUAGE SWITCH BUTTONS
@@ -326,8 +325,6 @@ function normalizedDisplayName(props){
 // Globe instance
 let globe = null;
 let controls = null;
-let usingSolidGlobe = false;
-let solidMat = null;
 
 
 // Simple hover tooltip (optional)
@@ -370,10 +367,6 @@ function applyThemeToGlobe(){
       d === selectedFeature ? 'rgba(139,0,0,0.95)' : themeStroke()
     );
 
-  if(usingSolidGlobe && solidMat){
-    solidMat.color.setHex(getGlobeBaseColor());
-    solidMat.needsUpdate = true;
-  }
 }
 
 if (themeCheckbox){
@@ -415,6 +408,11 @@ function initGlobe(){
     .polygonLabel(({properties:p}) => normalizedDisplayName(p))
     .polygonsTransitionDuration(300);
 
+  // Restore the dark minimal texture so the globe keeps its "black" look
+  // regardless of theme changes.
+  globe.globeImageUrl('/assets/earth-minimal.jpg');
+  globe.bumpImageUrl('/assets/earth-minimal.jpg');
+
   controls = globe.controls();
   controls.minDistance = 160;
   controls.maxDistance = 460;
@@ -432,6 +430,8 @@ function initGlobe(){
     if (el) {
       el.style.pointerEvents = 'auto';
       el.style.touchAction = 'none';
+      el.style.userSelect = 'none';
+      el.style.cursor = 'grab';
     }
   } catch(e) {}
   if (typeof globe.enablePointerInteraction === 'function') {
@@ -475,17 +475,6 @@ function initGlobe(){
     globe.polygonAltitude(d => d === selectedFeature ? 0.12 : 0.01);
     applyThemeToGlobe();
   });
-
-  // Globe appearance: solid color that follows the theme (no texture)
-  usingSolidGlobe = true;
-  solidMat = new THREE.MeshStandardMaterial({
-    color: getGlobeBaseColor(),
-    roughness: 1,
-    metalness: 0
-  });
-  globe.globeMaterial(solidMat);
-  applyThemeToGlobe();
-
 
   // Load country polygons (prefer local asset for performance/stability)
   (async () => {
