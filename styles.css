@@ -1270,3 +1270,12 @@ html[data-theme="light"]{
 
 /* Allow dragging/zooming the Globe canvas on touch devices */
 #globeViz canvas{ touch-action:none; }
+
+#background {
+  pointer-events: none;
+}
+
+canvas {
+  pointer-events: auto;
+}
+
