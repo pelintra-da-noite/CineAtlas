@@ -877,14 +877,14 @@ body::before{
 /* telemóveis pequenos */
 @media (max-width: 480px){
   header{
-    top:calc(60px + var(--safe-area-inset-top));
+    top:calc(12px + var(--safe-area-inset-top));
   }
   #siteTitle{
     font-size:2rem;
   }
 
   #tagline{
-    top:calc(105px + var(--safe-area-inset-top));
+    top:calc(80px + var(--safe-area-inset-top));
     font-size:.75rem;
     padding:0 .09rem;
   }
@@ -1392,7 +1392,7 @@ body.modal-open #donateBar{
 
 @media (max-width: 480px){
   header{
-    padding-left: 74px;
-    padding-right: 74px;
+    padding-left: 1px;
+    padding-right: 175px;
   }
 }
