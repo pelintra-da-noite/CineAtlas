@@ -1269,63 +1269,6 @@ html[data-theme="light"]{
   #starsCanvas{ display:none; }
 }
 
-/* ===============================
-   MOBILE: CAIXA FIXA PARA O GLOBO
-   =============================== */
-@media (max-width: 640px){
-
-  body{
-    overflow: hidden; /* impede zoom de rebentar layout */
-  }
-
-  #globeViz{
-    position: relative;
-    width: 100vw;
-    height: calc(100vh - 160px); /* espaço reservado para botões */
-    max-height: 520px;           /* LIMITE FÍSICO */
-    min-height: 360px;
-    margin: auto;
-    overflow: hidden;
-  }
-
-  canvas{
-    position: absolute !important;
-    inset: 0;
-  }
-
-  /* barras SEM sobreposição */
-  #controlsBar,
-  #donateBar{
-    position: relative;
-    inset: auto;
-    margin: 0;
-  }
-}
-
-/* FIX: impedir controls/donate de subirem para cima no mobile */
-#controlsBar{
-  position: fixed;
-  right: calc(20px + var(--safe-area-inset-right));
-  bottom: calc(20px + var(--safe-area-inset-bottom));
-  z-index: 2000;
-}
-
-#donateBar{
-  position: fixed;
-  left: calc(20px + var(--safe-area-inset-left));
-  bottom: calc(20px + var(--safe-area-inset-bottom));
-  z-index: 2000;
-}
-
-@media (max-width: 720px){
-  #donateBar{
-    bottom: calc(110px + var(--safe-area-inset-bottom));
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-}
-
 /* Quando um modal estiver aberto, os botões de baixo não devem sobrepor */
 body.modal-open #controlsBar,
 body.modal-open #donateBar{
@@ -1336,47 +1279,76 @@ body.modal-open #donateBar{
 }
 
 /* =========================================================
-   MOBILE POLISH OVERRIDES (layout only — keep button design)
+   MOBILE LAYOUT (single source of truth)
    ========================================================= */
-@media (max-width: 720px){
-
-  /* Prevent tiny horizontal overflow that can "cut" the globe */
-  html, body{
+@media (max-width: 768px){
+  html,
+  body{
+    height: 100%;
     width: 100%;
     overflow-x: hidden;
   }
 
-  /* True fullscreen globe container on mobile */
   #globeViz{
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100vw !important;
-    height: 100svh !important; /* stable mobile viewport height */
-    overflow: hidden !important;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100svh;
+    overflow: hidden;
   }
 
   #globeViz canvas{
-    width: 100% !important;
-    height: 100% !important;
+    width: 100%;
+    height: 100%;
     display: block;
   }
 
-  /* Keep header visually centered (avoid overlap with theme switch) */
   header{
     box-sizing: border-box;
     padding-left: 84px;
     padding-right: 84px;
   }
 
-  /* Make Support/GitHub match desktop layout (row + centered) */
-  #donateBar{
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
+  #tagline{
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
 
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: center !important;
+  #controlsBar,
+  #donateBar{
+    position: fixed;
+    top: auto;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    z-index: 3000;
+  }
+
+  #controlsBar{
+    bottom: calc(14px + var(--safe-area-inset-bottom, 0px));
+  }
+
+  #donateBar{
+    bottom: calc(14px + 54px + 8px + var(--safe-area-inset-bottom, 0px));
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+  }
+}
+
+@media (max-width: 768px){
+  #popup{
+    top: calc(10px + var(--safe-area-inset-top, 0px));
+    left: calc(10px + var(--safe-area-inset-left, 0px));
+    right: calc(10px + var(--safe-area-inset-right, 0px));
+    bottom: calc(10px + var(--safe-area-inset-bottom, 0px));
+    width: auto;
+    max-height: none;
+    transform: none;
+    overflow: auto;
+    box-sizing: border-box;
   }
 }
 
@@ -1386,134 +1358,3 @@ body.modal-open #donateBar{
     padding-right: 74px;
   }
 }
-/* ===== Mobile: barras em coluna (como antes) mas mais próximas ===== */
-@media (max-width: 720px){
-  :root{
-    --dock-pad: 14px;      /* distância ao fundo */
-    --dock-gap: 10px;      /* espaço entre donateBar (cima) e controlsBar (baixo) */
-    --controls-h: 54px;    /* altura aproximada do controlsBar */
-  }
-
-  /* controlsBar (línguas) em baixo, centrado */
-  #controlsBar{
-    position: fixed;
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-
-    bottom: calc(var(--dock-pad) + var(--safe-area-inset-bottom, 0px)) !important;
-    top: auto !important;
-
-    /* NÃO forces display com !important aqui */
-    align-items: center;
-    justify-content: center;
-    gap: .5rem;
-  }
-
-  /* donateBar (Support/GitHub) por cima do controlsBar, centrado */
-  #donateBar{
-    position: fixed;
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-
-    bottom: calc(var(--dock-pad) + var(--controls-h) + var(--dock-gap) + var(--safe-area-inset-bottom, 0px)) !important;
-    top: auto !important;
-
-    /* mantém coluna como tinhas, mas alinhada e bonita */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: .5rem;
-  }
-}
-
-/* ========= Popup sempre dentro do ecrã (mobile) ========= */
-@media (max-width: 720px){
-  #popup{
-    top: calc(10px + var(--safe-area-inset-top, 0px)) !important;
-    left: calc(10px + var(--safe-area-inset-left, 0px)) !important;
-    right: calc(10px + var(--safe-area-inset-right, 0px)) !important;
-    bottom: calc(10px + var(--safe-area-inset-bottom, 0px)) !important;
-
-    width: auto !important;
-    max-height: none !important;
-
-    transform: none !important; /* <- chave para não sair fora */
-    overflow: auto !important;
-    box-sizing: border-box !important;
-  }
-
-  /* opcional: se o body do popup estiver a "apertar" */
-  #popupBody{
-    flex-direction: column;
-  }
-}
-
-/* Mobile: centrar perfeitamente o texto por baixo do título */
-@media (max-width: 720px){
-  #tagline{
-    display: block;
-    width: 100%;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-/* Mobile: globo ocupa o ecrã TODO (por trás dos botões) */
-@media (max-width: 720px){
-  html, body{
-    height: 100%;
-  }
-
-  #globeViz{
-    position: fixed !important;
-    inset: 0 !important;          /* top/right/bottom/left = 0 */
-    width: 100vw !important;
-    height: 100svh !important;    /* mais estável que 100vh em mobile */
-    bottom: 0 !important;         /* anula qualquer "reserva" para botões */
-    overflow: hidden !important;
-  }
-
-  #globeViz canvas{
-    width: 100% !important;
-    height: 100% !important;
-    display: block !important;
-  }
-}
-/* Mobile: tagline centrada pelo ecrã (ignora padding/offset do header) */
-@media (max-width: 720px){
-  #tagline{
-    position: relative !important;
-    left: 42% !important;
-    transform: translateX(-50%) !important;
-    width: max-content;
-    max-width: calc(100vw - 24px);
-    text-align: center !important;
-    margin: 0 auto !important;
-  }
-}
-/* === FIX FINAL: botões inferiores SEMPRE no fundo (mobile) === */
-@media (max-width: 768px){
-  #controlsBar,
-  #donateBar{
-    position: fixed !important;
-    top: auto !important;
-    left: 50% !important;
-    right: auto !important;
-
-    transform: translateX(-50%) !important;
-    z-index: 3000 !important;
-  }
-
-  /* línguas (mais em baixo) */
-  #controlsBar{
-    bottom: calc(14px + var(--safe-area-inset-bottom, 0px)) !important;
-  }
-
-  /* support/github (logo acima) */
-  #donateBar{
-    bottom: calc(14px + 54px + 8px + var(--safe-area-inset-bottom, 0px)) !important;
-  }
-}
-
