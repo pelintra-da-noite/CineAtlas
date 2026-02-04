@@ -884,7 +884,7 @@ body::before{
   }
 
   #tagline{
-    top:calc(130px + var(--safe-area-inset-top));
+    top:calc(105px + var(--safe-area-inset-top));
     font-size:.75rem;
     padding:0 .9rem;
   }
