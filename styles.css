@@ -1351,7 +1351,7 @@ body.modal-open #donateBar{
   #donateBar{
     position: fixed;
     top: auto;
-    left: 50%;
+    left: 3.5%;
     right: auto;
     transform: translateX(-50%);
     z-index: 3000;
