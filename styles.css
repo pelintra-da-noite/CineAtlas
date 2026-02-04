@@ -980,6 +980,35 @@ body::before{
     min-width:96px;
     max-width:calc(50% - .4rem);
     justify-content:center;
+    padding:.32rem .5rem;
+    font-size:clamp(.68rem, 2.8vw, .78rem);
+    line-height:1.1;
+    white-space:normal;
+  }
+}
+
+@media (max-width: 360px){
+  #donateBar,
+  #controlsBar{
+    width:calc(100vw - 24px - var(--safe-area-inset-left) - var(--safe-area-inset-right));
+    padding:.4rem .45rem;
+  }
+
+  #donateBar{
+    bottom:calc(96px + var(--safe-area-inset-bottom));
+  }
+
+  #controlsBar{
+    bottom:calc(12px + var(--safe-area-inset-bottom));
+  }
+
+  .langBtn{
+    min-width:0;
+    font-size:.68rem;
+  }
+
+  .donateBtn{
+    font-size:.68rem;
   }
 }
 
