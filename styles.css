@@ -937,8 +937,8 @@ body::before{
     left:50%;
     right:auto;
     transform:translateX(-50%);
-    width:calc(100vw - 24px - var(--safe-area-inset-left) - var(--safe-area-inset-right));
-    max-width:380px;
+    width:calc(100vw - 32px - var(--safe-area-inset-left) - var(--safe-area-inset-right));
+    max-width:420px;
     justify-content:center;
     box-sizing:border-box;
   }
@@ -971,14 +971,14 @@ body::before{
     bottom:calc(20px + var(--safe-area-inset-bottom));
     flex-wrap:wrap;
     align-items:stretch;
-    padding:.4rem .45rem;
-    gap:.35rem;
+    padding:.45rem .55rem;
+    gap:.4rem;
   }
 
   .langBtn{
-    flex:1 1 calc(50% - .35rem);
-    min-width:0;
-    max-width:calc(50% - .35rem);
+    flex:1 1 45%;
+    min-width:96px;
+    max-width:calc(50% - .4rem);
     justify-content:center;
     padding:.32rem .5rem;
     font-size:clamp(.68rem, 2.8vw, .78rem);
@@ -1009,6 +1009,31 @@ body::before{
 
   .donateBtn{
     font-size:.68rem;
+  }
+}
+
+@media (max-width: 360px){
+  #donateBar,
+  #controlsBar{
+    width:calc(100vw - 24px - var(--safe-area-inset-left) - var(--safe-area-inset-right));
+    padding:.4rem .45rem;
+  }
+
+  #donateBar{
+    bottom:calc(96px + var(--safe-area-inset-bottom));
+  }
+
+  #controlsBar{
+    bottom:calc(12px + var(--safe-area-inset-bottom));
+  }
+
+  .langBtn{
+    min-width:84px;
+    font-size:.72rem;
+  }
+
+  .donateBtn{
+    font-size:.72rem;
   }
 }
 
