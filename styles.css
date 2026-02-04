@@ -886,7 +886,7 @@ body::before{
   #tagline{
     top:calc(105px + var(--safe-area-inset-top));
     font-size:.75rem;
-    padding:0 .9rem;
+    padding:0 .09rem;
   }
 
   #themeSwitch{
