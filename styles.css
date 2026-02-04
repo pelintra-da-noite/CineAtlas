@@ -1323,6 +1323,9 @@ body.modal-open #donateBar{
     right: auto;
     transform: translateX(-50%);
     z-index: 3000;
+    width: calc(100vw - 32px - var(--safe-area-inset-left, 0px) - var(--safe-area-inset-right, 0px));
+    max-width: 420px;
+    justify-content: center;
   }
 
   #controlsBar{
@@ -1340,15 +1343,16 @@ body.modal-open #donateBar{
 
 @media (max-width: 768px){
   #popup{
-    top: calc(10px + var(--safe-area-inset-top, 0px));
-    left: calc(10px + var(--safe-area-inset-left, 0px));
-    right: calc(10px + var(--safe-area-inset-right, 0px));
-    bottom: calc(10px + var(--safe-area-inset-bottom, 0px));
-    width: auto;
-    max-height: none;
-    transform: none;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    width: min(640px, calc(100vw - 32px - var(--safe-area-inset-left, 0px) - var(--safe-area-inset-right, 0px)));
+    max-height: calc(100svh - 32px - var(--safe-area-inset-top, 0px) - var(--safe-area-inset-bottom, 0px));
+    transform: translate(-50%, -50%);
     overflow: auto;
     box-sizing: border-box;
+    z-index: 4000;
   }
 }
 
