@@ -288,12 +288,14 @@ function showPopup(){
   popupEl.style.display='block';
   requestAnimationFrame(()=>{
     popupEl.classList.add('show');
+    document.body.classList.add('modal-open');
     closePopupBtn.focus();
   });
 }
 
 function hidePopup(){
   popupEl.classList.remove('show');
+  document.body.classList.remove('modal-open');
   setTimeout(()=>{
     if(!popupEl.classList.contains('show')) popupEl.style.display='none';
   },200);
