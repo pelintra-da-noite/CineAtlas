@@ -242,19 +242,26 @@ const themeCheckbox = document.getElementById('themeCheckbox');
 const themeFade = document.getElementById('themeFade');
 
 htmlEl.setAttribute('data-theme', 'dark');
-themeCheckbox.checked = false;
+if (themeCheckbox) themeCheckbox.checked = false;
 
 /* Fade suavizado entre temas */
-themeCheckbox.addEventListener('change', ()=>{
+themeCheckbox?.addEventListener('change', ()=>{
   const next = themeCheckbox.checked ? 'light' : 'dark';
 
-  themeFade.style.background = next === 'light' ? '#f7f3e7' : '#000000';
-  themeFade.style.opacity = '1';
+  if (themeFade){
+    themeFade.style.background = next === 'light' ? '#f7f3e7' : '#000000';
+    themeFade.style.opacity = '1';
+  }
 
   setTimeout(() => {
-    htmlEl.setAttribute('data-theme', next);
-    applyThemeToGlobe();
-    requestAnimationFrame(()=> themeFade.style.opacity = '0');
+    try{
+      htmlEl.setAttribute('data-theme', next);
+      applyThemeToGlobe();
+    }catch(err){
+      console.error('Theme switch failed:', err);
+    }finally{
+      if (themeFade) requestAnimationFrame(()=> themeFade.style.opacity = '0');
+    }
   }, 200);
 });
 
@@ -462,6 +469,8 @@ function tryLoadGlobeTexture(){
 tryLoadGlobeTexture();
 
 function applyThemeToGlobe(){
+  if(!globe || typeof globe.atmosphereColor !== 'function') return;
+
   globe
     .atmosphereColor(isLight() ? '#f4c75a' : '#ffd58a')
     .polygonCapColor(d =>
