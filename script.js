@@ -340,18 +340,71 @@ function themeSide(){ return isLight() ? 'rgba(216,163,0,0.12)' : 'rgba(216,163,
 function themeStroke(){ return isLight() ? '#a07800' : '#d8a300'; }
 function getGlobeBaseColor(){ return isLight() ? 0xffffff : 0x000000; }
 
-const globe = Globe()(document.getElementById('globeViz'))
-  .backgroundColor('rgba(0,0,0,0)')
-  .showAtmosphere(true)
-  .atmosphereColor('#ffd58a')
-  .atmosphereAltitude(0.22)
-  .showGraticules(false)
-  .polygonAltitude(0.01)
-  .polygonCapColor(d => themeCap())
-  .polygonSideColor(d => themeSide())
-  .polygonStrokeColor(d => themeStroke())
-  .polygonLabel(({properties:p}) => normalizedDisplayName(p))
-  .polygonsTransitionDuration(300);
+function createNoopGlobe(){
+  const self = {
+    backgroundColor: () => self,
+    showAtmosphere: () => self,
+    atmosphereColor: () => self,
+    atmosphereAltitude: () => self,
+    showGraticules: () => self,
+    polygonAltitude: () => self,
+    polygonCapColor: () => self,
+    polygonSideColor: () => self,
+    polygonStrokeColor: () => self,
+    polygonLabel: () => self,
+    polygonsTransitionDuration: () => self,
+    onPolygonHover: () => self,
+    onPolygonClick: () => self,
+    onGlobeClick: () => self,
+    polygonsData: () => self,
+    globeImageUrl: () => self,
+    globeMaterial: () => self,
+    width: () => self,
+    height: () => self,
+    pointOfView: (pov) => (pov ? self : { lat: 0, lng: 0, altitude: 1.35 }),
+    controls: () => ({
+      minDistance: 160,
+      maxDistance: 460,
+      minPolarAngle: 0.2,
+      maxPolarAngle: Math.PI - 0.2,
+      enablePan: false,
+      target: { set: () => {} },
+      update: () => {}
+    }),
+    camera: () => ({
+      fov: 45,
+      near: 0.1,
+      far: 3000,
+      updateProjectionMatrix: () => {}
+    }),
+    renderer: () => null
+  };
+  return self;
+}
+
+const globeContainer = document.getElementById('globeViz');
+let globe = createNoopGlobe();
+
+if (typeof Globe === 'function' && globeContainer){
+  try{
+    globe = Globe()(globeContainer)
+      .backgroundColor('rgba(0,0,0,0)')
+      .showAtmosphere(true)
+      .atmosphereColor('#ffd58a')
+      .atmosphereAltitude(0.22)
+      .showGraticules(false)
+      .polygonAltitude(0.01)
+      .polygonCapColor(d => themeCap())
+      .polygonSideColor(d => themeSide())
+      .polygonStrokeColor(d => themeStroke())
+      .polygonLabel(({properties:p}) => normalizedDisplayName(p))
+      .polygonsTransitionDuration(300);
+  }catch(err){
+    console.error('Failed to initialize globe, running in fallback mode:', err);
+  }
+}else{
+  console.warn('globe.gl not available, running in fallback mode.');
+}
 
 const controls = globe.controls();
 controls.minDistance = 160;
